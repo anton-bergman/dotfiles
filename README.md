@@ -53,7 +53,7 @@ This **.dotfiles** repository includes custom plugins for zsh. To install or upd
 cd ~/.dotfiles && ./update.sh
 ```
 
-### Configure iTerm2.
+### Configure iTerm2
 
 1. **Create a Custom Profile:**
 
