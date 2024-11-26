@@ -1,0 +1,82 @@
+palette:
+  path-color: "lightMagenta"
+  prompt-color: "white"
+  virtual-environment-color: "lightYellow"
+  git-color: "lightGreen"
+  git-branch-color: "lightYellow"
+  execution-time-color: "yellow"
+
+# This section defines the secondary prompt, which appears when a command takes up multiple rows.
+secondary_prompt:
+  template: "❯❯ "
+  foreground: p:prompt-color
+  background: transparent
+
+# This controls the title of the terminal window (if supported), showing the shell and the current folder.
+console_title_template: "{{ .Shell }} in {{ .Folder }}"
+
+blocks:
+  - type: prompt
+    alignment: left
+    segments:
+      # This segment shows the virtual environment name if it's active.
+      - properties:
+          cache_duration: none
+          command: basename $VIRTUAL_ENV
+        # template: "{{ .Venv }}"
+        template: "({{ .Output }}) "
+        foreground: p:virtual-environment-color
+        background: transparent
+        type: command
+        style: plain
+
+      # This segment shows the current directory path.
+      - properties:
+          cache_duration: none
+          style: full
+        template: "{{ .Path }}"
+        foreground: p:path-color
+        background: transparent
+        type: path
+        style: plain
+
+      # This segment shows the current Git branch (if in a git repository).
+      - properties:
+          branch_icon: ""
+          cache_duration: none
+          commit_icon: "@"
+          fetch_status: true
+        template: " git:(<p:git-branch-color>{{ .HEAD }}{{ if or (.Working.Changed) (.Staging.Changed) }}*{{ end }}{{ if gt .Behind 0 }} \U000F0045{{ end }}{{ if gt .Ahead 0 }} \U000F005D{{ end }}</>)"
+        foreground: p:git-color
+        background: transparent
+        type: git
+        style: plain
+
+  # This block defines the right-side prompt (rprompt).
+  - type: rprompt
+    overflow: hidden
+    segments:
+      # This segment shows the execution time for the last command if execution time exceeds 5 seconds.
+      - properties:
+          cache_duration: none
+          threshold: 5000
+        template: "{{ .FormattedMs }}"
+        foreground: p:execution-time-color
+        background: transparent
+        type: executiontime
+        style: plain
+
+  # This block defines the primary prompt where the command input symbol (❯) is displayed.
+  - type: prompt
+    alignment: left
+    segments:
+      - properties:
+          cache_duration: none
+        template: " ❯"
+        foreground: p:prompt-color
+        background: transparent
+        type: text
+        style: plain
+
+version: 3
+final_space: true
