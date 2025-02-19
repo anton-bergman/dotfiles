@@ -11,6 +11,9 @@ command_exists() {
 }
 
 
+# ---------- Install packages ----------
+echo -e "\nInstalling packages..."
+
 # Install oh-my-posh
 if ! command_exists oh-my-posh; then
     echo "Installing Oh-My-Posh..."

@@ -41,6 +41,36 @@ The script `install.sh` will:
 - Clone zsh plugins.
 - Set up symbolic links for the dotfiles.
 
+### Install Neovim Configuration
+
+This repository also includes my Neovim configuration. To set up Neovim and related dependencies, run the `install_nvim.sh` script:
+
+```bash
+cd ~/.dotfiles && ./install_nvim.sh
+```
+
+The script install_nvim.sh will:
+
+- Install packages Neovim, LuaRocks, Ripgrep (required for Telescope fuzzy finding).
+- Set up symbolic links for the Neovim configuration.
+
+This Neovim configuration includes:
+
+- **Lazy.nvim** as the plugin manager.
+- Pre-installed plugins for autocompletions, LSP support, color theme, syntax highlighting and more.
+
+To start using Neovim, simply run:
+
+```bash
+nvim
+```
+
+If you wish to update Neovim plugins, run the following inside Neovim:
+
+```bash
+:Lazy sync
+```
+
 ### Managing zsh Plugins
 
 This **.dotfiles** repository includes custom plugins for zsh. To install or update the plugins, you can run the `install.sh` and `update.sh` scripts:
