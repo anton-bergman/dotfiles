@@ -51,6 +51,12 @@ zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 # ----- Aliases -----
 alias ls='ls --color'
 
+# ----- Set language and formatting preferences ----- 
+export LANG=en_US.UTF-8          # Set the default language to English
+export LC_MESSAGES=en_US.UTF-8   # Ensure program messages are displayed in English  
+export LC_TIME=sv_SE.UTF-8       # Use Swedish formats for dates and times  
+export LC_NUMERIC=sv_SE.UTF-8    # Use Swedish formatting for numbers (e.g., decimal commas)  
+
 
 # ----- Keybindings -----
 
