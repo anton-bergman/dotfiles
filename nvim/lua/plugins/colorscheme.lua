@@ -11,5 +11,5 @@ return {
 
 		-- Set the colorscheme
 		vim.cmd("colorscheme vscode")
-	end
+	end,
 }

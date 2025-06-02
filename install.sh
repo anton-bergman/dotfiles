@@ -43,7 +43,7 @@ PLUGIN_DIR=~/.dotfiles/zsh_plugins
 
 if [ ! -d "$PLUGIN_DIR" ]; then
     # Create the zsh_plugins directory if it does not exist
-    mkdir -p "$HOME/zsh_plugins"
+    mkdir -p "$PLUGIN_DIR"
 fi
 
 # Clone zsh-autosuggestions plugin
