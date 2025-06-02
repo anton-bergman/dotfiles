@@ -10,6 +10,14 @@ vim.opt.relativenumber = true
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+	callback = function()
+		vim.opt_local.tabstop = 2
+		vim.opt_local.softtabstop = 2
+		vim.opt_local.shiftwidth = 2
+	end,
+})
 
 -- Enables smart indentation based on code structure
 vim.opt.smartindent = true
@@ -48,6 +56,12 @@ vim.keymap.set("v", "K", ":m '<-2<CR>gv=gv")
 -- Scroll up/down half a screen while keeping the cursor centered
 vim.keymap.set("n", "<C-d>", "<C-d>zz")
 vim.keymap.set("n", "<C-u>", "<C-u>zz")
+
+-- Enable navigation between Vim splits using Ctrl + h/j/k/l
+vim.keymap.set("n", "<c-h>", ":wincmd h<CR>")
+vim.keymap.set("n", "<c-j>", ":wincmd j<CR>")
+vim.keymap.set("n", "<c-k>", ":wincmd k<CR>")
+vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 
 -- In Visual Mode, delete the selected text without overwriting the clipboard
 -- register, effectively preserving the clipboard's contents while still
