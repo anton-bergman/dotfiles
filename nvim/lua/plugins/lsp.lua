@@ -27,10 +27,6 @@ return {
 
 			local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
-			vim.lsp.handlers["textDocument/hover"] = vim.lsp.with(vim.lsp.handlers.hover, { border = "rounded" })
-			vim.lsp.handlers["textDocument/signatureHelp"] =
-				vim.lsp.with(vim.lsp.handlers.signature_help, { border = "rounded" })
-
 			-- Diagnostics
 			vim.diagnostic.config({
 				virtual_text = true, -- Inline error messages
@@ -53,8 +49,12 @@ return {
 			})
 
 			-- Keymaps --
-			vim.keymap.set("n", "K", vim.lsp.buf.hover, { desc = "Show hover documentation" })
-			vim.keymap.set("i", "<C-k>", vim.lsp.buf.signature_help, { desc = "Show function signature help" })
+			vim.keymap.set("n", "K", function()
+				vim.lsp.buf.hover({ border = "rounded" })
+			end, { desc = "Show hover documentation" })
+			vim.keymap.set("i", "<C-k>", function()
+				vim.lsp.buf.signature_help({ border = "rounded" })
+			end, { desc = "Show function signature help" })
 			vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 			vim.keymap.set("n", "<leader>fs", function()
