@@ -37,6 +37,20 @@ else
     echo "Hack font already installed."
 fi
 
+# Install fastfetch — tool to show OS, hardware, and environment details in terminal
+if ! command_exists fastfetch; then
+    echo "Installing fastfetch..."
+    if [[ "$OSTYPE" == "darwin"* ]]; then
+        # macOS
+        brew install fastfetch
+    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+        # linux
+		sudo apt-get update && sudo apt-get install -y fastfetch
+    fi
+else
+    echo "fastfetch already installed."
+fi
+
 # ---------- Clone zsh plugins repositories ----------
 echo -e "\nCloning zsh plugins..."
 PLUGIN_DIR=~/.dotfiles/zsh_plugins
