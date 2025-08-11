@@ -87,7 +87,7 @@ cd ~/.dotfiles && ./update.sh
 
 1. **Create a Custom Profile:**
 
-   - Open iTerm2 and go to `Settings` > `Profiles`.
+   - Navigate to `Settings` > `Profiles`.
    - Click the "+" button to create a new profile and name it **Custom theme**.
    - Select the newly created profile, click on `Other Actions`, and choose `Set as Default` to make it the default profile.
 
@@ -108,8 +108,13 @@ cd ~/.dotfiles && ./update.sh
 
 5. **Configure Key Mappings:**
 
-   - Go to `Settings` > `Profiles` > `Keys` tab > `Key Mappings`.
+   - Navigate to `Settings` > `Profiles` > `Keys` tab > `Key Mappings`.
    - Select `Presets` and chose the option `Natural Text Editing`.
+
+6. **Automatically run Fastfetch:**
+
+    - Navigate to `Settings` > `Profiles` > `General`.
+    - In the input field `Send text at start`, add `fastfetch` to show system info on terminal startup.
 
 ### Customize Terminal Color Theme and Prompt Theme
 
