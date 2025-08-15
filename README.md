@@ -1,4 +1,4 @@
-# .dotfiles
+# dotfiles
 
 This repository contains the dotfiles for configuring my development environment, including terminal settings, plugins, and other personal customizations.
 
@@ -18,20 +18,20 @@ This repository contains the dotfiles for configuring my development environment
 brew install --cask iterm2
 ```
 
-### Install .dotfiles
+### Install dotfiles
 
 To set up your development environment, run the following installation script. This will install required software, clone necessary plugins, and set up your dotfiles.
 
 1. Clone this repository:
 
 ```bash
-git clone https://github.com/anton-bergman/.dotfiles.git ~/.dotfiles
+git clone https://github.com/anton-bergman/dotfiles.git ~/dotfiles
 ```
 
 2. Run the `install.sh` script to set up your environment:
 
 ```bash
-cd ~/.dotfiles && ./install.sh
+cd ~/dotfiles && ./install.sh
 ```
 
 The script `install.sh` will:
@@ -46,7 +46,7 @@ The script `install.sh` will:
 This repository also includes my Neovim configuration. To set up Neovim and related dependencies, run the `install_nvim.sh` script:
 
 ```bash
-cd ~/.dotfiles && ./install_nvim.sh
+cd ~/dotfiles && ./install_nvim.sh
 ```
 
 The script install_nvim.sh will:
@@ -73,14 +73,14 @@ If you wish to update Neovim plugins, run the following inside Neovim:
 
 ### Managing zsh Plugins
 
-This **.dotfiles** repository includes custom plugins for zsh. To install or update the plugins, you can run the `install.sh` and `update.sh` scripts:
+This **dotfiles** repository includes custom plugins for zsh. To install or update the plugins, you can run the `install.sh` and `update.sh` scripts:
 
 - **To install the plugins for the first time:** Run `install.sh` as mentioned above. This will clone the plugins: `zsh-autosuggestions`, `zsh-syntax-highlighting`, and `zsh-completions` and set them up.
 
 - **To update existing plugins:** Run the `update.sh` script to pull the latest changes from the plugin repositories:
 
 ```bash
-cd ~/.dotfiles && ./update.sh
+cd ~/dotfiles && ./update.sh
 ```
 
 ### Configure iTerm2
@@ -99,7 +99,7 @@ cd ~/.dotfiles && ./update.sh
 3. **Select a Color Theme:**
 
    - Navigate to `Settings` > `Profiles` > `Colors` tab.
-   - Select `Color Presets`, choose `Import` and select your preferred color theme from `~/.dotfiles/iterm2-color-themes`.
+   - Select `Color Presets`, choose `Import` and select your preferred color theme from `~/dotfiles/iterm2-color-themes`.
 
 4. **Select Font:**
 
@@ -120,10 +120,10 @@ cd ~/.dotfiles && ./update.sh
 
 This repository includes a collection of custom color themes for iTerm2 and prompt themes for Oh-My-Posh.
 
-- **Oh-My-Posh Prompt Theme:** Create or customize your own Oh-My-Posh prompt theme by modifying or adding YAML configuration files located under `.dotfiles/oh-my-posh`. These themes can be easily switched by changing the theme path in the configuration file `.dotfiles/zshrc`.
+- **Oh-My-Posh Prompt Theme:** Create or customize your own Oh-My-Posh prompt theme by modifying or adding YAML configuration files located under `dotfiles/oh-my-posh`. These themes can be easily switched by changing the theme path in the configuration file `dotfiles/zshrc`.
 
 - **iTerm2 Color Theme:** To customize the color theme of your iTerm2 terminal you have two main options.
 
   - **Download a Theme:** Download a iTerm2 color theme from [iTerm2 Color Schemes](https://iterm2colorschemes.com/).
 
-  - **Create your own theme / Customize an existing theme:** To create your own theme or customize an existing theme, navigate to `Settings` > `Profiles` > `Colors`. From there, you can tweak the colors to your liking. Once you have customized a theme, save it under `.dotfiles/iterm2-color-themes` by selecting `Color Presets` > `Export`.
+  - **Create your own theme / Customize an existing theme:** To create your own theme or customize an existing theme, navigate to `Settings` > `Profiles` > `Colors`. From there, you can tweak the colors to your liking. Once you have customized a theme, save it under `dotfiles/iterm2-color-themes` by selecting `Color Presets` > `Export`.

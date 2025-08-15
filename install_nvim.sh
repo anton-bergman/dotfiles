@@ -73,7 +73,7 @@ if [ -e "$HOME/.config/nvim" ] || [ -L "$HOME/.config/nvim" ]; then
     rm -rf "$HOME/.config/nvim"
 fi
 
-# Add a symbolic link between ~/.dotfiles/nvim and ~/.config/nvim
-ln -s "$HOME/.dotfiles/nvim" "$HOME/.config/nvim"
+# Add a symbolic link between ~/dotfiles/nvim and ~/.config/nvim
+ln -s "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
 
 echo "Neovim setup completed!"
