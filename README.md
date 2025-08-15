@@ -1,129 +1,188 @@
 # dotfiles
 
-This repository contains the dotfiles for configuring my development environment, including terminal settings, plugins, and other personal customizations.
+This repository contains my personal dotfiles for configuring and automating the setup of my development environment.
 
-## Installation and Setup
+## Table of Contents
 
-### Prerequisites
+- [Overview](#overview)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+  - [Install Dotfiles](#install-dotfiles)
+  - [Install Zsh Plugins](#install-zsh-plugins)
+  - [Install Neovim](#install-neovim)
+  - [Install VS Code](#install-vs-code)
+  - [Install Tmux](#install-tmux)
+  - [Install CLI Tools](#install-cli-tools)
+- [Directory Structure](#directory-structure)
+- [Troubleshooting](#troubleshooting)
 
-1. **Homebrew:** Ensure Homebrew is installed. You can install it via:
+---
+
+## Prerequisites
+
+Before proceeding, ensure the following are installed:
+
+1. **Homebrew:** Install Homebrew (macOS package manager) using:
+
+   ```bash
+   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+   ```
+
+2. **iTerm2:** Install iTerm2 (recommended terminal for macOS):
+   ```bash
+   brew install --cask iterm2
+   ```
+
+---
+
+## Installation
+
+### Install Dotfiles
+
+1. Clone this repository into your home directory:
+
+   ```bash
+   git clone https://github.com/anton-bergman/dotfiles.git ~/dotfiles
+   ```
+
+2. Follow the individual installation steps for each component (e.g., Zsh, Neovim, VS Code, Tmux, CLI tools) as outlined below.
+
+---
+
+### Install Zsh Plugins
+
+To set up Zsh plugins, run the Zsh installation script:
 
 ```bash
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+cd ~/dotfiles && ./install_zsh.sh
 ```
 
-2. **iTerm2:** Install your terminal of choice. I prefer iTerm2 (recommended for macOS), install it using Homebrew:
+This script will:
 
-```bash
-brew install --cask iterm2
-```
+- Clone and set up the following Zsh plugins:
+  - `zsh-autosuggestions`
+  - `zsh-syntax-highlighting`
+  - `zsh-completions`
+- Set up symbolic links for `.zshrc`.
 
-### Install dotfiles
+This script will:
 
-To set up your development environment, run the following installation script. This will install required software, clone necessary plugins, and set up your dotfiles.
+- Install **Oh-My-Posh** and the **Hack Nerd Font**.
+- Clone Zsh plugins.
+- Set up symbolic links for Zsh, Vim, and other configuration files.
 
-1. Clone this repository:
+---
 
-```bash
-git clone https://github.com/anton-bergman/dotfiles.git ~/dotfiles
-```
+### Install Neovim
 
-2. Run the `install.sh` script to set up your environment:
-
-```bash
-cd ~/dotfiles && ./install.sh
-```
-
-The script `install.sh` will:
-
-- Install **Oh-My-Posh**.
-- Install the **Hack Nerd Font**.
-- Clone zsh plugins.
-- Set up symbolic links for the dotfiles.
-
-### Install Neovim Configuration
-
-This repository also includes my Neovim configuration. To set up Neovim and related dependencies, run the `install_nvim.sh` script:
+To set up Neovim and its dependencies, run the Neovim installation script:
 
 ```bash
 cd ~/dotfiles && ./install_nvim.sh
 ```
 
-The script install_nvim.sh will:
+This script will:
 
-- Install packages Neovim, LuaRocks, Ripgrep (required for Telescope fuzzy finding).
-- Set up symbolic links for the Neovim configuration.
+- Install **Neovim**, **LuaRocks**, and **Ripgrep** _(required for Telescope fuzzy finding)_.
+- Set up symbolic links for Neovim configuration.
+- Configure **Lazy.nvim** as the plugin manager with pre-installed plugins for LSP, autocompletion, syntax highlighting, and more.
 
-This Neovim configuration includes:
-
-- **Lazy.nvim** as the plugin manager.
-- Pre-installed plugins for autocompletions, LSP support, color theme, syntax highlighting and more.
-
-To start using Neovim, simply run:
+To start Neovim:
 
 ```bash
 nvim
 ```
 
-If you wish to update Neovim plugins, run the following inside Neovim:
+To update plugins inside Neovim:
 
 ```bash
 :Lazy sync
 ```
 
-### Managing zsh Plugins
+---
 
-This **dotfiles** repository includes custom plugins for zsh. To install or update the plugins, you can run the `install.sh` and `update.sh` scripts:
+### Install VS Code
 
-- **To install the plugins for the first time:** Run `install.sh` as mentioned above. This will clone the plugins: `zsh-autosuggestions`, `zsh-syntax-highlighting`, and `zsh-completions` and set them up.
-
-- **To update existing plugins:** Run the `update.sh` script to pull the latest changes from the plugin repositories:
+To set up VS Code, run the VS Code installation script:
 
 ```bash
-cd ~/dotfiles && ./update.sh
+cd ~/dotfiles && ./install_vscode.sh
 ```
 
-### Configure iTerm2
+This script will:
 
-1. **Create a Custom Profile:**
+- Install VS Code (if not already installed).
+- Install extensions listed in `vscode/vscode-extensions.txt`.
+- Set up symbolic links for VS Code settings.
 
-   - Navigate to `Settings` > `Profiles`.
-   - Click the "+" button to create a new profile and name it **Custom theme**.
-   - Select the newly created profile, click on `Other Actions`, and choose `Set as Default` to make it the default profile.
+---
 
-2. **Disable Dimming on Inactive Split Panes:**
+### Install Tmux
 
-   - Navigate to `Settings` > `Appearance` > `Dimming`.
-   - Uncheck the option `Dim inactive split panes`.
+To set up Tmux run the Tmux installation script:
 
-3. **Select a Color Theme:**
+```bash
+cd ~/dotfiles && ./install_tmux.sh
+```
 
-   - Navigate to `Settings` > `Profiles` > `Colors` tab.
-   - Select `Color Presets`, choose `Import` and select your preferred color theme from `~/dotfiles/iterm2-color-themes`.
+This script will:
 
-4. **Select Font:**
+- Install Tmux and the Tmux Plugin Manager (TPM).
+- Set up symbolic links for Tmux configuration.
 
-   - Navigate to `Settings` > `Profiles` > `Text` tab.
-   - In the **Font**-dropdown menu select `Hack Nerd Font Mono`.
+---
 
-5. **Configure Key Mappings:**
+### Install CLI Tools
 
-   - Navigate to `Settings` > `Profiles` > `Keys` tab > `Key Mappings`.
-   - Select `Presets` and chose the option `Natural Text Editing`.
+To install additional CLI tools:
 
-6. **Automatically run Fastfetch:**
+1. Run the CLI tools installation script:
+   ```bash
+   cd ~/dotfiles/cli-tools && ./install_cli_tools.sh
+   ```
 
-    - Navigate to `Settings` > `Profiles` > `General`.
-    - In the input field `Send text at start`, add `fastfetch` to show system info on terminal startup.
+This script will install:
 
-### Customize Terminal Color Theme and Prompt Theme
+- **Fastfetch:** A fast system information tool.
+- **TLDR:** Simplified and community-driven man pages.
 
-This repository includes a collection of custom color themes for iTerm2 and prompt themes for Oh-My-Posh.
+---
 
-- **Oh-My-Posh Prompt Theme:** Create or customize your own Oh-My-Posh prompt theme by modifying or adding YAML configuration files located under `dotfiles/oh-my-posh`. These themes can be easily switched by changing the theme path in the configuration file `dotfiles/zshrc`.
+## Directory Structure
 
-- **iTerm2 Color Theme:** To customize the color theme of your iTerm2 terminal you have two main options.
+The repository is organized as follows:
 
-  - **Download a Theme:** Download a iTerm2 color theme from [iTerm2 Color Schemes](https://iterm2colorschemes.com/).
+```
+dotfiles/
+├── cli-tools/               # CLI tools installation scripts
+├── iterm2/                  # iTerm2 configuration files
+├── macos/                   # macOS-specific settings and scripts
+├── nvim/                    # Neovim configuration
+├── tmux/                    # Tmux configuration
+├── vscode/                  # VS Code settings and extensions
+├── zsh/                     # Zsh configuration and plugins
+├── install_nvim.sh          # Neovim installation script
+├── install_tmux.sh          # Tmux installation script
+├── install_vscode.sh        # VS Code installation script
+├── install_zsh.sh           # Zsh installation script
+└── README.md                # Documentation
+```
 
-  - **Create your own theme / Customize an existing theme:** To create your own theme or customize an existing theme, navigate to `Settings` > `Profiles` > `Colors`. From there, you can tweak the colors to your liking. Once you have customized a theme, save it under `dotfiles/iterm2-color-themes` by selecting `Color Presets` > `Export`.
+---
+
+## Troubleshooting
+
+- **Permission Issues:** Ensure all scripts have executable permissions:
+
+  ```bash
+  chmod +x ~/dotfiles/*.sh ~/dotfiles/cli-tools/*.sh
+  ```
+
+- **Missing Dependencies:** Verify Homebrew and required tools are installed.
+
+- **Symbolic Link Issues:** Remove existing conflicting files or directories before running the scripts:
+  ```bash
+  rm -rf ~/.config/nvim ~/.config/tmux ~/.zshrc
+  ```
+
+---
