@@ -15,9 +15,14 @@ return {
 					"lua_ls",
 					"pyright",
 					"ts_ls",
+					"jsonls",
 				},
 			})
 		end,
+	},
+	-- Provides JSON/YAML schemas for LSP autocompletion and validation
+	{
+		"b0o/schemastore.nvim",
 	},
 	-- LSP configuration
 	{
@@ -46,6 +51,15 @@ return {
 			})
 			lspconfig.ruff.setup({
 				capabilities = capabilities,
+			})
+			lspconfig.jsonls.setup({
+				capabilities = capabilities,
+				settings = {
+					json = {
+						schemas = require("schemastore").json.schemas(),
+						validate = { enable = true },
+					},
+				},
 			})
 
 			-- Keymaps --
