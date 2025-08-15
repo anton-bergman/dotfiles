@@ -37,51 +37,40 @@ else
     echo "Hack font already installed."
 fi
 
-# Install fastfetch — tool to show OS, hardware, and environment details in terminal
-if ! command_exists fastfetch; then
-    echo "Installing fastfetch..."
-    if [[ "$OSTYPE" == "darwin"* ]]; then
-        # macOS
-        brew install fastfetch
-    elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-        # linux
-		sudo apt-get update && sudo apt-get install -y fastfetch
-    fi
-else
-    echo "fastfetch already installed."
-fi
-
 # ---------- Clone zsh plugins repositories ----------
 echo -e "\nCloning zsh plugins..."
-PLUGIN_DIR=~/dotfiles/zsh_plugins
+PLUGIN_DIR=~/dotfiles/zsh/plugins
 
 if [ ! -d "$PLUGIN_DIR" ]; then
-    # Create the zsh_plugins directory if it does not exist
+    # Create the zsh/plugins directory if it does not exist
     mkdir -p "$PLUGIN_DIR"
 fi
 
 # Clone zsh-autosuggestions plugin
 if [ ! -d "$PLUGIN_DIR/zsh-autosuggestions" ]; then
-    echo "Cloning zsh-autosuggestions..."
+    echo -e "\nCloning zsh-autosuggestions..."
     git clone https://github.com/zsh-users/zsh-autosuggestions.git "$PLUGIN_DIR/zsh-autosuggestions"
 else
-    echo "zsh-autosuggestions already cloned."
+    echo -e "\nzsh-autosuggestions already cloned. Updating zsh-autosuggestions..."
+    cd "$PLUGIN_DIR/zsh-autosuggestions" && git pull origin master
 fi
 
 # Clone zsh-syntax-highlighting plugin
 if [ ! -d "$PLUGIN_DIR/zsh-syntax-highlighting" ]; then
-    echo "Cloning zsh-syntax-highlighting..."
+    echo -e "\nCloning zsh-syntax-highlighting..."
     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$PLUGIN_DIR/zsh-syntax-highlighting"
 else
-    echo "zsh-syntax-highlighting already cloned."
+    echo -e "\nzsh-syntax-highlighting already cloned. Updating zsh-syntax-highlighting..."
+    cd "$PLUGIN_DIR/zsh-syntax-highlighting" && git pull origin master
 fi
 
 # Clone zsh-completions plugin
 if [ ! -d "$PLUGIN_DIR/zsh-completions" ]; then
-    echo "Cloning zsh-completions..."
+    echo -e "\nCloning zsh-completions..."
     git clone https://github.com/zsh-users/zsh-completions.git "$PLUGIN_DIR/zsh-completions"
 else
-    echo "zsh-completions already cloned."
+    echo -e "\nzsh-completions already cloned. Updating zsh-completions..."
+    cd "$PLUGIN_DIR/zsh-completions" && git pull origin master
 fi
 
 
@@ -95,7 +84,7 @@ if [ ! -f "$HOME/.zshrc" ]; then
 fi
 
 # Add symbolic link for zsh config file
-ln -sf "$DOTFILES_DIR/zshrc" "$HOME/.zshrc"
+ln -sf "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
 
 if [ ! -f "$HOME/.vimrc" ]; then
     # Create the .vimrc file if it does not exist
@@ -103,6 +92,6 @@ if [ ! -f "$HOME/.vimrc" ]; then
 fi
 
 # Add symbolic link for vim config file
-ln -sf "$DOTFILES_DIR/vimrc" "$HOME/.vimrc"
+ln -sf "$DOTFILES_DIR/vim/vimrc" "$HOME/.vimrc"
 
 echo "Dotfiles setup completed!"
