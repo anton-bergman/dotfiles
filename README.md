@@ -4,7 +4,6 @@ This repository contains my personal dotfiles for configuring and automating the
 
 ## Table of Contents
 
-- [Overview](#overview)
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
   - [Install Dotfiles](#install-dotfiles)
