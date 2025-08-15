@@ -50,8 +50,8 @@ if [ -e "$HOME/.config/tmux" ] || [ -L "$HOME/.config/tmux" ]; then
     rm -rf "$HOME/.config/tmux"
 fi
 
-# Add a symbolic link between ~/.dotfiles/tmux and ~/.config/tmux
-ln -s "$HOME/.dotfiles/tmux" "$HOME/.config/tmux"
+# Add a symbolic link between ~/dotfiles/tmux and ~/.config/tmux
+ln -s "$HOME/dotfiles/tmux" "$HOME/.config/tmux"
 
 echo "Tmux setup completed!"
 

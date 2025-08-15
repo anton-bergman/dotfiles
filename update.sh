@@ -11,7 +11,7 @@ dir_exists() {
 }
 
 # Update zsh plugins
-PLUGIN_DIR=~/.dotfiles/zsh_plugins
+PLUGIN_DIR=~/dotfiles/zsh_plugins
 
 # Update zsh-autosuggestions plugin
 if dir_exists "$PLUGIN_DIR/zsh-autosuggestions"; then

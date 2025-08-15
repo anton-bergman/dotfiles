@@ -53,7 +53,7 @@ fi
 
 # ---------- Clone zsh plugins repositories ----------
 echo -e "\nCloning zsh plugins..."
-PLUGIN_DIR=~/.dotfiles/zsh_plugins
+PLUGIN_DIR=~/dotfiles/zsh_plugins
 
 if [ ! -d "$PLUGIN_DIR" ]; then
     # Create the zsh_plugins directory if it does not exist
@@ -87,7 +87,7 @@ fi
 
 # ---------- Symlink dotfiles ----------
 echo -e "\nSetting up dotfiles..."
-DOTFILES_DIR="$HOME/.dotfiles"
+DOTFILES_DIR="$HOME/dotfiles"
 
 if [ ! -f "$HOME/.zshrc" ]; then
     # Create the .zshrc file if it does not exist

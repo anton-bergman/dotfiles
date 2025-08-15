@@ -5,16 +5,16 @@ if [[ -f "/opt/homebrew/bin/brew" ]] then
 fi
 
 # Initialize Oh-My-Posh with a custom theme for the Zsh prompt
-eval "$(oh-my-posh init zsh --config ~/.dotfiles/oh-my-posh/my-theme.yaml)"
+eval "$(oh-my-posh init zsh --config ~/dotfiles/oh-my-posh/my-theme.yaml)"
 
 
 # ----- Plugins -----
 
 # Load zsh-autosuggestions plugin
-source ~/.dotfiles/zsh_plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
+source ~/dotfiles/zsh_plugins/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 
 # Load zsh-syntax-highlighting plugin
-source ~/.dotfiles/zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
+source ~/dotfiles/zsh_plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 # zsh-syntax-highlighting allows customizing the colors of different command components.
 # Set the color using different formats:
 # - Hex color: "fg=#123456" 
@@ -31,9 +31,9 @@ ZSH_HIGHLIGHT_STYLES[precommand]="fg=10"    # Set color for precommand parts (e.
 ZSH_HIGHLIGHT_STYLES[arg0]="fg=10"          # Set color for the first argument of the command (arg0) to Bright Green
 
 # Load zsh-completions plugin
-source ~/.dotfiles/zsh_plugins/zsh-completions/zsh-completions.plugin.zsh
+source ~/dotfiles/zsh_plugins/zsh-completions/zsh-completions.plugin.zsh
 # Make the zsh-completions plugin functions available
-fpath=(~/.dotfiles/zsh_plugins/zsh-completions/src $fpath)
+fpath=(~/dotfiles/zsh_plugins/zsh-completions/src $fpath)
 # Initialize the Zsh completion system
 autoload -U compinit && compinit
 
