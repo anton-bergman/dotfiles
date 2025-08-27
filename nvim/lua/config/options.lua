@@ -11,7 +11,21 @@ vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.api.nvim_create_autocmd("FileType", {
-	pattern = { "javascript", "typescript", "javascriptreact", "typescriptreact" },
+	pattern = {
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact",
+		"css",
+		"scss",
+		"html",
+		"json",
+		"jsonc",
+		"yaml",
+		"markdown",
+		"markdown.mdx",
+		"graphql",
+	},
 	callback = function()
 		vim.opt_local.tabstop = 2
 		vim.opt_local.softtabstop = 2
@@ -39,7 +53,6 @@ vim.opt.colorcolumn = "80"
 
 -- Enable system clipboard for all yank/paste operations
 vim.opt.clipboard = "unnamedplus"
-
 
 ---------- Keymaps ----------
 

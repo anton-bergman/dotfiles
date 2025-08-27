@@ -2,19 +2,46 @@ return {
 	"nvimtools/none-ls.nvim",
 	dependencies = {
 		"nvimtools/none-ls-extras.nvim",
+		"jay-babu/mason-null-ls.nvim",
 	},
 	config = function()
 		local null_ls = require("null-ls")
+		local mason_null_ls = require("mason-null-ls")
 
+		-- Ensure CLI tools are installed
+		mason_null_ls.setup({
+			ensure_installed = {
+				"stylua",
+				"prettier",
+			},
+			automatic_installation = true,
+		})
+
+		-- Configure null-ls to use CLI tools as LSP-like sources for formatting
 		null_ls.setup({
 			sources = {
 
 				-- Lua
 				null_ls.builtins.formatting.stylua,
 
-				-- JavaScript/TypeScript
-				require("none-ls.diagnostics.eslint_d"),
-				require("none-ls.formatting.eslint_d"),
+				-- Prettier for web/config files
+				null_ls.builtins.formatting.prettier.with({
+					filetypes = {
+						"javascript",
+						"javascriptreact",
+						"typescript",
+						"typescriptreact",
+						"css",
+						"scss",
+						"html",
+						"json",
+						"jsonc",
+						"yaml",
+						"markdown",
+						"markdown.mdx",
+						"graphql",
+					},
+				}),
 			},
 		})
 	end,
