@@ -58,17 +58,12 @@ cd ~/dotfiles && ./install_zsh.sh
 
 This script will:
 
+- Install **Oh-My-Posh** and the **Hack Nerd Font**.
 - Clone and set up the following Zsh plugins:
   - `zsh-autosuggestions`
   - `zsh-syntax-highlighting`
   - `zsh-completions`
 - Set up symbolic links for `.zshrc`.
-
-This script will:
-
-- Install **Oh-My-Posh** and the **Hack Nerd Font**.
-- Clone Zsh plugins.
-- Set up symbolic links for Zsh, Vim, and other configuration files.
 
 ---
 
