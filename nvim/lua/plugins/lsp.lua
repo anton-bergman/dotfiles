@@ -62,17 +62,25 @@ return {
 			vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 			vim.keymap.set("n", "<leader>fs", function()
-				-- Organize imports
-				vim.lsp.buf.code_action({
-					context = { only = { "source.organizeImports.ruff" } },
-					apply = true,
-				})
+				-- Current buffer (e.i current open file)
+				local bufnr = 0
 
-				-- Format the document
-				-- vim.lsp.buf.format({ name = "ruff" })
-				vim.lsp.buf.format()
+				-- Run code actions if any attached LSP supports it
+				for _, client in ipairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
+					if client.supports_method("textDocument/codeAction") then
+						-- Organize Python imports
+						vim.lsp.buf.code_action({
+							context = { only = { "source.organizeImports.ruff" } },
+							apply = true,
+						})
+						break
+					end
+				end
 
-				-- Save the file
+				-- 2️⃣ Format the buffe
+				vim.lsp.buf.format({ bufnr = bufnr })
+
+				-- Save the buffer
 				vim.cmd("write")
 			end, { desc = "Organize imports, format, and save document" })
 			vim.keymap.set("n", "<leader>E", function()
