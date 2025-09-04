@@ -77,7 +77,7 @@ return {
 					end
 				end
 
-				-- 2️⃣ Format the buffe
+				-- Format the buffe
 				vim.lsp.buf.format({ bufnr = bufnr })
 
 				-- Save the buffer
