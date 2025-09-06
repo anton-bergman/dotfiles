@@ -67,7 +67,7 @@
     "titleExclusions": "",
     "spacesExclusions": "",
     "exclusionsAsRegex": false,
-    "displayAllSpacesOnAllScreens": false,
+    "displayAllSpacesOnAllScreens": true,
     "hideDuplicateAppsInSpaces": false,
     "displayStickyWindowsSeparately": false,
     "hideCreateSpaceButton": false,
