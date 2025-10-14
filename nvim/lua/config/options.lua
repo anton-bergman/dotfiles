@@ -87,16 +87,22 @@ vim.opt.colorcolumn = "80"
 -- Enable system clipboard for all yank/paste operations
 vim.opt.clipboard = "unnamedplus"
 
+-- Automatically reread files changed outside of Neovim
+vim.opt.autoread = true
+
 ---------- Keymaps ----------
 
 -- Set space as leader key
 vim.g.mapleader = " "
 
--- Map <leader>e to the :Explore command to open the file explorer
-vim.keymap.set("n", "<leader>e", ":Explore<CR>", { desc = "Open file explorer" })
+-- Map <leader>e to the :Explore command to open the file explorer (Currently using nvim-tree instead)
+-- vim.keymap.set("n", "<leader>e", ":Explore<CR>", { desc = "Open file explorer" })
 
 -- Map <leader>s to save the current file
 vim.keymap.set("n", "<leader>s", ":w<CR>", { desc = "Save file" })
+
+-- Quit all windows (soft)
+vim.keymap.set("n", "<leader>Q", ":qa<CR>", { desc = "Quit all windows (soft)" })
 
 -- Move selected lines up (K) or down (J) without losing the selection
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")

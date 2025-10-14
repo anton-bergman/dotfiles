@@ -14,7 +14,7 @@ return {
 
 			-- Keymap to open Telescope's live grep and search for text across the project files
 			vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
-		end
+		end,
 	},
 	{
 		"nvim-telescope/telescope-ui-select.nvim",
@@ -22,12 +22,11 @@ return {
 			require("telescope").setup({
 				extensions = {
 					["ui-select"] = {
-						require("telescope.themes").get_dropdown {
-						}
-					}
-				}
+						require("telescope.themes").get_dropdown({}),
+					},
+				},
 			})
 			require("telescope").load_extension("ui-select")
-		end
-	}
+		end,
+	},
 }
