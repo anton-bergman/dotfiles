@@ -52,6 +52,11 @@ docker.docker
 github.vscode-github-actions
 
 # =========================
+# Configuration / Data Files
+# =========================
+tamasfe.even-better-toml
+
+# =========================
 # Git
 # =========================
 mhutchie.git-graph
