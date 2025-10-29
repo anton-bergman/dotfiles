@@ -9,13 +9,30 @@ return {
 			filters = {
 				git_ignored = true, -- Hide git-ignored files
 				dotfiles = false, -- Show dotfiles
-				exclude = { ".env" }, -- Do not hide '.env'-files
+				exclude = { ".env", "AGENTS.md", "efs" }, -- Don't hide these files in file explorer
 			},
 			renderer = {
 				highlight_git = true,
 				icons = {
 					show = {
 						git = false,
+					},
+					glyphs = {
+						folder = {
+							arrow_closed = "\u{f061}",
+							arrow_open = "\u{f063}",
+						},
+					},
+				},
+				indent_markers = {
+					enable = true,
+					inline_arrows = false,
+					icons = {
+						corner = "└",
+						edge = "│",
+						item = "│",
+						bottom = "─",
+						none = " ",
 					},
 				},
 			},

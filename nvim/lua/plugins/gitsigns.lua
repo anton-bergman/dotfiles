@@ -11,5 +11,12 @@ return {
 			{ desc = "Gitsigns: Toggle line blame" }
 		)
 		vim.keymap.set("n", "<leader>gr", ":Gitsigns reset_hunk<CR>", { desc = "Gitsigns: Reset hunk" })
+
+		vim.keymap.set("v", "<leader>gr", function()
+			local start_line = vim.fn.line("v")
+			local end_line = vim.fn.line(".")
+			vim.cmd("normal! <Esc>") -- exit visual mode
+			require("gitsigns").reset_hunk({ start_line, end_line })
+		end, { desc = "Gitsigns: Reset selected hunks" })
 	end,
 }
