@@ -8,9 +8,9 @@ echo "Installing CLI tools..."
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     if command -v apt >/dev/null; then
         sudo apt update
-        sudo apt install -y fastfetch tlrc
+        sudo apt install -y fastfetch tlrc lazygit
     else
-        echo "Unsupported Linux distro. Please install fastfetch and tldr manually."
+        echo "Unsupported Linux distro. Please install fastfetch, tldr, and lazygit manually."
         exit 1
     fi
 elif [[ "$OSTYPE" == "darwin"* ]]; then
@@ -19,7 +19,7 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
         echo "Homebrew not found. Installing Homebrew first..."
         /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
     fi
-    brew install fastfetch tlrc
+    brew install fastfetch tlrc lazygit
 else
     echo "Unsupported OS. Please install CLI tools manually."
     exit 1

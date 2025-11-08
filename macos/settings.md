@@ -7,6 +7,7 @@ This document lists my personal macOS configuration preferences for setting up a
 - [Desktop & Dock](#desktop--dock)
 - [Finder](#finder)
 - [Control Centre](#control-centre)
+- [Keyboard](#keyboard)
 - [Ubersicht](#ubersicht)
 
 ---
@@ -59,6 +60,13 @@ Navigate to `System Settings` > `Control Centre`
 
 - **Automatically hide and show the menu bar**: ALWAYS
   _(Only relevant if using SketchyBar or Simple-bar for menu bar management)_
+
+## Keyboard
+
+Navigate to `System Settings` > `Keyboard`
+
+- **Key repeat rate:** Fast
+- **Delay until repeat:** Short
 
 ## Ubersicht
 

@@ -7,9 +7,7 @@ return {
 	config = function()
 		require("nvim-tree").setup({
 			filters = {
-				git_ignored = true, -- Hide git-ignored files
-				dotfiles = false, -- Show dotfiles
-				exclude = { ".env", "AGENTS.md", "efs" }, -- Don't hide these files in file explorer
+				git_ignored = false, -- Hide git-ignored files
 			},
 			renderer = {
 				highlight_git = true,
