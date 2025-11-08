@@ -47,6 +47,7 @@ Navigate to `Finder Settings` > `Sidebar`
 Navigate to `Finder Settings` > `Advanced`
 
 - **Show all filename extensions:** ON
+- **When performing a search:** Search the Current Folder
 
 ### View
 
