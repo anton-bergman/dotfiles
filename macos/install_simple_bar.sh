@@ -18,11 +18,11 @@ mkdir -p "$UEBERSICHT_WIDGETS_DIR"
 
 # Clone or update the simple-bar repo
 if [ -d "$SIMPLEBAR_REPO_DIR/.git" ]; then
-    echo "simple-bar repo already exists. Pulling latest changes..."
-    git -C "$SIMPLEBAR_REPO_DIR" pull
+	echo "simple-bar repo already exists. Pulling latest changes..."
+	git -C "$SIMPLEBAR_REPO_DIR" pull
 else
-    echo "Cloning simple-bar repo..."
-    git clone "$SIMPLEBAR_REPO_URL" "$SIMPLEBAR_REPO_DIR"
+	echo "Cloning simple-bar repo..."
+	git clone "$SIMPLEBAR_REPO_URL" "$SIMPLEBAR_REPO_DIR"
 fi
 
 # Create symlink for Simple-Bar config

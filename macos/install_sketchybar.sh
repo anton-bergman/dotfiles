@@ -9,7 +9,6 @@ SKETCHYBAR_CONFIG_TARGET_DIR="$HOME/.config/sketchybar"
 SKETCHYBAR_CONFIG_TARGET="$HOME/.config/sketchybar/sketchybarrc"
 SKETCHYBAR_PLUGINS_TARGET_DIR="$HOME/.config/sketchybar/plugins"
 
-
 # Packages
 echo "Installing Dependencies"
 brew install lua
@@ -42,13 +41,13 @@ echo "Creating SketchyBar config directory..."
 mkdir -p "$SKETCHYBAR_CONFIG_TARGET_DIR"
 
 # Create symlinks
-EXCLUDE_FILE="install.sh"  # Do not create a symlink for install.sh
+EXCLUDE_FILE="install.sh" # Do not create a symlink for install.sh
 for item in "$SKETCHYBAR_DOTFILES_DIR"/*; do
-    filename=$(basename "$item")
-    if [[ "$filename" == "$EXCLUDE_FILE" ]]; then
-        continue
-    fi
-    ln -sfn "$item" "$SKETCHYBAR_CONFIG_TARGET_DIR/$filename"
+	filename=$(basename "$item")
+	if [[ "$filename" == "$EXCLUDE_FILE" ]]; then
+		continue
+	fi
+	ln -sfn "$item" "$SKETCHYBAR_CONFIG_TARGET_DIR/$filename"
 done
 
 brew services restart sketchybar

@@ -16,8 +16,8 @@ mkdir -p "$AEROSPACE_CONFIG_TARGET_DIR"
 
 # Backup existing AeroSpace config if it's not a symlink
 if [ -e "$AEROSPACE_CONFIG_TARGET" ] && [ ! -L "$AEROSPACE_CONFIG_TARGET" ]; then
-    echo "Backing up existing AeroSpace config..."
-    mv "$AEROSPACE_CONFIG_TARGET" "$AEROSPACE_CONFIG_TARGET.bak"
+	echo "Backing up existing AeroSpace config..."
+	mv "$AEROSPACE_CONFIG_TARGET" "$AEROSPACE_CONFIG_TARGET.bak"
 fi
 
 # Create symlink for AeroSpace config
