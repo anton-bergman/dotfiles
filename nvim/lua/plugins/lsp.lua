@@ -3,7 +3,11 @@ return {
 	{
 		"williamboman/mason.nvim",
 		config = function()
-			require("mason").setup()
+			require("mason").setup({
+				ui = {
+					border = "rounded",
+				},
+			})
 		end,
 	},
 	-- Mason-LSPconfig to simplify LSP server installation
@@ -12,13 +16,12 @@ return {
 		config = function()
 			require("mason-lspconfig").setup({
 				ensure_installed = {
-					-- Language Servers
 					"lua_ls",
 					"pyright",
 					"ts_ls",
-
-					-- Linters
 					"ruff",
+					"taplo",
+					"dockerls",
 				},
 			})
 		end,
@@ -27,10 +30,6 @@ return {
 	{
 		"neovim/nvim-lspconfig",
 		config = function()
-			local lspconfig = require("lspconfig")
-
-			local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
 			-- Diagnostics
 			vim.diagnostic.config({
 				virtual_text = true, -- Inline error messages
@@ -38,19 +37,27 @@ return {
 				severity_sort = true, -- Sort diagnostics by severity
 			})
 
-			-- LSP Setup --
-			lspconfig.lua_ls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.pyright.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.ts_ls.setup({
-				capabilities = capabilities,
-			})
-			lspconfig.ruff.setup({
-				capabilities = capabilities,
-			})
+			-- Get the list of servers to install from mason-lspconfig
+			local servers = require("mason-lspconfig").get_installed_servers()
+			vim.lsp.enable(servers)
+
+			-- Function to organize imports and format
+			local function format_on_save(bufnr)
+				-- Get all active LSP clients for the buffer
+				local clients = vim.lsp.get_active_clients({ bufnr = bufnr })
+
+				-- Check if ruff is one of the active clients
+				for _, client in ipairs(clients) do
+					if client.name == "ruff" then
+						-- Run organize imports command
+						vim.lsp.buf.code_action({
+							context = { only = { "source.organizeImports" } },
+							apply = true,
+						})
+					end
+				end
+				vim.lsp.buf.format({ bufnr = bufnr })
+			end
 
 			-- Keymaps --
 			vim.keymap.set("n", "K", function()
@@ -62,26 +69,8 @@ return {
 			vim.keymap.set("n", "gd", vim.lsp.buf.definition, { desc = "Go to definition" })
 			vim.keymap.set("n", "<leader>ca", vim.lsp.buf.code_action, { desc = "Code action" })
 			vim.keymap.set("n", "<leader>fs", function()
-				-- Current buffer (e.i current open file)
-				local bufnr = 0
-
-				-- Run code actions if any attached LSP supports it
-				for _, client in ipairs(vim.lsp.get_active_clients({ bufnr = bufnr })) do
-					if client.supports_method("textDocument/codeAction") then
-						-- Organize Python imports
-						vim.lsp.buf.code_action({
-							context = { only = { "source.organizeImports.ruff" } },
-							apply = true,
-						})
-						break
-					end
-				end
-
-				-- Format the buffe
-				vim.lsp.buf.format({ bufnr = bufnr })
-
-				-- Save the buffer
-				vim.cmd("write")
+				pcall(format_on_save)
+				pcall(vim.cmd, "write")
 			end, { desc = "Organize imports, format, and save document" })
 			vim.keymap.set("n", "<leader>E", function()
 				vim.diagnostic.open_float(nil, { scope = "buffer" })

@@ -147,6 +147,14 @@ This file lists my essential VS Code extensions organized by category for quick 
 
 ---
 
+## Configuration / Data Files
+
+- **Even Better TOML** - [`tamasfe.even-better-toml`](https://marketplace.visualstudio.com/items?itemName=tamasfe.even-better-toml)
+
+  Advanced support for TOML files with syntax highlighting, validation, and formatting.
+
+---
+
 ## Git
 
 - **Git Graph** - [`mhutchie.git-graph`](https://marketplace.visualstudio.com/items?itemName=mhutchie.git-graph)

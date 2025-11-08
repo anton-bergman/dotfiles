@@ -5,26 +5,40 @@
   // --- Python ---
   "[python]": {
     "editor.rulers": [79],
-    "editor.formatOnType": true
+    "editor.formatOnType": true,
   },
   "python.defaultInterpreterPath": "/opt/homebrew/bin/python3",
+  "python.testing.pytestArgs": ["tests"],
+  "python.testing.unittestEnabled": false,
+  "python.testing.pytestEnabled": true,
+  "python.analysis.typeCheckingMode": "standard",
   // --- JavaScript / TypeScript ---
   "[javascript]": {
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
   },
   "[javascriptreact]": {
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
   },
   "[typescript]": {
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
   },
   "[typescriptreact]": {
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
   },
   // --- HTML ---
   "[html]": {
-    "editor.tabSize": 2
+    "editor.tabSize": 2,
   },
+  // --- TOML ---
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml",
+    "editor.tabSize": 2,
+  },
+  // --- JSON ---
+  "[json]": {
+    "json.schemas": [],
+  },
+
   // =========================
   // Extension Settings
   // =========================
@@ -82,31 +96,39 @@
     "fortran-modern": "cd $dir && gfortran $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
     "fortran_fixed-form": "cd $dir && gfortran $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
     "fortran": "cd $dir && gfortran $fileName -o $fileNameWithoutExt && $dir$fileNameWithoutExt",
-    "sml": "cd $dir && sml $fileName"
+    "sml": "cd $dir && sml $fileName",
   },
+  // --- Github Copilot ---
+  "github.copilot.nextEditSuggestions.enabled": true,
+
   // =========================
   // Editor Settings
   // =========================
   "editor.suggestSelection": "first",
   "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-  "editor.formatOnSave": true,
+  "editor.formatOnSave": false,
+  "editor.inertialScroll": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "editor.codeActionsOnSave": {},
+
   // =========================
   // Git
   // =========================
   "git.autofetch": true,
   "git.confirmSync": false,
   "git.openRepositoryInParentFolders": "always",
+
   // =========================
   // Themes & Icons
   // =========================
   "workbench.iconTheme": "material-icon-theme",
   "workbench.colorTheme": "Default Dark Modern",
+
   // =========================
   // Terminal Settings
   // =========================
   "terminal.integrated.inheritEnv": false,
+
   // =========================
   // Files / Explorer
   // =========================
@@ -114,7 +136,7 @@
     "**/.classpath": true,
     "**/.project": true,
     "**/.settings": true,
-    "**/.factorypath": true
+    "**/.factorypath": true,
   },
   "explorer.fileNesting.patterns": {
     "*.ts": "${capture}.js",
@@ -130,9 +152,9 @@
     "*.sqlite3": "${capture}.${extname}-*",
     "*.db3": "${capture}.${extname}-*",
     "*.sdb": "${capture}.${extname}-*",
-    "*.s3db": "${capture}.${extname}-*"
+    "*.s3db": "${capture}.${extname}-*",
   },
   "workbench.editorAssociations": {
-    "*.db": "default"
-  }
+    "*.db": "default",
+  },
 }

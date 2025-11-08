@@ -60,6 +60,39 @@ else
 fi
 
 
+# Install nvm (Node Version Manager) and Node.js
+# Required for LSP servers and other tools
+if [ ! -d "$HOME/.nvm" ]; then
+    echo "Installing nvm and Node.js..."
+		echo "Don't forget to add the following lines to your ~/.zshrc or ~/.bashrc:"
+		echo ''
+		echo 'export NVM_DIR="$HOME/.nvm"'
+		echo '[ -s "$NVM_DIR/nvm.sh" ] && \."$NVM_DIR/nvm.sh"  # This loads nvm'
+
+    # Download and run the nvm installation script
+		curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
+
+    # Source nvm to use it in the current script session
+    export NVM_DIR="$HOME/.nvm"
+    [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+
+    # Install the latest LTS version of Node.js and set it as default
+    nvm install --lts
+    nvm alias default 'lts/*'
+    nvm use default
+else
+		if ! command_exists nvm; then 
+			echo "nvm is installed but NOT sourced in your current shell."
+			echo "To fix this, add the following lines to your ~/.zshrc or ~/.bashrc:"
+			echo ''
+			echo 'export NVM_DIR="$HOME/.nvm"'
+			echo '[ -s "$NVM_DIR/nvm.sh" ] && \."$NVM_DIR/nvm.sh"  # This loads nvm'
+		else
+			echo "nvm is already installed."
+		fi
+fi
+
+
 # ---------- Symlink dotfiles ----------
 echo -e "\nSetting up dotfiles..."
 

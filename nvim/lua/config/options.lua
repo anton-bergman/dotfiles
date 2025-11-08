@@ -6,25 +6,47 @@ vim.opt.number = true
 -- Enable relative line numbers
 vim.opt.relativenumber = true
 
--- Define tab as 4 spaces
+-- Define a tab character as 4 spaces
+vim.opt_local.expandtab = true -- convert tabs to spaces
 vim.opt.tabstop = 4
 vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.api.nvim_create_autocmd("FileType", {
 	pattern = {
+		-- Code files (JS/TS/Web)
 		"javascript",
 		"javascriptreact",
 		"typescript",
 		"typescriptreact",
+		"vue",
+		"svelte",
 		"css",
 		"scss",
 		"html",
+		-- Config/data files
 		"json",
 		"jsonc",
+		"json5",
 		"yaml",
+		"yml",
+		"toml",
+		"conf",
+		"env",
+		-- Scripts
+		"sh",
+		"bash",
+		"zsh",
+		-- Documentation / prose
 		"markdown",
 		"markdown.mdx",
+		"mdx",
+		"txt",
+		"test",
+		"gitcommit",
+		-- Other
 		"graphql",
+		"dockerfile",
+		"sql",
 	},
 	callback = function()
 		vim.opt_local.tabstop = 2
@@ -38,6 +60,17 @@ vim.opt.smartindent = true
 
 -- Disable line wrapping, long lines will extend horizontally
 vim.opt.wrap = false
+vim.opt.linebreak = false
+vim.api.nvim_create_autocmd("FileType", {
+	pattern = { "markdown", "markdown.mdx", "mdx", "txt", "gitcommit" },
+	callback = function()
+		vim.opt_local.wrap = true
+		-- When 'wrap' is enabled, break lines at word boundaries instead of mid-word
+		vim.opt_local.linebreak = true
+		-- Indented wrapped lines align visually with the start of the text in the line
+		vim.opt_local.breakindent = true
+	end,
+})
 
 -- Enable incremental search, updating search results as while typing
 vim.opt.incsearch = true
@@ -54,16 +87,22 @@ vim.opt.colorcolumn = "80"
 -- Enable system clipboard for all yank/paste operations
 vim.opt.clipboard = "unnamedplus"
 
+-- Automatically reread files changed outside of Neovim
+vim.opt.autoread = true
+
 ---------- Keymaps ----------
 
 -- Set space as leader key
 vim.g.mapleader = " "
 
--- Map <leader>e to the :Explore command to open the file explorer
-vim.keymap.set("n", "<leader>e", ":Explore<CR>", { desc = "Open file explorer" })
+-- Map <leader>e to the :Explore command to open the file explorer (Currently using nvim-tree instead)
+-- vim.keymap.set("n", "<leader>e", ":Explore<CR>", { desc = "Open file explorer" })
 
 -- Map <leader>s to save the current file
 vim.keymap.set("n", "<leader>s", ":w<CR>", { desc = "Save file" })
+
+-- Quit all windows (soft)
+vim.keymap.set("n", "<leader>Q", ":qa<CR>", { desc = "Quit all windows (soft)" })
 
 -- Move selected lines up (K) or down (J) without losing the selection
 vim.keymap.set("v", "J", ":m '>+1<CR>gv=gv")
