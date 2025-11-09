@@ -31,7 +31,7 @@ This file lists my essential macOS applications with quick install commands for 
 
 - **iTerm2** - Terminal emulator _(See `dotfiles/README.md` for installation & setup)_
 - **Neovim** - Text editor _(See `dotfiles/README.md` for installation & setup)_
-- **VS Code** - IDE _(See `dotfiles/vscode/README.md` for installation & setup)_
+- **VS Code** - IDE _(See `dotfiles/vscode/vscode-extensions.md` for extensions list & `dotfiles/README.md` for installation)_
 
 ---
 

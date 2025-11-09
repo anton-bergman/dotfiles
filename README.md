@@ -10,6 +10,7 @@ This repository contains my personal dotfiles for configuring and automating the
   - [Install Zsh Plugins](#install-zsh-plugins)
   - [Install Neovim](#install-neovim)
   - [Install VS Code](#install-vs-code)
+  - [Install Ghostty](#install-ghostty)
   - [Install Tmux](#install-tmux)
   - [Install CLI Tools](#install-cli-tools)
 - [Directory Structure](#directory-structure)
@@ -64,6 +65,7 @@ This script will:
   - `zsh-syntax-highlighting`
   - `zsh-completions`
 - Set up symbolic links for `.zshrc`.
+- Set up symbolic links for `.vimrc` (basic Vim configuration).
 
 ---
 
@@ -111,6 +113,21 @@ This script will:
 
 ---
 
+### Install Ghostty
+
+Ghostty is a modern, GPU-accelerated terminal emulator. To set up Ghostty, run the installation script:
+
+```bash
+cd ~/dotfiles && ./install_ghostty.sh
+```
+
+This script will:
+
+- Install **Ghostty** via Homebrew.
+- Set up symbolic links for Ghostty configuration (`config.toml`).
+
+---
+
 ### Install Tmux
 
 To set up Tmux run the Tmux installation script:
@@ -149,12 +166,19 @@ The repository is organized as follows:
 ```
 dotfiles/
 ├── cli-tools/               # CLI tools installation scripts
+├── ghostty/                 # Ghostty terminal configuration
 ├── iterm2/                  # iTerm2 configuration files
 ├── macos/                   # macOS-specific settings and scripts
+│   ├── aerospace/           # AeroSpace window manager config
+│   ├── raycast/             # Raycast scripts and setup
+│   ├── simple-bar/          # Simple-Bar configuration
+│   └── sketchybar/          # SketchyBar configuration
 ├── nvim/                    # Neovim configuration
 ├── tmux/                    # Tmux configuration
+├── vim/                     # Basic Vim configuration
 ├── vscode/                  # VS Code settings and extensions
 ├── zsh/                     # Zsh configuration and plugins
+├── install_ghostty.sh       # Ghostty installation script
 ├── install_nvim.sh          # Neovim installation script
 ├── install_tmux.sh          # Tmux installation script
 ├── install_vscode.sh        # VS Code installation script
