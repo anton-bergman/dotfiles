@@ -13,6 +13,7 @@ return {
 			ensure_installed = {
 				"stylua",
 				"prettier",
+				"shfmt",
 			},
 			automatic_installation = true,
 		})
@@ -42,6 +43,9 @@ return {
 						"graphql",
 					},
 				}),
+
+				-- Shell scripts
+				null_ls.builtins.formatting.shfmt,
 			},
 		})
 	end,
