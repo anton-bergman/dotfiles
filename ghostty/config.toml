@@ -17,5 +17,6 @@ cursor-style-blink = false
 # This may be needed for cleaner experience in some setups
 shell-integration-features = "no-cursor"
 
-
-keybind = "cmd+t=new_window"
+# Keybindings
+keybind = shift+enter=text:\u001b\r # Map Shift+Enter to ESC+Enter
+keybind = cmd+t=new_window
