@@ -14,6 +14,9 @@ return {
 
 			-- Keymap to open Telescope's live grep and search for text across the project files
 			vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
+
+			-- Keymap to open Telescope's git status and show modified files
+			vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "Telescope git status" })
 		end,
 	},
 	{

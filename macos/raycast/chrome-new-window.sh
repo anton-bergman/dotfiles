@@ -12,4 +12,4 @@
 # @raycast.description Opens a new window for Chrome
 # @raycast.author Anton Bergman
 
-open -na "Google Chrome" --args "--profile-directory=Profile 1"
+open -na "Google Chrome" --args "--profile-directory=Default"

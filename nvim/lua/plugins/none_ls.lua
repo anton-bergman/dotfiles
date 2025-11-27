@@ -14,6 +14,7 @@ return {
 				"stylua",
 				"prettier",
 				"shfmt",
+				"sqlfluff", -- BigQuery-compatible SQL formatter & linter
 			},
 			automatic_installation = true,
 		})
@@ -46,6 +47,11 @@ return {
 
 				-- Shell scripts
 				null_ls.builtins.formatting.shfmt,
+
+				-- SQL files (BigQuery)
+				null_ls.builtins.formatting.sqlfluff.with({
+					extra_args = { "--dialect", "bigquery" },
+				}),
 			},
 		})
 	end,

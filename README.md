@@ -28,11 +28,6 @@ Before proceeding, ensure the following are installed:
    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
    ```
 
-2. **iTerm2:** Install iTerm2 (recommended terminal for macOS):
-   ```bash
-   brew install --cask iterm2
-   ```
-
 ---
 
 ## Installation
@@ -156,6 +151,7 @@ This script will install:
 
 - **Fastfetch:** A fast system information tool.
 - **TLDR:** Simplified and community-driven man pages.
+- **Lazygit:** A simple terminal UI for git commands.
 
 ---
 

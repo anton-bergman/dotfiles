@@ -44,6 +44,23 @@ return {
 			-- Function to organize imports and format
 			local function format_and_save()
 				local bufnr = vim.api.nvim_get_current_buf()
+
+				-- Skip if not a normal file buffer (file explorer, terminal, etc.)
+				if vim.bo[bufnr].buftype ~= "" then
+					return
+				end
+
+				-- Skip if buffer is not modifiable
+				if not vim.bo[bufnr].modifiable then
+					return
+				end
+
+				-- Skip if buffer has no filename (unnamed scratch buffer)
+				local bufname = vim.api.nvim_buf_get_name(bufnr)
+				if bufname == "" then
+					return
+				end
+
 				local ft = vim.bo[bufnr].filetype
 
 				-- Helper: organize imports first (async)
