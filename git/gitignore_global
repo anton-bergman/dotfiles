@@ -1,0 +1,10 @@
+# macOS
+.DS_Store
+
+# Python
+.python-version
+
+# Personal Development Docs
+AGENTS.md
+TODO.md
+NOTES.md

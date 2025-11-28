@@ -76,20 +76,16 @@ fi
 echo -e "\nSetting up dotfiles..."
 DOTFILES_DIR="$HOME/dotfiles"
 
-if [ ! -f "$HOME/.zshrc" ]; then
-	# Create the .zshrc file if it does not exist
-	touch "$HOME/.zshrc"
-fi
-
 # Add symbolic link for zsh config file
 ln -sf "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
 
-if [ ! -f "$HOME/.vimrc" ]; then
-	# Create the .vimrc file if it does not exist
-	touch "$HOME/.vimrc"
-fi
-
 # Add symbolic link for vim config file
 ln -sf "$DOTFILES_DIR/vim/vimrc" "$HOME/.vimrc"
+
+# Add symbolic link for git config file
+ln -sf "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
+
+# Add symbolic link for global gitignore file
+ln -sf "$DOTFILES_DIR/git/gitignore_global" "$HOME/.gitignore_global"
 
 echo "Dotfiles setup completed!"
