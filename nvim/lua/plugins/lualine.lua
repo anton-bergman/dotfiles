@@ -3,8 +3,10 @@ return {
 	dependencies = { "nvim-tree/nvim-web-devicons" },
 	config = function()
 		local custom_theme = require("lualine.themes.ayu_mirage")
-		-- Change the background of lualine_c section for normal mode
-		custom_theme.normal.c.bg = "#1F1F1F"
+
+		-- Make section C transparent
+		custom_theme.normal.c.bg = "NONE"
+
 		require("lualine").setup({
 
 			options = {
@@ -14,8 +16,13 @@ return {
 			},
 			sections = {
 				lualine_a = { "mode" },
-				lualine_b = { "branch", "diff", "diagnostics" },
-				lualine_c = { "filename" },
+				lualine_b = { { "branch", icon = "" }, "diff", "diagnostics" },
+				lualine_c = {
+					{
+						"filename",
+						path = 1, -- 0: filename only, 1: relative path, 2: absolute path, 3: absolute with ~, 4: filename + parent
+					},
+				},
 				lualine_x = { "filetype" },
 				lualine_y = { "progress" },
 				lualine_z = { "location" },

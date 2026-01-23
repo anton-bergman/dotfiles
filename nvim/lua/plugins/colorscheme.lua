@@ -11,5 +11,9 @@ return {
 
 		-- Set the colorscheme
 		vim.cmd("colorscheme vscode")
+
+		-- Make StatusLine transparent - Colors not visible while using lualine
+		vim.api.nvim_set_hl(0, "StatusLine", { bg = "NONE", fg = "#D4D4D4" }) -- Active window
+		vim.api.nvim_set_hl(0, "StatusLineNC", { bg = "NONE", fg = "#808080" }) -- Inactive windows
 	end,
 }
