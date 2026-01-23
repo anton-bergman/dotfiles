@@ -10,6 +10,7 @@ This repository contains my personal dotfiles for configuring and automating the
   - [Install Zsh Plugins](#install-zsh-plugins)
   - [Install Neovim](#install-neovim)
   - [Install VS Code](#install-vs-code)
+  - [Install OpenCode](#install-opencode)
   - [Install Ghostty](#install-ghostty)
   - [Install Tmux](#install-tmux)
   - [Install CLI Tools](#install-cli-tools)
@@ -108,6 +109,22 @@ This script will:
 
 ---
 
+### Install OpenCode
+
+OpenCode is an AI-powered coding assistant CLI. To set up OpenCode configuration, run the installation script:
+
+```bash
+cd ~/dotfiles && ./install_opencode.sh
+```
+
+This script will:
+
+- Install **OpenCode** via Homebrew (if not already installed).
+- Set up symbolic links for OpenCode configuration (`opencode.json`).
+- Install OpenCode plugins if `package.json` exists in `~/.config/opencode/`.
+
+---
+
 ### Install Ghostty
 
 Ghostty is a modern, GPU-accelerated terminal emulator. To set up Ghostty, run the installation script:
@@ -170,12 +187,14 @@ dotfiles/
 │   ├── simple-bar/          # Simple-Bar configuration
 │   └── sketchybar/          # SketchyBar configuration
 ├── nvim/                    # Neovim configuration
+├── opencode/                # OpenCode AI assistant configuration
 ├── tmux/                    # Tmux configuration
 ├── vim/                     # Basic Vim configuration
 ├── vscode/                  # VS Code settings and extensions
 ├── zsh/                     # Zsh configuration and plugins
 ├── install_ghostty.sh       # Ghostty installation script
 ├── install_nvim.sh          # Neovim installation script
+├── install_opencode.sh      # OpenCode installation script
 ├── install_tmux.sh          # Tmux installation script
 ├── install_vscode.sh        # VS Code installation script
 ├── install_zsh.sh           # Zsh installation script
