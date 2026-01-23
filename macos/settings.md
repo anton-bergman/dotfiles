@@ -69,6 +69,13 @@ Navigate to `System Settings` > `Keyboard`
 - **Key repeat rate:** Fast
 - **Delay until repeat:** Short
 
+### Modifier Keys
+
+Navigate to `System Settings` > `Keyboard` > `Keyboard Shortcuts...` > `Modifier Keys`
+
+- **Caps Lock key:** Escape
+  **Note:** You'll need to set this for each keyboard (built-in and external keyboards are configured separately).
+
 ## Ubersicht
 
 Navigate to `Übersicht` > `Preferences`
