@@ -20,15 +20,11 @@ blocks:
     alignment: left
     segments:
       # This segment shows the virtual environment name if it's active.
-      - properties:
-          cache_duration: none
-          command: basename $VIRTUAL_ENV
-        # template: "{{ .Venv }}"
-        template: "({{ .Output }}) "
+      - type: text
+        style: plain
         foreground: p:virtual-environment-color
         background: transparent
-        type: command
-        style: plain
+        template: "{{ if .Env.VIRTUAL_ENV }}({{ .Env.VIRTUAL_ENV | base }}) {{ end }}"
 
       # This segment shows the current directory path.
       - properties:
