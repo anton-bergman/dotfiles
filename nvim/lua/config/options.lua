@@ -90,6 +90,9 @@ vim.opt.clipboard = "unnamedplus"
 -- Automatically reread files changed outside of Neovim
 vim.opt.autoread = true
 
+-- Hide end-of-buffer tilde (~) characters for cleaner appearance
+vim.opt.fillchars = { eob = " " }
+
 ---------- Keymaps ----------
 
 -- Set space as leader key
