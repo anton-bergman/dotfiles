@@ -1,0 +1,69 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  // ============================================================================
+  // CORE SETTINGS
+  // ============================================================================
+  "model": "anthropic/claude-sonnet-4-5", // Default: undefined (uses first available provider)
+  "small_model": "anthropic/claude-haiku-4-5", // Default: undefined (falls back to main model)
+  "formatter": false, // Default: true
+  "theme": "my-theme", // Default: "opencode"
+  "autoupdate": true, // Default
+  // ============================================================================
+  // TUI SETTINGS
+  // ============================================================================
+  "tui": {
+    "scroll_acceleration": {
+      "enabled": true // Default: false | macOS-style scrolling
+    }
+  },
+  // ============================================================================
+  // SECURITY
+  // ============================================================================
+  "permission": {
+    "read": {
+      "*": "allow" // Default
+    },
+    "bash": {
+      "*": "allow", // Default
+      "rm -rf*": "ask",
+      "sudo*": "ask",
+      "git push*": "ask",
+      "git commit*": "ask",
+      "git add*": "ask"
+    }
+  },
+  // ============================================================================
+  // PERFORMANCE
+  // ============================================================================
+  "watcher": {
+    // Default: [] (no ignores)
+    "ignore": [
+      "node_modules/**",
+      "dist/**",
+      "build/**",
+      ".next/**",
+      ".git/**",
+      "*.log"
+    ]
+  },
+  // ============================================================================
+  // CUSTOM COMMANDS
+  // ============================================================================
+  // Default: {} (no custom commands)
+  "command": {
+    "test": {
+      "template": "Run the test suite with coverage and analyze failures",
+      "description": "Run tests with coverage"
+    },
+    "review": {
+      "template": "Review git diff for code quality, bugs, and best practices",
+      "description": "Review changes",
+      "agent": "plan"
+    }
+  },
+  // ============================================================================
+  // PROJECT INSTRUCTIONS
+  // ============================================================================
+  // Default: [] (no instructions)
+  "instructions": ["AGENTS.md"]
+}
