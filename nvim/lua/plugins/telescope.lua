@@ -10,7 +10,34 @@ return {
 			vim.g.telescope_grep_command = { "grep", "--color=never", "-r", "--exclude-dir={.git,node_modules}", "." }
 
 			-- Keymap to open Telescope's file finder and search for files in the current project
+			-- This respects .gitignore and only shows git-tracked files
 			vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+
+			-- Keymap to search ALL files including untracked/ignored files
+			-- This bypasses git filtering completely
+			vim.keymap.set("n", "<leader>fa", function()
+				builtin.find_files({
+					no_ignore = true,
+					hidden = true,
+					file_ignore_patterns = {
+						-- Python
+						"%.venv/",
+						"__pycache__/",
+						".pytest_cache/",
+						".ruff_cache/",
+
+						-- JavaScript/Node
+						"node_modules/",
+						"build/",
+
+						-- Version control
+						"%.git/",
+
+						-- OS files
+						"%.DS_Store",
+					},
+				})
+			end, { desc = "Telescope find all files" })
 
 			-- Keymap to open Telescope's live grep and search for text across the project files
 			vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
