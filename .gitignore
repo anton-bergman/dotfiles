@@ -2,3 +2,5 @@
 zsh/plugins/*
 !zsh/plugins/.gitkeep
 .env
+wallpapers/*
+!wallpapers/.gitkeep

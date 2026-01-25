@@ -14,6 +14,7 @@ This repository contains my personal dotfiles for configuring and automating the
   - [Install Ghostty](#install-ghostty)
   - [Install Tmux](#install-tmux)
   - [Install CLI Tools](#install-cli-tools)
+  - [Install Wallpapers](#install-wallpapers)
 - [Directory Structure](#directory-structure)
 - [Troubleshooting](#troubleshooting)
 
@@ -172,6 +173,19 @@ This script will install:
 
 ---
 
+### Install Wallpapers
+
+To set up desktop wallpapers:
+
+1. Run the wallpaper installation script:
+   ```bash
+   cd ~/dotfiles && ./install_wallpapers.sh
+   ```
+
+**Note:** Wallpapers are not included in the repository due to copyright restrictions. They are downloaded from their original sources for personal use only.
+
+---
+
 ## Directory Structure
 
 The repository is organized as follows:
@@ -191,12 +205,14 @@ dotfiles/
 ├── tmux/                    # Tmux configuration
 ├── vim/                     # Basic Vim configuration
 ├── vscode/                  # VS Code settings and extensions
+├── wallpapers/              # Desktop wallpapers (downloaded, not in repo)
 ├── zsh/                     # Zsh configuration and plugins
 ├── install_ghostty.sh       # Ghostty installation script
 ├── install_nvim.sh          # Neovim installation script
 ├── install_opencode.sh      # OpenCode installation script
 ├── install_tmux.sh          # Tmux installation script
 ├── install_vscode.sh        # VS Code installation script
+├── install_wallpapers.sh    # Wallpaper installation script
 ├── install_zsh.sh           # Zsh installation script
 └── README.md                # Documentation
 ```
