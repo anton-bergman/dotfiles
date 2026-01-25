@@ -21,7 +21,7 @@ return {
 					hidden = true,
 					file_ignore_patterns = {
 						-- Python
-						"%.venv/",
+						"%.venv[^/]*/", -- .venv, .venv-dev, .venv-app, etc.
 						"__pycache__/",
 						".pytest_cache/",
 						".ruff_cache/",
