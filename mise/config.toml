@@ -1,0 +1,22 @@
+[tools]
+# Global Playground Runtimes (LTS/Stable)
+node = "lts"
+uv = "latest"
+python = "latest"
+usage = "latest"  # CLI autocomplete engine used by mise
+
+[settings]
+
+# Support .python-version, .nvmrc, and .node-version files for older projects
+legacy_version_file = true
+
+# 'create' ensures a .venv exists; 'source' activates it upon entering the directory.
+python.uv_venv_auto = "create|source"
+
+# Optimization: Download precompiled Python binaries instead of building from source
+python.compile = false
+
+[env]
+# Enable Poetry auto-activation (requires mise-poetry plugin)
+MISE_POETRY_VENV_AUTO = "1"
+MISE_POETRY_AUTO_INSTALL = "1"

@@ -1,8 +1,8 @@
 # macOS
 .DS_Store
 
-# Python
-.python-version
+# Mise
+mise.local.toml
 
 # Personal Development Docs
 AGENTS.md
