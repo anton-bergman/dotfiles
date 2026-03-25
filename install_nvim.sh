@@ -3,107 +3,33 @@
 # Exit immediately if any command fails
 set -e
 
-echo "Starting Neovim installation..."
+# Source utility functions
+source "$HOME/dotfiles/lib/utils.sh"
 
-# Function to check if a command exists
-command_exists() {
-	command -v "$1" &>/dev/null
-}
+# Ensure brew/mise/etc are ready
+ensure_base_ready
 
-# ---------- Install packages ----------
-echo -e "\nInstalling packages..."
+header "Neovim Setup"
 
-# Install Neovim
-if ! command_exists nvim; then
-	echo "Installing Neovim..."
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		# macOS
-		brew install neovim
-	elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-		# linux
-		sudo apt update && sudo apt install -y neovim
-	fi
+# --- Install Neovim & Core Dependencies ---
+info "Installing core dependencies..."
 
-else
-	echo "Neovim is already installed."
+# Linux-Specific Repository Setup
+if [ "$IS_LINUX" = true ]; then
+	# Ensures we get the latest stable version on Ubuntu/Debian
+	add_apt_repo "ppa:neovim-ppa/stable"
 fi
 
-# Install Luarocks
-# A package manager for Lua required by Lazy.nvim
-if ! command_exists luarocks; then
-	echo "Installing Luarocks..."
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		# macOS
-		brew install luarocks
-	elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-		# Linux
-		sudo apt update && sudo apt install -y luarocks
-	fi
-else
-	echo "Luarocks is already installed."
-fi
+# Core tools
+# Format: cmd:pkg:provider
+smart_install "nvim:neovim:brew" "nvim:neovim:apt"
+smart_install "luarocks:luarocks:brew" "luarocks:luarocks:apt"
+smart_install "rg:ripgrep:brew" "rg:ripgrep:apt"
+smart_install "magick:imagemagick:brew" "magick:imagemagick:apt"
+smart_install "node:node:mise" # Node.js (Required for many LSPs)
 
-# Install ripgrep
-# A fast search tool required by Neovim Telescope plugin for live grep functionality
-if ! command_exists rg; then
-	echo "Installing ripgrep..."
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		# macOS
-		brew install ripgrep
-	elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-		# Linux
-		sudo apt update && sudo apt install -y ripgrep
-	fi
-else
-	echo "ripgrep is already installed."
-fi
+# --- Symlink dotfiles ---
+info "Linking configuration..."
+link_file "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
 
-# Install nvm (Node Version Manager) and Node.js
-# Required for LSP servers and other tools
-if [ ! -d "$HOME/.nvm" ]; then
-	echo "Installing nvm and Node.js..."
-	echo "Don't forget to add the following lines to your ~/.zshrc or ~/.bashrc:"
-	echo ''
-	echo 'export NVM_DIR="$HOME/.nvm"'
-	echo '[ -s "$NVM_DIR/nvm.sh" ] && \."$NVM_DIR/nvm.sh"  # This loads nvm'
-
-	# Download and run the nvm installation script
-	curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-
-	# Source nvm to use it in the current script session
-	export NVM_DIR="$HOME/.nvm"
-	[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-
-	# Install the latest LTS version of Node.js and set it as default
-	nvm install --lts
-	nvm alias default 'lts/*'
-	nvm use default
-else
-	if ! command_exists nvm; then
-		echo "nvm is installed but NOT sourced in your current shell."
-		echo "To fix this, add the following lines to your ~/.zshrc or ~/.bashrc:"
-		echo ''
-		echo 'export NVM_DIR="$HOME/.nvm"'
-		echo '[ -s "$NVM_DIR/nvm.sh" ] && \."$NVM_DIR/nvm.sh"  # This loads nvm'
-	else
-		echo "nvm is already installed."
-	fi
-fi
-
-# ---------- Symlink dotfiles ----------
-echo -e "\nSetting up dotfiles..."
-
-# Ensure ~/.config directory exists
-if [ ! -d "$HOME/.config" ]; then
-	mkdir -p "$HOME/.config"
-fi
-
-# Remove ~/.config/nvim if it exists (to prevent nesting issues)
-if [ -e "$HOME/.config/nvim" ] || [ -L "$HOME/.config/nvim" ]; then
-	rm -rf "$HOME/.config/nvim"
-fi
-
-# Add a symbolic link between ~/dotfiles/nvim and ~/.config/nvim
-ln -s "$HOME/dotfiles/nvim" "$HOME/.config/nvim"
-
-echo "Neovim setup completed!"
+success "Neovim setup completed!"

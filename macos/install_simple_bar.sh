@@ -1,32 +1,29 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+set -e
 
-# Variables
-UEBERSICHT_WIDGETS_DIR="$HOME/Library/Application Support/Übersicht/widgets"
-SIMPLEBAR_WIDGET_SOURCE="$HOME/dotfiles/macos/simple-bar/simplebarrc"
-SIMPLEBAR_WIDGET_TARGET="$HOME/.simplebarrc"
-SIMPLEBAR_REPO_DIR="$UEBERSICHT_WIDGETS_DIR/simple-bar"
-SIMPLEBAR_REPO_URL="https://github.com/Jean-Tinland/simple-bar"
+# 1. Source the "Brain"
+source "$(dirname "$0")/../lib/utils.sh"
 
-# Install Übersicht
-echo "Installing Übersicht..."
-brew install --cask ubersicht
+# 2. Bootstrap
+ensure_base_ready
+header "Simple-Bar Setup"
 
-# Ensure Übersicht widgets directory exists
-echo -e "\nCreating Übersicht widgets directory..."
-mkdir -p "$UEBERSICHT_WIDGETS_DIR"
-
-# Clone or update the simple-bar repo
-if [ -d "$SIMPLEBAR_REPO_DIR/.git" ]; then
-	echo "simple-bar repo already exists. Pulling latest changes..."
-	git -C "$SIMPLEBAR_REPO_DIR" pull
-else
-	echo "Cloning simple-bar repo..."
-	git clone "$SIMPLEBAR_REPO_URL" "$SIMPLEBAR_REPO_DIR"
+# Only run on macOS
+if [ "$IS_MAC" = false ]; then
+	warn "Simple-Bar is only supported on macOS. Skipping."
+	exit 0
 fi
 
-# Create symlink for Simple-Bar config
-echo -e "\nLinking custom Simple-Bar config..."
-ln -sf "$SIMPLEBAR_WIDGET_SOURCE" "$SIMPLEBAR_WIDGET_TARGET"
+# 3. Install Übersicht
+smart_install "ubersicht:ubersicht:cask"
 
-echo -e "\nSimple-Bar installation and config setup complete."
+# 4. Clone or update Simple-Bar
+UEBERSICHT_WIDGETS_DIR="$HOME/Library/Application Support/Übersicht/widgets"
+mkdir -p "$UEBERSICHT_WIDGETS_DIR"
+
+clone_or_pull "https://github.com/Jean-Tinland/simple-bar" "$UEBERSICHT_WIDGETS_DIR/simple-bar"
+
+# 5. Link configuration
+link_file "$HOME/dotfiles/macos/simple-bar/simplebarrc" "$HOME/.simplebarrc"
+
+success "Simple-Bar setup completed!"

@@ -1,32 +1,28 @@
-#!/usr/bin/env bash
-set -euo pipefail
+#!/bin/bash
+set -e
 
-# Variables
-AEROSPACE_CONFIG_SOURCE="$HOME/dotfiles/macos/aerospace/aerospace.toml"
-AEROSPACE_CONFIG_TARGET_DIR="$HOME/.config/aerospace"
-AEROSPACE_CONFIG_TARGET="$AEROSPACE_CONFIG_TARGET_DIR/aerospace.toml"
+# 1. Source the "Brain"
+source "$(dirname "$0")/../lib/utils.sh"
 
-# Install AeroSpace
-echo "Installing AeroSpace..."
-brew install --cask nikitabobko/tap/aerospace
+# 2. Bootstrap
+ensure_base_ready
+header "AeroSpace & JankyBorders Setup"
 
-# Ensure AeroSpace config directory exists
-echo "Creating AeroSpace config directory..."
-mkdir -p "$AEROSPACE_CONFIG_TARGET_DIR"
-
-# Backup existing AeroSpace config if it's not a symlink
-if [ -e "$AEROSPACE_CONFIG_TARGET" ] && [ ! -L "$AEROSPACE_CONFIG_TARGET" ]; then
-	echo "Backing up existing AeroSpace config..."
-	mv "$AEROSPACE_CONFIG_TARGET" "$AEROSPACE_CONFIG_TARGET.bak"
+# Only run on macOS
+if [ "$IS_MAC" = false ]; then
+	warn "AeroSpace is only supported on macOS. Skipping."
+	exit 0
 fi
 
-# Create symlink for AeroSpace config
-echo "Linking custom AeroSpace config..."
-ln -sf "$AEROSPACE_CONFIG_SOURCE" "$AEROSPACE_CONFIG_TARGET"
+# 3. Install AeroSpace
+# Format: cmd:pkg:provider
+smart_install "aerospace:nikitabobko/tap/aerospace:cask"
 
-# Install JankyBorders
-echo "Installing JankyBorders..."
-brew tap FelixKratz/formulae
-brew install borders
+# 4. Install JankyBorders
+smart_install "borders:FelixKratz/formulae/borders:brew"
 
-echo "AeroSpace and JankyBorders installation and config setup complete."
+# 5. Symlink Configuration
+info "Linking configuration..."
+link_file "$HOME/dotfiles/macos/aerospace/aerospace.toml" "$HOME/.config/aerospace/aerospace.toml"
+
+success "AeroSpace and JankyBorders setup completed!"

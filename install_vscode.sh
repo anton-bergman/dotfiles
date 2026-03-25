@@ -3,59 +3,41 @@
 # Exit immediately if any command fails
 set -e
 
-echo "Starting VS Code installation..."
+# Source utility functions
+source "$HOME/dotfiles/lib/utils.sh"
 
-# Function to check if a command exists
-command_exists() {
-	command -v "$1" &>/dev/null
-}
+# Ensure brew/mise are ready
+ensure_base_ready
 
-# ---------- Install VS Code ----------
-if ! command_exists code; then
-	echo "Installing VS Code..."
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		# macOS
-		brew install --cask visual-studio-code
-	else
-		echo "Unsupported OS: $OSTYPE. Cannot install VS Code automatically."
-		exit 1
-	fi
-else
-	echo "VS Code is already installed."
-fi
+header "VS Code Setup"
 
-# ---------- Install extensions ----------
-echo -e "\nInstalling VS Code extensions..."
+# --- Install VS Code ---
+# Use the explicit spec model: cmd:pkg:provider
+smart_install "code:visual-studio-code:cask" "code:code:apt"
 
+# --- Install extensions ---
 VSCODE_EXT_FILE="$HOME/dotfiles/vscode/vscode-extensions.txt"
 
 if [ -f "$VSCODE_EXT_FILE" ]; then
+	info "Installing VS Code extensions..."
 	# Install all VS Code extensions from the list, ignoring empty lines and lines starting with #
 	grep -vE '^\s*(#|$)' "$VSCODE_EXT_FILE" | xargs -n 1 code --install-extension
 else
-	echo "No vscode-extensions.txt file found at $VSCODE_EXT_FILE. Skipping extension installation."
+	warn "No vscode-extensions.txt file found at $VSCODE_EXT_FILE. Skipping extension installation."
 fi
 
-# ---------- Symlink settings ----------
-echo -e "\nSetting up VS Code settings..."
+# --- Symlink settings ---
+info "Setting up VS Code settings..."
 
-# Detect VS Code user settings directory
-if [[ "$OSTYPE" == "darwin"* ]]; then
+# Detect VS Code user settings directory using vars from utils.sh
+if [ "$IS_MAC" = true ]; then
 	VSCODE_USER_DIR="$HOME/Library/Application Support/Code/User"
-elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
+else
 	VSCODE_USER_DIR="$HOME/.config/Code/User"
-else
-	echo "Unsupported OS type: $OSTYPE. Cannot link VS Code settings."
-	exit 1
 fi
 
-mkdir -p "$VSCODE_USER_DIR"
+# Link settings.jsonc
+# link_file handles backup of existing real files
+link_file "$HOME/dotfiles/vscode/settings.jsonc" "$VSCODE_USER_DIR/settings.json"
 
-# Link settings.json
-if [ -f "$HOME/dotfiles/vscode/settings.jsonc" ]; then
-	ln -sf "$HOME/dotfiles/vscode/settings.jsonc" "$VSCODE_USER_DIR/settings.json"
-else
-	echo "settings.jsonc not found in ~/dotfiles/vscode. Skipping settings link."
-fi
-
-echo "VS Code setup completed!"
+success "VS Code setup completed!"

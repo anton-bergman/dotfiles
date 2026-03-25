@@ -3,89 +3,47 @@
 # Exit immediately if any command fails
 set -e
 
-echo "Starting dotfiles installation..."
+# Source utility functions
+source "$HOME/dotfiles/lib/utils.sh"
 
-# Function to check if a command exists
-command_exists() {
-	command -v "$1" &>/dev/null
-}
+# Ensure brew/mise are ready
+ensure_base_ready
 
-# ---------- Install packages ----------
-echo -e "\nInstalling packages..."
+header "Zsh & Dotfiles Setup"
+
+# --- Install packages ---
+info "Installing required packages..."
 
 # Install oh-my-posh
-if ! command_exists oh-my-posh; then
-	echo "Installing Oh-My-Posh..."
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		# macOS
-		brew install jandedobbeleer/oh-my-posh/oh-my-posh
-	elif [[ "$OSTYPE" == "linux-gnu"* ]]; then
-		# linux
-		curl -s https://ohmyposh.dev/install.sh | bash -s
-	fi
-
-else
-	echo "Oh-My-Posh already installed."
-fi
+# Format: cmd:pkg:provider
+smart_install "oh-my-posh:jandedobbeleer/oh-my-posh/oh-my-posh:brew"
 
 # Install Nerd Font (Hack font)
-if ! fc-list | grep -i "Hack" >/dev/null; then
-	echo "Installing Nerd Font Hack..."
+if ! font_installed "Hack"; then
+	info "Installing Nerd Font Hack..."
 	oh-my-posh font install Hack
 else
-	echo "Hack font already installed."
+	success "Hack font already installed."
 fi
 
-# ---------- Clone zsh plugins repositories ----------
-echo -e "\nCloning zsh plugins..."
-PLUGIN_DIR=~/dotfiles/zsh/plugins
+# --- Clone zsh plugins repositories ---
+info "Managing Zsh plugins..."
 
-if [ ! -d "$PLUGIN_DIR" ]; then
-	# Create the zsh/plugins directory if it does not exist
-	mkdir -p "$PLUGIN_DIR"
-fi
+PLUGIN_DIR="$HOME/dotfiles/zsh/plugins"
+mkdir -p "$PLUGIN_DIR"
 
-# Clone zsh-autosuggestions plugin
-if [ ! -d "$PLUGIN_DIR/zsh-autosuggestions" ]; then
-	echo -e "\nCloning zsh-autosuggestions..."
-	git clone https://github.com/zsh-users/zsh-autosuggestions.git "$PLUGIN_DIR/zsh-autosuggestions"
-else
-	echo -e "\nzsh-autosuggestions already cloned. Updating zsh-autosuggestions..."
-	cd "$PLUGIN_DIR/zsh-autosuggestions" && git pull origin master
-fi
+clone_or_pull "https://github.com/zsh-users/zsh-autosuggestions.git" "$PLUGIN_DIR/zsh-autosuggestions"
+clone_or_pull "https://github.com/zsh-users/zsh-syntax-highlighting.git" "$PLUGIN_DIR/zsh-syntax-highlighting"
+clone_or_pull "https://github.com/zsh-users/zsh-completions.git" "$PLUGIN_DIR/zsh-completions"
 
-# Clone zsh-syntax-highlighting plugin
-if [ ! -d "$PLUGIN_DIR/zsh-syntax-highlighting" ]; then
-	echo -e "\nCloning zsh-syntax-highlighting..."
-	git clone https://github.com/zsh-users/zsh-syntax-highlighting.git "$PLUGIN_DIR/zsh-syntax-highlighting"
-else
-	echo -e "\nzsh-syntax-highlighting already cloned. Updating zsh-syntax-highlighting..."
-	cd "$PLUGIN_DIR/zsh-syntax-highlighting" && git pull origin master
-fi
+# --- Symlink dotfiles ---
+info "Linking configuration files..."
 
-# Clone zsh-completions plugin
-if [ ! -d "$PLUGIN_DIR/zsh-completions" ]; then
-	echo -e "\nCloning zsh-completions..."
-	git clone https://github.com/zsh-users/zsh-completions.git "$PLUGIN_DIR/zsh-completions"
-else
-	echo -e "\nzsh-completions already cloned. Updating zsh-completions..."
-	cd "$PLUGIN_DIR/zsh-completions" && git pull origin master
-fi
-
-# ---------- Symlink dotfiles ----------
-echo -e "\nSetting up dotfiles..."
 DOTFILES_DIR="$HOME/dotfiles"
 
-# Add symbolic link for zsh config file
-ln -sf "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
+link_file "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
+link_file "$DOTFILES_DIR/vim/vimrc" "$HOME/.vimrc"
+link_file "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
+link_file "$DOTFILES_DIR/git/gitignore_global" "$HOME/.gitignore_global"
 
-# Add symbolic link for vim config file
-ln -sf "$DOTFILES_DIR/vim/vimrc" "$HOME/.vimrc"
-
-# Add symbolic link for git config file
-ln -sf "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
-
-# Add symbolic link for global gitignore file
-ln -sf "$DOTFILES_DIR/git/gitignore_global" "$HOME/.gitignore_global"
-
-echo "Dotfiles setup completed!"
+success "Zsh and dotfiles setup completed!"

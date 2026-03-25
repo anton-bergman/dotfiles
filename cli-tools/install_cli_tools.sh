@@ -1,28 +1,30 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
+# Exit immediately if any command fails
 set -e
 
-echo "Installing CLI tools..."
+# Source utility functions
+source "$(dirname "$0")/../lib/utils.sh"
 
-# Detect OS / package manager
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-	if command -v apt >/dev/null; then
-		sudo apt update
-		sudo apt install -y fastfetch tlrc lazygit
-	else
-		echo "Unsupported Linux distro. Please install fastfetch, tldr, and lazygit manually."
-		exit 1
-	fi
-elif [[ "$OSTYPE" == "darwin"* ]]; then
-	# macOS
-	if ! command -v brew >/dev/null; then
-		echo "Homebrew not found. Installing Homebrew first..."
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-	fi
-	brew install fastfetch tlrc lazygit
-else
-	echo "Unsupported OS. Please install CLI tools manually."
-	exit 1
+# Ensure brew/mise are ready
+ensure_base_ready
+
+header "CLI Tools Setup"
+
+# 3. Install Tools
+# Format: cmd:pkg:provider
+smart_install "fastfetch:fastfetch:brew" "fastfetch:fastfetch:apt"
+smart_install "tldr:tlrc:brew" "tldr:tlrc:apt"
+
+# TODO: These tools are dependencies of neovim and used for some neovim plugins
+# Investigate if that should be handled in some separate way and if so then how
+smart_install "lazygit:lazygit:brew" "lazygit:lazygit:apt"
+
+smart_install "vd:visidata:uv"
+if command_exists visidata; then
+	# To support specific data formats (like Pickles) we inject these libraries
+	# into VisiData's private virtualenv.
+	uv tool install --with pandas,numpy,pytz visidata --force
 fi
 
-echo -e "\nAll CLI tools installed!"
+success "CLI tools setup completed!"

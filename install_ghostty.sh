@@ -1,46 +1,29 @@
 #!/bin/bash
-
 # Exit immediately if any command fails
 set -e
 
-echo "Starting Ghostty installation..."
+# Source utility functions
+source "$HOME/dotfiles/lib/utils.sh"
 
-# Function to check if a command exists
-command_exists() {
-	command -v "$1" &>/dev/null
-}
+# Ensure brew/mise are ready
+ensure_base_ready
 
-# ---------- Install Ghostty ----------
-if ! command_exists ghostty; then
-	echo "Ghostty not found. Installing..."
-	if [[ "$OSTYPE" == "darwin"* ]]; then
-		# macOS - install via brew
-		if ! command_exists brew; then
-			echo "Homebrew is not installed. Please install Homebrew first."
-			exit 1
-		fi
-		brew install ghostty
-	else
-		echo "Unsupported OS: $OSTYPE. Cannot install Ghostty automatically."
-		exit 1
-	fi
+header "Ghostty Setup"
+
+# --- Install Ghostty ---
+# Format: cmd:pkg:provider
+smart_install "ghostty:ghostty:brew"
+
+# --- Symlink dotfiles ---
+info "Linking configuration..."
+
+if [ "$IS_MAC" = true ]; then
+	GHOSTTY_CONFIG_DIR="$HOME/Library/Application Support/com.mitchellh.ghostty"
 else
-	echo "Ghostty is already installed."
+	# Ghostty on Linux usually looks in ~/.config/ghostty
+	GHOSTTY_CONFIG_DIR="$HOME/.config/ghostty"
 fi
 
-# ---------- Symlink config ----------
-echo -e "\nSetting up Ghostty config symlink..."
+link_file "$HOME/dotfiles/ghostty/config.toml" "$GHOSTTY_CONFIG_DIR/config"
 
-GHOSTTY_CONFIG_DIR="$HOME/Library/Application Support/com.mitchellh.ghostty"
-DOTFILES_GHOSTTY_CONFIG="$HOME/dotfiles/ghostty/config.toml"
-
-mkdir -p "$GHOSTTY_CONFIG_DIR"
-
-if [ -f "$DOTFILES_GHOSTTY_CONFIG" ]; then
-	ln -sf "$DOTFILES_GHOSTTY_CONFIG" "$GHOSTTY_CONFIG_DIR/config"
-	echo "Symlinked config.toml to $GHOSTTY_CONFIG_DIR/config.toml"
-else
-	echo "No config.toml found at $DOTFILES_GHOSTTY_CONFIG. Skipping config symlink."
-fi
-
-echo "Ghostty setup completed!"
+success "Ghostty setup completed!"
