@@ -1,5 +1,6 @@
 # Set the terminal color theme (must be a supported/built-in theme)
 theme = "Dracula+"
+background-opacity = 0.95
 
 # Set the font family (must be installed on your system)
 font-family = "Hack Nerd Font Mono"
