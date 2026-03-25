@@ -3,19 +3,10 @@
   // ============================================================================
   // CORE SETTINGS
   // ============================================================================
-  "model": "anthropic/claude-sonnet-4-5", // Default: undefined (uses first available provider)
-  "small_model": "anthropic/claude-haiku-4-5", // Default: undefined (falls back to main model)
-  "formatter": false, // Default: true
+  "model": "google/gemini-3-flash",
   "theme": "my-theme", // Default: "opencode"
-  "autoupdate": true, // Default
-  // ============================================================================
-  // TUI SETTINGS
-  // ============================================================================
-  "tui": {
-    "scroll_acceleration": {
-      "enabled": true // Default: false | macOS-style scrolling
-    }
-  },
+  "formatter": false, // Default: true
+  "autoupdate": true,
   // ============================================================================
   // SECURITY
   // ============================================================================
