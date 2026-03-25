@@ -1,6 +1,11 @@
 # Place a copy of this config to ~/.aerospace.toml
 # After that, you can edit ~/.aerospace.toml to your liking
 
+# Multi-Monitor Setup Note:
+# If using multiple monitors with Chromium browsers (Chrome, Edge, Brave),
+# you may need to disable "Displays have separate Spaces" in System Settings
+# to prevent focus conflicts. See: ../settings.md#displays-have-separate-spaces
+
 # You can use it to add commands that run after AeroSpace startup.
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = [
@@ -26,14 +31,14 @@ after-startup-command = [
 
 ##### Simple-bar #####
 # Uncomment these lines if you use Simple-Bar
-on-focus-changed = [
-  "exec-and-forget osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\"'",
-]
-exec-on-workspace-change = [
-  '/bin/zsh',
-  '-c',
-  '/usr/bin/osascript -e "tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\""',
-]
+#	on-focus-changed = [
+#	  "exec-and-forget osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\"'",
+#	]
+#	exec-on-workspace-change = [
+#	  '/bin/zsh',
+#	  '-c',
+#	  '/usr/bin/osascript -e "tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\""',
+#	]
 
 # Start AeroSpace at login
 start-at-login = true
@@ -85,11 +90,13 @@ automatically-unhide-macos-hidden-apps = false
     inner.vertical =   16
     outer.left =       16
     outer.bottom =     16
-    outer.top =     [
-      # offset of 32 on internal display, because of notch (16" MPB)
-      { monitor.'built-in.*' = 16 },
-      48
-    ]
+		# Simple-bar
+    # outer.top =     [
+    #   # offset of 32 on internal display, because of notch (16" MPB)
+    #   { monitor.'built-in.*' = 16 },
+    #   48
+    # ]
+		outer.top =				 8
     outer.right =      16
 
 [workspace-to-monitor-force-assignment]
