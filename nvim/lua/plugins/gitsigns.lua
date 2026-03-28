@@ -1,22 +1,21 @@
 return {
 	"lewis6991/gitsigns.nvim",
-	config = function()
-		require("gitsigns").setup()
+	opts = {
+		sign_priority = 20, -- Higher priority ensure gitsigns take precedence over LSP diagnostics in the gutter/sign column (default: 6)
+		on_attach = function(bufnr)
+			local gs = package.loaded.gitsigns
+			local function map(mode, l, r, opts)
+				opts = opts or {}
+				opts.buffer = bufnr
+				vim.keymap.set(mode, l, r, opts)
+			end
 
-		vim.keymap.set("n", "<leader>gh", ":Gitsigns preview_hunk_inline<CR>", { desc = "Gitsigns: Preview hunk" })
-		vim.keymap.set(
-			"n",
-			"<leader>gb",
-			":Gitsigns toggle_current_line_blame<CR>",
-			{ desc = "Gitsigns: Toggle line blame" }
-		)
-		vim.keymap.set("n", "<leader>gr", ":Gitsigns reset_hunk<CR>", { desc = "Gitsigns: Reset hunk" })
-
-		vim.keymap.set("v", "<leader>gr", function()
-			local start_line = vim.fn.line("v")
-			local end_line = vim.fn.line(".")
-			vim.cmd("normal! <Esc>") -- exit visual mode
-			require("gitsigns").reset_hunk({ start_line, end_line })
-		end, { desc = "Gitsigns: Reset selected hunks" })
-	end,
+			map("n", "<leader>gh", gs.preview_hunk_inline, { desc = "Gitsigns: Preview hunk" })
+			map("n", "<leader>gb", gs.toggle_current_line_blame, { desc = "Gitsigns: Toggle line blame" })
+			map("n", "<leader>gr", gs.reset_hunk, { desc = "Gitsigns: Reset hunk" })
+			map("v", "<leader>gr", function()
+				gs.reset_hunk({ vim.fn.line("v"), vim.fn.line(".") })
+			end, { desc = "Gitsigns: Reset selected hunks" })
+		end,
+	},
 }

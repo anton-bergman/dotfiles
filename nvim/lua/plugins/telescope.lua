@@ -20,15 +20,27 @@ return {
 					no_ignore = true,
 					hidden = true,
 					file_ignore_patterns = {
-						-- Python
-						"%.venv[^/]*/", -- .venv, .venv-dev, .venv-app, etc.
+						-- Python virtual environments (all naming patterns)
+						"%.venv[^/]*/", -- .venv, .venv-dev, .venv-prod, etc.
+						"venv[^/]*/", -- venv, venv-dev, venv-app, etc.
+						"env[^/]*/", -- env, env-dev, env-local, etc.
+						"%.virtualenv[^/]*/", -- .virtualenv and variants
+
+						-- Python caches and build artifacts
 						"__pycache__/",
 						".pytest_cache/",
 						".ruff_cache/",
+						".mypy_cache/",
+						"%.egg%-info/",
+						"%.pyc$",
+						"%.pyo$",
+						"%.coverage$",
+						"htmlcov/",
 
 						-- JavaScript/Node
 						"node_modules/",
 						"build/",
+						"dist/",
 
 						-- Version control
 						"%.git/",

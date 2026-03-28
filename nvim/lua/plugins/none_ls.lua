@@ -46,7 +46,9 @@ return {
 				}),
 
 				-- Shell scripts
-				null_ls.builtins.formatting.shfmt,
+				null_ls.builtins.formatting.shfmt.with({
+					filetypes = { "sh", "bash", "zsh" },
+				}),
 
 				-- SQL files (BigQuery)
 				null_ls.builtins.formatting.sqlfluff.with({
