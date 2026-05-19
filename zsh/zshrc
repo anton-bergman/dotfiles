@@ -57,6 +57,16 @@ fpath=($PLUGIN_DIR/zsh-completions/src $fpath)
 autoload -U compinit && compinit
 
 
+# ----- Custom Functions -----
+if [[ -f "$HOME/dotfiles/zsh/functions.zsh" ]]; then
+	source "$HOME/dotfiles/zsh/functions.zsh"
+fi
+
+if [[ -f "$HOME/dotfiles/zsh/python.zsh" ]]; then
+	source "$HOME/dotfiles/zsh/python.zsh"
+fi
+
+
 # ----- zsh-completion styling -----
 
 # Set color scheme for ls zsh-completion output

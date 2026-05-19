@@ -8,6 +8,7 @@ This repository contains my personal dotfiles for configuring and automating the
 - [Installation](#installation)
   - [Install Dotfiles](#install-dotfiles)
   - [Install Zsh Plugins](#install-zsh-plugins)
+  - [Install Python Lab](#install-python-lab)
   - [Install Neovim](#install-neovim)
   - [Install VS Code](#install-vs-code)
   - [Install OpenCode](#install-opencode)
@@ -63,6 +64,24 @@ This script will:
   - `zsh-completions`
 - Set up symbolic links for `.zshrc`.
 - Set up symbolic links for `.vimrc` (basic Vim configuration).
+- Load custom functions from `functions.zsh`.
+
+---
+
+### Install Python Lab
+
+To set up the persistent Python Lab environment (used for testing and data utilities), run the installation script:
+
+```bash
+cd ~/dotfiles && ./install_python_lab.sh
+```
+
+This script will:
+
+- Install **uv** (managed by **Mise**) for ultra-fast package management.
+- Initialize the lab project in `~/dotfiles/scripts/python/` with core data science and utility packages (`pandas`, `rich`, `httpx`, etc.).
+- Set up symbolic links to make the environment accessible at `~/.virtualenvs/lab`.
+- Enable the `py` command for a pre-configured **IPython** shell and rapid script execution.
 
 ---
 
@@ -210,6 +229,7 @@ dotfiles/
 ├── install_ghostty.sh       # Ghostty installation script
 ├── install_nvim.sh          # Neovim installation script
 ├── install_opencode.sh      # OpenCode installation script
+├── install_python_lab.sh    # Python Lab installation script
 ├── install_tmux.sh          # Tmux installation script
 ├── install_vscode.sh        # VS Code installation script
 ├── install_wallpapers.sh    # Wallpaper installation script

@@ -1,0 +1,6 @@
+httpx
+numpy
+pandas
+pyarrow
+pytz
+ipython
