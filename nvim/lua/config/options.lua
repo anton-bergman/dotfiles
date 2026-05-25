@@ -18,6 +18,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		"javascriptreact",
 		"typescript",
 		"typescriptreact",
+		"lua",
 		"vue",
 		"svelte",
 		"css",
