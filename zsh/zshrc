@@ -1,30 +1,28 @@
-
 # Initialize Homebrew
-if [[ -f "/opt/homebrew/bin/brew" ]] then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
+if [[ -f "/opt/homebrew/bin/brew" ]]; then
+	eval "$(/opt/homebrew/bin/brew shellenv)"
 fi
 
 # Initialize Mise Version Manager
 if [ -f "$HOME/.local/bin/mise" ]; then
-   export PATH="$HOME/.local/bin:$PATH"
-   eval "$(mise activate zsh)"
+	export PATH="$HOME/.local/bin:$PATH"
+	eval "$(mise activate zsh)"
 fi
 
 # Set Git editor environment variables if Neovim is installed
 if command -v nvim >/dev/null 2>&1; then
-  export GIT_EDITOR="nvim"
-  export VISUAL="nvim"
-  export EDITOR="nvim"
+	export GIT_EDITOR="nvim"
+	export VISUAL="nvim"
+	export EDITOR="nvim"
 fi
 
 # Load environment variables from .env if it exists
 if [[ -f "$HOME/dotfiles/.env" ]]; then
-  source "$HOME/dotfiles/.env"
+	source "$HOME/dotfiles/.env"
 fi
 
 # Initialize Oh-My-Posh with a custom theme for the Zsh prompt
 eval "$(oh-my-posh init zsh --config ~/dotfiles/zsh/oh-my-posh/my-theme.yaml)"
-
 
 # --- Plugins ---
 PLUGIN_DIR=~/dotfiles/zsh/plugins
@@ -36,7 +34,7 @@ source $PLUGIN_DIR/zsh-autosuggestions/zsh-autosuggestions.plugin.zsh
 source $PLUGIN_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 # zsh-syntax-highlighting allows customizing the colors of different command components.
 # Set the color using different formats:
-# - Hex color: "fg=#123456" 
+# - Hex color: "fg=#123456"
 # - Color name: "fg=green"
 # - ANSI color code: "fg=10" (where 10 is a color code in the 256-color palette)
 #
@@ -45,9 +43,9 @@ source $PLUGIN_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 # for i in {0..15}; do printf "\e[48;5;${i}m  %3d  \e[0m" $i; done; echo
 
 # Customize zsh-syntax-highlighting styles for specific elements, default is "fg=green"
-ZSH_HIGHLIGHT_STYLES[suffix-alias]="fg=10"  # Set color for alias suffixes to Bright Green (using ANSI color code 10)
-ZSH_HIGHLIGHT_STYLES[precommand]="fg=10"    # Set color for precommand parts (e.g., the beginning of the command) to Bright Green
-ZSH_HIGHLIGHT_STYLES[arg0]="fg=10"          # Set color for the first argument of the command (arg0) to Bright Green
+ZSH_HIGHLIGHT_STYLES[suffix - alias]="fg=10" # Set color for alias suffixes to Bright Green (using ANSI color code 10)
+ZSH_HIGHLIGHT_STYLES[precommand]="fg=10"     # Set color for precommand parts (e.g., the beginning of the command) to Bright Green
+ZSH_HIGHLIGHT_STYLES[arg0]="fg=10"           # Set color for the first argument of the command (arg0) to Bright Green
 
 # Load zsh-completions plugin
 source $PLUGIN_DIR/zsh-completions/zsh-completions.plugin.zsh
@@ -56,9 +54,8 @@ fpath=($PLUGIN_DIR/zsh-completions/src $fpath)
 
 # Enable Docker CLI completions if directory exists
 if [[ -d "$HOME/.docker/completions" ]]; then
-  fpath=($HOME/.docker/completions $fpath)
+	fpath=($HOME/.docker/completions $fpath)
 fi
-
 
 # ----- Custom Functions -----
 if [[ -f "$HOME/dotfiles/zsh/functions.zsh" ]]; then
@@ -69,7 +66,6 @@ if [[ -f "$HOME/dotfiles/zsh/python.zsh" ]]; then
 	source "$HOME/dotfiles/zsh/python.zsh"
 fi
 
-
 # ----- zsh-completion styling -----
 
 # Set color scheme for ls zsh-completion output
@@ -79,16 +75,14 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 # Configure Zsh completion list colors based on the `LS_COLORS` environment variable
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 
-
 # ----- Aliases -----
 alias ls='ls --color'
 
-# ----- Set language and formatting preferences ----- 
-export LANG=en_US.UTF-8          # Set the default language to English
-export LC_MESSAGES=en_US.UTF-8   # Ensure program messages are displayed in English  
-export LC_TIME=sv_SE.UTF-8       # Use Swedish formats for dates and times  
-export LC_NUMERIC=sv_SE.UTF-8    # Use Swedish formatting for numbers (e.g., decimal commas)  
-
+# ----- Set language and formatting preferences -----
+export LANG=en_US.UTF-8        # Set the default language to English
+export LC_MESSAGES=en_US.UTF-8 # Ensure program messages are displayed in English
+export LC_TIME=sv_SE.UTF-8     # Use Swedish formats for dates and times
+export LC_NUMERIC=sv_SE.UTF-8  # Use Swedish formatting for numbers (e.g., decimal commas)
 
 # ----- Keybindings -----
 
@@ -106,10 +100,9 @@ export LC_NUMERIC=sv_SE.UTF-8    # Use Swedish formatting for numbers (e.g., dec
 bindkey -e
 
 # Search backward through the history as you type part of a command
-bindkey '\e[A' history-search-backward   # '\e[A' = Up Arrow
+bindkey '\e[A' history-search-backward # '\e[A' = Up Arrow
 # Search forward through the history as you type part of a command
-bindkey '\e[B' history-search-forward    # '\e[B' = Down Arrow
-
+bindkey '\e[B' history-search-forward # '\e[B' = Down Arrow
 
 # ----- History -----
 
@@ -138,18 +131,18 @@ setopt hist_find_no_dups
 
 # Load machine-specific settings from ~/.zshrc.local (git-ignored)
 if [[ -f "$HOME/.zshrc.local" ]]; then
-  source "$HOME/.zshrc.local"
+	source "$HOME/.zshrc.local"
 fi
 
 # Initialize completion system once daily to minimize disk reads
 autoload -Uz compinit
 if [[ -n "$(find "${ZDOTDIR:-$HOME}/.zcompdump" -mtime -1 2>/dev/null)" ]]; then
-  compinit -C
+	compinit -C
 else
-  compinit
+	compinit
 fi
 
 # Asynchronously compile .zcompdump to native bytecode (.zwc) in the background
 if [[ -f "${ZDOTDIR:-$HOME}/.zcompdump" && ! "${ZDOTDIR:-$HOME}/.zcompdump.zwc" -nt "${ZDOTDIR:-$HOME}/.zcompdump" ]]; then
-  zcompile "${ZDOTDIR:-$HOME}/.zcompdump" &!
+	zcompile "${ZDOTDIR:-$HOME}/.zcompdump" &|
 fi
