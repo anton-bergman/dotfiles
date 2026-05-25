@@ -5,3 +5,11 @@ zsh/plugins/*
 wallpapers/*
 !wallpapers/.gitkeep
 zsh/zshrc.local
+
+# Secure Static Storage Vault (.secrets/)
+.secrets/**/*
+!.secrets/**/
+!.secrets/**/.gitkeep
+!.secrets/README.md
+!.secrets/**/*.example
+

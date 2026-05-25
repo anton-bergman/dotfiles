@@ -1,0 +1,13 @@
+# Local/Sensitive SSH Configurations
+# Copy this file to "config" in this directory (e.g. .secrets/ssh/config)
+# This file is completely ignored by Git.
+#
+# You can include this file in your main ~/.ssh/config like so:
+#   Include ~/dotfiles/.secrets/ssh/config
+
+# Example Work Server
+Host work
+    HostName work.com
+    User anton
+    IdentityFile ~/.ssh/id_rsa_work
+    Port 2222
