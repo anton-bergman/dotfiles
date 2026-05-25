@@ -21,6 +21,7 @@ info "Setting up configuration files..."
 DOTFILES_DIR="$HOME/dotfiles"
 OPENCODE_CONFIG_DIR="$HOME/.config/opencode"
 OPENCODE_THEMES_DIR="$OPENCODE_CONFIG_DIR/themes"
+OPENCODE_MCP_DIR="$OPENCODE_CONFIG_DIR/mcp"
 
 # Ensure directories exist
 mkdir -p "$OPENCODE_THEMES_DIR"
@@ -30,5 +31,11 @@ link_file "$DOTFILES_DIR/opencode/opencode.json" "$OPENCODE_CONFIG_DIR/opencode.
 
 # Link theme
 link_file "$DOTFILES_DIR/opencode/my-theme.json" "$OPENCODE_THEMES_DIR/my-theme.json"
+
+# Link MCP configuration
+link_file "$DOTFILES_DIR/opencode/mcp" "$OPENCODE_MCP_DIR"
+
+# Link skills directory
+link_file "$DOTFILES_DIR/opencode/skills" "$OPENCODE_CONFIG_DIR/skills"
 
 success "OpenCode setup completed!"
