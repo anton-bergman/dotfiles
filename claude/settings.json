@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "allow": [
+      "Bash(git log *)",
+      "Bash(git diff *)",
+      "Bash(git status)",
+      "Bash(npm run *)",
+      "Bash(python *)",
+      "Bash(ruff *)",
+      "Bash(stylua *)",
+      "Bash(shellcheck *)",
+      "Bash(prettier *)"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(sudo *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
+    ],
+    "defaultMode": "auto"
+  },
+  "model": "claude-opus-4-6",
+  "alwaysThinkingEnabled": true,
+  "skipAutoPermissionPrompt": true
+}

@@ -12,6 +12,7 @@ This repository contains my personal dotfiles for configuring and automating the
   - [Install Neovim](#install-neovim)
   - [Install VS Code](#install-vs-code)
   - [Install OpenCode](#install-opencode)
+  - [Install Claude Code](#install-claude-code)
   - [Install Ghostty](#install-ghostty)
   - [Install Tmux](#install-tmux)
   - [Install CLI Tools](#install-cli-tools)
@@ -95,7 +96,7 @@ cd ~/dotfiles && ./install_nvim.sh
 
 This script will:
 
-- Install **Neovim**, **LuaRocks**, and **Ripgrep** _(required for Telescope fuzzy finding)_.
+- Install **Neovim**, **LuaRocks**, **Ripgrep** _(required for Telescope fuzzy finding)_, and **ImageMagick** _(required for image.nvim plugin)_.
 - Set up symbolic links for Neovim configuration.
 - Configure **Lazy.nvim** as the plugin manager with pre-installed plugins for LSP, autocompletion, syntax highlighting, and more.
 
@@ -142,6 +143,24 @@ This script will:
 - Install **OpenCode** via Homebrew (if not already installed).
 - Set up symbolic links for OpenCode configuration (`opencode.json`).
 - Install OpenCode plugins if `package.json` exists in `~/.config/opencode/`.
+
+---
+
+### Install Claude Code
+
+Claude Code is Anthropic's AI-powered coding assistant CLI. To set up Claude Code configuration, run the installation script:
+
+```bash
+cd ~/dotfiles && ./install_claude.sh
+```
+
+This script will:
+
+- Install **Claude Code** via Homebrew cask (if not already installed).
+- Set up symbolic links for Claude Code settings (`settings.json`).
+- Set up symbolic links for global instructions (`CLAUDE.md`).
+
+**Note:** After installation, run `claude` once to complete the OAuth login flow.
 
 ---
 
@@ -211,6 +230,7 @@ The repository is organized as follows:
 
 ```
 dotfiles/
+├── claude/                  # Claude Code AI assistant configuration
 ├── cli-tools/               # CLI tools installation scripts
 ├── ghostty/                 # Ghostty terminal configuration
 ├── iterm2/                  # iTerm2 configuration files
@@ -225,7 +245,8 @@ dotfiles/
 ├── vim/                     # Basic Vim configuration
 ├── vscode/                  # VS Code settings and extensions
 ├── wallpapers/              # Desktop wallpapers (downloaded, not in repo)
-├── zsh/                     # Zsh configuration and plugins
+├── zsh/                     # Zsh configuration, plugins, and custom functions
+├── install_claude.sh        # Claude Code installation script
 ├── install_ghostty.sh       # Ghostty installation script
 ├── install_nvim.sh          # Neovim installation script
 ├── install_opencode.sh      # OpenCode installation script
