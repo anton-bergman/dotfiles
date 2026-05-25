@@ -6,8 +6,8 @@ fi
 
 # Initialize Mise Version Manager
 if [ -f "$HOME/.local/bin/mise" ]; then
-	export PATH="$HOME/.local/bin:$PATH"
-	eval "$(mise activate zsh --shims)"
+   export PATH="$HOME/.local/bin:$PATH"
+   eval "$(mise activate zsh)"
 fi
 
 # Set Git editor environment variables if Neovim is installed
@@ -53,8 +53,11 @@ ZSH_HIGHLIGHT_STYLES[arg0]="fg=10"          # Set color for the first argument o
 source $PLUGIN_DIR/zsh-completions/zsh-completions.plugin.zsh
 # Make the zsh-completions plugin functions available
 fpath=($PLUGIN_DIR/zsh-completions/src $fpath)
-# Initialize the Zsh completion system
-autoload -U compinit && compinit
+
+# Enable Docker CLI completions if directory exists
+if [[ -d "$HOME/.docker/completions" ]]; then
+  fpath=($HOME/.docker/completions $fpath)
+fi
 
 
 # ----- Custom Functions -----
@@ -132,3 +135,21 @@ setopt hist_save_no_dups
 setopt hist_ignore_dups
 # Do not save duplicate commands when searching through history
 setopt hist_find_no_dups
+
+# Load machine-specific settings from ~/.zshrc.local (git-ignored)
+if [[ -f "$HOME/.zshrc.local" ]]; then
+  source "$HOME/.zshrc.local"
+fi
+
+# Initialize completion system once daily to minimize disk reads
+autoload -Uz compinit
+if [[ -n "$(find "${ZDOTDIR:-$HOME}/.zcompdump" -mtime -1 2>/dev/null)" ]]; then
+  compinit -C
+else
+  compinit
+fi
+
+# Asynchronously compile .zcompdump to native bytecode (.zwc) in the background
+if [[ -f "${ZDOTDIR:-$HOME}/.zcompdump" && ! "${ZDOTDIR:-$HOME}/.zcompdump.zwc" -nt "${ZDOTDIR:-$HOME}/.zcompdump" ]]; then
+  zcompile "${ZDOTDIR:-$HOME}/.zcompdump" &!
+fi

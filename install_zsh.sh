@@ -41,7 +41,18 @@ info "Linking configuration files..."
 
 DOTFILES_DIR="$HOME/dotfiles"
 
+# Bootstrap local machine-specific zshrc if missing
+LOCAL_ZSH_CONFIG="$DOTFILES_DIR/zsh/zshrc.local"
+LOCAL_ZSH_TEMPLATE="$DOTFILES_DIR/zsh/zshrc.local.example"
+
+if [[ ! -f "$LOCAL_ZSH_CONFIG" ]]; then
+	info "Bootstrapping zshrc.local from example template..."
+	cp "$LOCAL_ZSH_TEMPLATE" "$LOCAL_ZSH_CONFIG"
+	success "Created local zsh configuration at $LOCAL_ZSH_CONFIG"
+fi
+
 link_file "$DOTFILES_DIR/zsh/zshrc" "$HOME/.zshrc"
+link_file "$LOCAL_ZSH_CONFIG" "$HOME/.zshrc.local"
 link_file "$DOTFILES_DIR/vim/vimrc" "$HOME/.vimrc"
 link_file "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
 link_file "$DOTFILES_DIR/git/gitignore_global" "$HOME/.gitignore_global"

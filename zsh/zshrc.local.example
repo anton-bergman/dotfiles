@@ -1,0 +1,52 @@
+# ============================================================================
+# ~/.zshrc.local - Machine-Specific & Sensitive Overrides
+# ============================================================================
+# This file is sourced automatically by ~/.zshrc.
+# It lives in ~/dotfiles/zsh/zshrc.local but is ignored by Git,
+# meaning you can safely put secrets, keys, and local machine configs here.
+# ============================================================================
+
+# ----------------------------------------------------------------------------
+# 1. API Keys and Sensitive Environment Variables (Never Commit to Git!)
+# ----------------------------------------------------------------------------
+# export GEMINI_API_KEY="AIzaSy..."
+# export ANTHROPIC_API_KEY="sk-ant-..."
+# export OPENAI_API_KEY="sk-proj-..."
+# export SENTRY_AUTH_TOKEN="sentry_..."
+
+# ----------------------------------------------------------------------------
+# 2. Machine-Specific Paths or Overrides
+# ----------------------------------------------------------------------------
+# If this machine has a specific user directory or unique path overrides,
+# define them here so that your public dotfiles stay completely portable.
+#
+# export PATH="/custom/local/path/bin:$PATH"
+
+# ----------------------------------------------------------------------------
+# 3. Work vs. Personal Developer Profiles (AWS, GCP, Kubernetes)
+# ----------------------------------------------------------------------------
+# Load heavy, workspace-specific CLI integrations only on the devices that
+# actually require them. This keeps your personal laptop fast.
+#
+# # AWS Profile
+# export AWS_PROFILE="personal"
+#
+# # Google Cloud SDK Configuration
+# export GCLOUD_SDK_ROOT="/opt/homebrew/share/google-cloud-sdk"
+# if [[ -d "$GCLOUD_SDK_ROOT" ]]; then
+#     export PATH="$GCLOUD_SDK_ROOT/bin:$PATH"
+#     if [[ -f "$GCLOUD_SDK_ROOT/completion.zsh.inc" ]]; then
+#         source "$GCLOUD_SDK_ROOT/completion.zsh.inc"
+#     fi
+# fi
+#
+# # Kubernetes completions (only if kubectl exists)
+# if command -v kubectl &>/dev/null; then
+#   source <(kubectl completion zsh)
+# fi
+
+# ----------------------------------------------------------------------------
+# 4. Device-Specific Custom Aliases / Prompts
+# ----------------------------------------------------------------------------
+# alias deploy-prod="ssh production-server.com"
+# alias start-local-db="brew services start postgresql@15"

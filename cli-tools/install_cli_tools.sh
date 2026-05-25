@@ -15,6 +15,7 @@ header "CLI Tools Setup"
 # Format: cmd:pkg:provider
 smart_install "fastfetch:fastfetch:brew" "fastfetch:fastfetch:apt"
 smart_install "tldr:tlrc:brew" "tldr:tlrc:apt"
+smart_install "btop:btop:brew" "btop:btop:apt"
 
 # TODO: These tools are dependencies of neovim and used for some neovim plugins
 # Investigate if that should be handled in some separate way and if so then how

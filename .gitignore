@@ -4,3 +4,4 @@ zsh/plugins/*
 .env
 wallpapers/*
 !wallpapers/.gitkeep
+zsh/zshrc.local
