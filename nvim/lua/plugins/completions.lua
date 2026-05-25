@@ -1,5 +1,5 @@
 return {
-	"hrsh7th/nvim-cmp",   -- The completion plugin
+	"hrsh7th/nvim-cmp", -- The completion plugin
 	dependencies = {
 		"hrsh7th/cmp-nvim-lsp", -- LSP completion source
 		"hrsh7th/cmp-buffer", -- Buffer completion source
@@ -10,8 +10,12 @@ return {
 		cmp.setup({
 
 			window = {
-				completion = cmp.config.window.bordered(),
-				documentation = cmp.config.window.bordered(),
+				completion = {
+					border = "rounded",
+				},
+				documentation = {
+					border = "rounded",
+				},
 			},
 
 			-- Keymaps
