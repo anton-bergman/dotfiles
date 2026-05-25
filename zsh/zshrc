@@ -43,7 +43,7 @@ source $PLUGIN_DIR/zsh-syntax-highlighting/zsh-syntax-highlighting.plugin.zsh
 # for i in {0..15}; do printf "\e[48;5;${i}m  %3d  \e[0m" $i; done; echo
 
 # Customize zsh-syntax-highlighting styles for specific elements, default is "fg=green"
-ZSH_HIGHLIGHT_STYLES[suffix - alias]="fg=10" # Set color for alias suffixes to Bright Green (using ANSI color code 10)
+ZSH_HIGHLIGHT_STYLES['suffix-alias']="fg=10" # Set color for alias suffixes to Bright Green (using ANSI color code 10)
 ZSH_HIGHLIGHT_STYLES[precommand]="fg=10"     # Set color for precommand parts (e.g., the beginning of the command) to Bright Green
 ZSH_HIGHLIGHT_STYLES[arg0]="fg=10"           # Set color for the first argument of the command (arg0) to Bright Green
 
@@ -74,6 +74,15 @@ export LSCOLORS="exfxcxdxbxegedabagacad" # default colors
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Za-z}'
 # Configure Zsh completion list colors based on the `LS_COLORS` environment variable
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+# Enable interactive completion menu selection (navigate matching options with arrow keys)
+zstyle ':completion:*' menu select
+# Enable instant command recognition for newly installed packages across all open terminal windows
+zstyle ':completion:*' rehash true
+
+# ----- Poweruser Shell Options -----
+setopt interactivecomments # Allow pasting command lines containing comments (ignored in interactive shell)
+setopt autocd              # Change directories by simply typing their name (no cd required)
+setopt globdots            # Standard globbing patterns (like *) will match hidden dotfiles
 
 # ----- Aliases -----
 alias ls='ls --color'
@@ -108,25 +117,17 @@ bindkey '\e[B' history-search-forward # '\e[B' = Down Arrow
 
 # History file location
 HISTFILE=~/.zsh_history
-# Number of history commands to keep in memory
-HISTSIZE=1000
+# Number of history commands to keep in memory (Lifetime persistent database)
+HISTSIZE=100000
 # Number of history commands to save in the history file
-SAVEHIST=$HISTSIZE
-# Erase any duplicates in history file
-HISTDUP=erase
-# Append to history file when session ends instead of overwriting
-setopt appendhistory
-# Share history across sessions
+SAVEHIST=100000
+# Share history across sessions (automatically appends and keeps sessions synchronized)
 setopt sharehistory
-# Ignore commands that start with a space from being saved in history
+# Ignore commands that start with a space from being saved in history (crucial for secrets)
 setopt hist_ignore_space
-# Prevent saving duplicate commands in history
+# Delete older matching duplicates from history, keeping only the most recent command
 setopt hist_ignore_all_dups
-# Do not save consecutive duplicate commands in history
-setopt hist_save_no_dups
-# Prevent duplicate commands from being added to history
-setopt hist_ignore_dups
-# Do not save duplicate commands when searching through history
+# Do not show duplicate commands when reverse-searching through history
 setopt hist_find_no_dups
 
 # Load machine-specific settings from ~/.zshrc.local (git-ignored)
