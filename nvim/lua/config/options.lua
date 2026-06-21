@@ -24,6 +24,7 @@ vim.api.nvim_create_autocmd("FileType", {
 		"css",
 		"scss",
 		"html",
+		"swift",
 		-- Config/data files
 		"json",
 		"jsonc",
