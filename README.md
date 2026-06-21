@@ -234,23 +234,27 @@ The repository is organized as follows:
 ```
 dotfiles/
 ├── claude/                  # Claude Code AI assistant configuration
-├── cli-tools/               # CLI tools installation scripts
 ├── ghostty/                 # Ghostty terminal configuration
-├── iterm2/                  # iTerm2 configuration files
+├── git/                     # Global Git configuration (gitconfig, gitignore_global)
+├── iterm2/                  # iTerm2 configuration profiles and themes
+├── lib/                     # Shared shell utility functions (utils.sh)
 ├── macos/                   # macOS-specific settings and scripts
 │   ├── aerospace/           # AeroSpace window manager config
 │   ├── raycast/             # Raycast scripts and setup
 │   ├── simple-bar/          # Simple-Bar configuration
 │   └── sketchybar/          # SketchyBar configuration
-├── nvim/                    # Neovim configuration
+├── mise/                    # Global tool version manager (mise) configuration
+├── nvim/                    # Neovim configuration (Lazy.nvim setup)
 ├── opencode/                # OpenCode AI assistant configuration
+├── scripts/                 # Utility scripts (e.g., Python Lab and data tools)
 ├── tmux/                    # Tmux configuration
-├── vim/                     # Basic Vim configuration
-├── vscode/                  # VS Code settings and extensions
-├── wallpapers/              # Desktop wallpapers (downloaded, not in repo)
+├── vim/                     # Basic Vim configuration (.vimrc)
+├── vscode/                  # VS Code settings and extension lists
+├── wallpapers/              # Desktop wallpapers (downloaded, gitignored)
 ├── zsh/                     # Zsh configuration, plugins, and custom functions
 ├── install_claude.sh        # Claude Code installation script
-├── install_ghostty.sh       # Ghostty installation script
+├── install_cli_tools.sh     # CLI tools installation script (btop, fzf, fastfetch, etc.)
+├── install_ghostty.sh       # Ghostty terminal installation script
 ├── install_nvim.sh          # Neovim installation script
 ├── install_opencode.sh      # OpenCode installation script
 ├── install_python_lab.sh    # Python Lab installation script
@@ -258,7 +262,8 @@ dotfiles/
 ├── install_vscode.sh        # VS Code installation script
 ├── install_wallpapers.sh    # Wallpaper installation script
 ├── install_zsh.sh           # Zsh installation script
-└── README.md                # Documentation
+├── README.md                # Main documentation and installation guide
+└── TODO.md                  # Personal task list and roadmap
 ```
 
 ---
