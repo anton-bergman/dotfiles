@@ -1,0 +1,27 @@
+{
+  "mcpServers": {
+    "sellpy-knowledge-wiki": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://knowledge-wiki-worker.johan-e93.workers.dev/mcp"
+      ]
+    },
+    "bigquery": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@toolbox-sdk/server",
+        "--config=/Users/anton/.config/agents/mcp/bq-tools.yaml",
+        "--stdio"
+      ]
+    },
+    "linear": {
+      "type": "remote",
+      "url": "https://mcp.linear.app/mcp",
+      "headers": {
+        "Authorization": "Bearer {env:LINEAR_API_KEY}"
+      }
+    }
+  }
+}

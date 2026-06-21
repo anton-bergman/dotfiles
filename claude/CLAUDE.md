@@ -1,4 +1,4 @@
-@./AGENTS.md
+@../agents/INSTRUCTIONS.md
 
 ## Claude Code Specific
 

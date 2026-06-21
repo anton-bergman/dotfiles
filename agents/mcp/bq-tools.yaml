@@ -1,0 +1,73 @@
+kind: source
+name: bigquery-source
+type: bigquery
+project: analytics-309907
+location: europe-west3
+writeMode: blocked
+---
+kind: tool
+name: analyze_contribution
+type: bigquery-analyze-contribution
+source: bigquery-source
+description: Use this tool to analyze the contribution about changes to key metrics in multi-dimensional data.
+---
+kind: tool
+name: ask_data_insights
+type: bigquery-conversational-analytics
+source: bigquery-source
+description: |
+  Use this tool to perform data analysis, get insights,
+  or answer complex questions about the contents of specific
+  BigQuery tables.
+---
+kind: tool
+name: execute_sql
+type: bigquery-execute-sql
+source: bigquery-source
+description: Use this tool to execute sql statement.
+---
+kind: tool
+name: forecast
+type: bigquery-forecast
+source: bigquery-source
+description: Use this tool to forecast time series data.
+---
+kind: tool
+name: get_dataset_info
+type: bigquery-get-dataset-info
+source: bigquery-source
+description: Use this tool to get dataset metadata.
+---
+kind: tool
+name: get_table_info
+type: bigquery-get-table-info
+source: bigquery-source
+description: Use this tool to get table metadata.
+---
+kind: tool
+name: list_dataset_ids
+type: bigquery-list-dataset-ids
+source: bigquery-source
+description: Use this tool to list datasets.
+---
+kind: tool
+name: list_table_ids
+type: bigquery-list-table-ids
+source: bigquery-source
+description: Use this tool to list tables.
+---
+kind: tool
+name: search_catalog
+type: bigquery-search-catalog
+source: bigquery-source
+description: Use this tool to find tables, views, models, routines or connections.
+---
+kind: toolset
+name: data
+tools:
+  - execute_sql
+  - list_dataset_ids
+  - list_table_ids
+  - get_dataset_info
+  - get_table_info
+  - search_catalog

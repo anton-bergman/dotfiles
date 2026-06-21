@@ -141,7 +141,8 @@ cd ~/dotfiles && ./install_opencode.sh
 This script will:
 
 - Install **OpenCode** via Homebrew (if not already installed).
-- Set up symbolic links for OpenCode configuration (`opencode.json`).
+- Generate a dynamic `opencode.json` configuration file by merging the base template (`opencode/opencode.json`) with universal MCP servers (`agents/mcp.json`).
+- Set up symbolic links for universal agent skills and instructions from the `agents/` directory.
 - Install OpenCode plugins if `package.json` exists in `~/.config/opencode/`.
 
 ---
@@ -157,8 +158,9 @@ cd ~/dotfiles && ./install_claude.sh
 This script will:
 
 - Install **Claude Code** via Homebrew cask (if not already installed).
+- Generate a Claude-compatible `mcp.json` file by extracting only local MCP servers from the universal `agents/mcp.json`.
 - Set up symbolic links for Claude Code settings (`settings.json`).
-- Set up symbolic links for global instructions (`CLAUDE.md`).
+- Set up symbolic links for universal agent skills and global instructions (`agents/INSTRUCTIONS.md`).
 
 **Note:** After installation, run `claude` once to complete the OAuth login flow.
 
@@ -233,7 +235,8 @@ The repository is organized as follows:
 
 ```
 dotfiles/
-├── claude/                  # Claude Code AI assistant configuration
+├── agents/                  # Agnostic Agent Core: universal skills, MCP servers, and global instructions
+├── claude/                  # Claude Code base configuration templates
 ├── ghostty/                 # Ghostty terminal configuration
 ├── git/                     # Global Git configuration (gitconfig, gitignore_global)
 ├── iterm2/                  # iTerm2 configuration profiles and themes
@@ -245,7 +248,7 @@ dotfiles/
 │   └── sketchybar/          # SketchyBar configuration
 ├── mise/                    # Global tool version manager (mise) configuration
 ├── nvim/                    # Neovim configuration (Lazy.nvim setup)
-├── opencode/                # OpenCode AI assistant configuration
+├── opencode/                # OpenCode base configuration templates and plugins
 ├── scripts/                 # Utility scripts (e.g., Python Lab and data tools)
 ├── tmux/                    # Tmux configuration
 ├── vim/                     # Basic Vim configuration (.vimrc)
