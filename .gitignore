@@ -5,6 +5,8 @@ zsh/plugins/*
 wallpapers/*
 !wallpapers/.gitkeep
 zsh/zshrc.local
+opencode/plugins/*
+!opencode/plugins/.gitkeep
 
 # Secure Static Storage Vault (.secrets/)
 .secrets/**/*
