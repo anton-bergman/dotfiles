@@ -21,7 +21,14 @@ smart_install "aerospace:nikitabobko/tap/aerospace:cask"
 # 4. Install JankyBorders
 smart_install "borders:FelixKratz/formulae/borders:brew"
 
-# 5. Symlink Configuration
+# 5. Compile input source switcher
+info "Compiling input source switcher..."
+mkdir -p "$HOME/.local/bin"
+swiftc -O "$HOME/dotfiles/macos/aerospace/switch-input-source.swift" \
+	-o "$HOME/.local/bin/switch-input-source"
+success "Input source switcher compiled."
+
+# 6. Symlink Configuration
 info "Linking configuration..."
 link_file "$HOME/dotfiles/macos/aerospace/aerospace.toml" "$HOME/.config/aerospace/aerospace.toml"
 

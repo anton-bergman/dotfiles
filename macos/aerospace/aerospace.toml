@@ -40,6 +40,26 @@ after-startup-command = [
 #	  '/usr/bin/osascript -e "tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\""',
 #	]
 
+##### Input Source Switching #####
+# Automatically switch keyboard input source based on the focused app.
+# Terminals and code editors -> English (ABC)
+# Browsers -> Swedish-Pro
+# All other apps -> no change (keeps current layout)
+# Requires: ~/.local/bin/switch-input-source (compiled by install_aerospace.sh)
+on-focus-changed = [
+    """exec-and-forget /bin/bash -c '
+    APP_ID=$(aerospace list-windows --focused --format "%{app-bundle-id}" 2>/dev/null)
+    case "$APP_ID" in
+        com.mitchellh.ghostty|com.googlecode.iterm2|org.alacritty|net.kovidgoyal.kitty|com.microsoft.VSCode|com.todesktop.230313mzl4w4u92)
+            $HOME/.local/bin/switch-input-source com.apple.keylayout.ABC
+            ;;
+        com.google.Chrome|company.thebrowser.Browser|com.apple.Safari)
+            $HOME/.local/bin/switch-input-source com.apple.keylayout.Swedish-Pro
+            ;;
+    esac
+    '"""
+]
+
 # Start AeroSpace at login
 start-at-login = true
 
