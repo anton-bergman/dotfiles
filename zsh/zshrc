@@ -57,6 +57,11 @@ if [[ -d "$HOME/.docker/completions" ]]; then
 	fpath=($HOME/.docker/completions $fpath)
 fi
 
+# ----- fzf (Fuzzy Finder) -----
+if command -v fzf >/dev/null 2>&1; then
+	eval "$(fzf --zsh)"
+fi
+
 # ----- Custom Functions -----
 if [[ -f "$HOME/dotfiles/zsh/functions.zsh" ]]; then
 	source "$HOME/dotfiles/zsh/functions.zsh"

@@ -200,14 +200,17 @@ To install additional CLI tools:
 
 1. Run the CLI tools installation script:
    ```bash
-   cd ~/dotfiles/cli-tools && ./install_cli_tools.sh
+   cd ~/dotfiles && ./install_cli_tools.sh
    ```
 
 This script will install:
 
 - **Fastfetch:** A fast system information tool.
 - **TLDR:** Simplified and community-driven man pages.
+- **Btop:** A modern, interactive terminal resource monitor.
+- **Fzf:** A general-purpose command-line fuzzy finder.
 - **Lazygit:** A simple terminal UI for git commands.
+- **VisiData:** A terminal spreadsheet viewer and data analyzer.
 
 ---
 

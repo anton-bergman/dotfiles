@@ -16,6 +16,7 @@ header "CLI Tools Setup"
 smart_install "fastfetch:fastfetch:brew" "fastfetch:fastfetch:apt"
 smart_install "tldr:tlrc:brew" "tldr:tlrc:apt"
 smart_install "btop:btop:brew" "btop:btop:apt"
+smart_install "fzf:fzf:brew" "fzf:fzf:apt"
 
 # TODO: These tools are dependencies of neovim and used for some neovim plugins
 # Investigate if that should be handled in some separate way and if so then how
@@ -25,7 +26,7 @@ smart_install "vd:visidata:uv"
 if command_exists visidata; then
 	# To support specific data formats (like Pickles) we inject these libraries
 	# into VisiData's private virtualenv.
-	uv tool install --with pandas,numpy,pytz visidata --force
+	uv tool install --with pandas,numpy,pyarrow,pytz visidata --force
 fi
 
 success "CLI tools setup completed!"
