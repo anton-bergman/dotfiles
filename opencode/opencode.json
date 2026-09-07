@@ -20,7 +20,87 @@
       "sudo*": "ask",
       "git push*": "ask",
       "git commit*": "ask",
-      "git add*": "ask"
+      "git add*": "ask",
+      // --- AWS Guardrails ---
+      "aws *": "ask",
+      "aws * list-*": "allow",
+      "aws * describe-*": "allow",
+      "aws * get-*": "allow",
+      "aws * head-*": "allow",
+      "aws * help*": "allow",
+      "aws s3 ls*": "allow"
+    },
+    "external_directory": {
+      "*": "ask",
+      // --- Workspaces ---
+      "~/dev": "allow",
+      "~/dev/*": "allow",
+      "~/dev/**": "allow",
+      "/Users/anton/dev": "allow",
+      "/Users/anton/dev/*": "allow",
+      "/Users/anton/dev/**": "allow",
+
+      "~/dotfiles": "allow",
+      "~/dotfiles/*": "allow",
+      "~/dotfiles/**": "allow",
+      "/Users/anton/dotfiles": "allow",
+      "/Users/anton/dotfiles/*": "allow",
+      "/Users/anton/dotfiles/**": "allow",
+
+      "~/playground": "allow",
+      "~/playground/*": "allow",
+      "~/playground/**": "allow",
+      "/Users/anton/playground": "allow",
+      "/Users/anton/playground/*": "allow",
+      "/Users/anton/playground/**": "allow",
+
+      // --- Core Configuration Directories ---
+      "~/.config": "allow",
+      "~/.config/*": "allow",
+      "~/.config/**": "allow",
+      "/Users/anton/.config": "allow",
+      "/Users/anton/.config/*": "allow",
+      "/Users/anton/.config/**": "allow",
+
+      // --- Root Shell & Dotfiles ---
+      "~/.zshrc": "allow",
+      "~/.zshrc.local": "allow",
+      "~/.zprofile": "allow",
+      "~/.gitconfig": "allow",
+      "~/.gitignore_global": "allow",
+      "~/.vimrc": "allow",
+      "/Users/anton/.zshrc": "allow",
+      "/Users/anton/.zshrc.local": "allow",
+      "/Users/anton/.zprofile": "allow",
+      "/Users/anton/.gitconfig": "allow",
+      "/Users/anton/.gitignore_global": "allow",
+      "/Users/anton/.vimrc": "allow",
+
+      // --- AI Assistants & Agents ---
+      "~/.claude": "allow",
+      "~/.claude/*": "allow",
+      "~/.claude/**": "allow",
+      "/Users/anton/.claude": "allow",
+      "/Users/anton/.claude/*": "allow",
+      "/Users/anton/.claude/**": "allow",
+      "~/.claude.json": "allow",
+      "/Users/anton/.claude.json": "allow",
+
+      // --- Scratch & Temporary Work ---
+      "~/tmp": "allow",
+      "~/tmp/*": "allow",
+      "~/tmp/**": "allow",
+      "/Users/anton/tmp": "allow",
+      "/Users/anton/tmp/*": "allow",
+      "/Users/anton/tmp/**": "allow",
+
+      "/tmp": "allow",
+      "/tmp/*": "allow",
+      "/tmp/**": "allow",
+      "/private/tmp": "allow",
+      "/private/tmp/*": "allow",
+      "/private/tmp/**": "allow",
+      "/var/folders/**": "allow"
     }
   },
   // ============================================================================

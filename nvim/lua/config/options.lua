@@ -126,3 +126,7 @@ vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 -- register, effectively preserving the clipboard's contents while still
 -- performing the delete operation
 vim.keymap.set("x", "<leader>p", [["_dP]])
+
+-- Resize neovim window height (vertical axis)
+vim.keymap.set("n", "<M-Up>", "<cmd>resize -2<CR>", { desc = "Increase window height" })
+vim.keymap.set("n", "<M-Down>", "<cmd>resize +2<CR>", { desc = "Decrease window height" })

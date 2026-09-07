@@ -4,9 +4,13 @@ zsh/plugins/*
 .env
 wallpapers/*
 !wallpapers/.gitkeep
-zsh/zshrc.local
 opencode/plugins/*
 !opencode/plugins/.gitkeep
+
+# Local, private, and machine-specific overrides
+*.local
+*.local.*
+**/local/*
 
 # Secure Static Storage Vault (.secrets/)
 .secrets/**/*

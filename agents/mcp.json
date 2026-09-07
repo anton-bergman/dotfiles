@@ -22,6 +22,17 @@
       "headers": {
         "Authorization": "Bearer {env:LINEAR_API_KEY}"
       }
+    },
+    "betterstack": {
+      "type": "http",
+      "url": "https://mcp.betterstack.com"
+    },
+    "redash": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://redash-mcp-worker.johan-e93.workers.dev/mcp"
+      ]
     }
   }
 }

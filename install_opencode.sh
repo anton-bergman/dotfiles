@@ -63,14 +63,16 @@ with open(os.path.join(dotfiles_dir, "agents/mcp.json"), "r") as f:
 # Translate mcpServers to OpenCode mcp format
 opencode_mcp = {}
 for name, mcp_server in mcp_data.get("mcpServers", {}).items():
-    if mcp_server.get("type") == "remote":
+    server_type = mcp_server.get("type")
+    
+    if server_type in ("remote", "sse", "http") or "url" in mcp_server:
         opencode_mcp[name] = {
             "type": "remote",
             "url": mcp_server.get("url"),
-            "headers": mcp_server.get("headers", {}),
-            "oauth": False,
             "enabled": True
         }
+        if "headers" in mcp_server:
+            opencode_mcp[name]["headers"] = mcp_server.get("headers")
     else:
         opencode_mcp[name] = {
             "type": "local",
@@ -92,8 +94,21 @@ link_file "$DOTFILES_DIR/opencode/my-theme.json" "$OPENCODE_THEMES_DIR/my-theme.
 # Link plugins directory
 link_file "$DOTFILES_DIR/opencode/plugins" "$OPENCODE_CONFIG_DIR/plugins"
 
-# Link Ponytail custom commands to global user commands
-link_file "$DOTFILES_DIR/opencode/plugins/ponytail/.opencode/command" "$OPENCODE_CONFIG_DIR/commands"
+# Link custom commands to global user commands
+if [ -L "$OPENCODE_CONFIG_DIR/commands" ]; then
+	rm "$OPENCODE_CONFIG_DIR/commands"
+fi
+mkdir -p "$OPENCODE_CONFIG_DIR/commands"
+
+# Link Agnostic Commands
+for cmd in "$DOTFILES_DIR/agents/commands"/*.md; do
+	[ -e "$cmd" ] && link_file "$cmd" "$OPENCODE_CONFIG_DIR/commands/$(basename "$cmd")"
+done
+
+# Link Ponytail Commands
+for cmd in "$DOTFILES_DIR/opencode/plugins/ponytail/.opencode/command"/*.md; do
+	[ -e "$cmd" ] && link_file "$cmd" "$OPENCODE_CONFIG_DIR/commands/$(basename "$cmd")"
+done
 
 # Link Ponytail configuration
 link_file "$DOTFILES_DIR/opencode/ponytail/config.json" "$HOME/.config/ponytail/config.json"
