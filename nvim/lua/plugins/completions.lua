@@ -7,8 +7,8 @@ return {
 	},
 	config = function()
 		local cmp = require("cmp")
-		cmp.setup({
 
+		cmp.setup({
 			window = {
 				completion = {
 					border = "rounded",
@@ -32,5 +32,16 @@ return {
 				{ name = "path" }, -- Enable file path completions
 			},
 		})
+
+		cmp.setup.filetype({ "sql", "mysql", "plsql" }, {
+			sources = {
+				{ name = "bigquery_schema" },
+				{ name = "vim-dadbod-completion" },
+				{ name = "buffer" },
+			},
+		})
+
+		-- Register custom BigQuery completion source
+		cmp.register_source("bigquery_schema", require("utils.bigquery").new_cmp_source())
 	end,
 }

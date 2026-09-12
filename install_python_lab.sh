@@ -42,4 +42,10 @@ info "Installing core lab dependencies..."
 info "Linking lab environment..."
 link_file "$LAB_VENV" "$VENV_DIR/lab"
 
+# --- Pre-cache BigQuery Schema (best-effort) ---
+if [ -f "$LAB_DIR/sync_bq_schema.py" ] && [ -n "${BIGQUERY_DATASETS:-}" ]; then
+	info "Syncing BigQuery schema cache for Neovim..."
+	"$LAB_VENV/bin/python" "$LAB_DIR/sync_bq_schema.py" || warn "BigQuery schema sync skipped (run 'sync-bq-schema' after authenticating gcloud)."
+fi
+
 success "Python Lab setup completed!"

@@ -44,3 +44,17 @@ py-clean() {
 	# Rebuild and re-link
 	(cd "$HOME/dotfiles" && ./install_python_lab.sh)
 }
+
+# Sync BigQuery schema for Neovim autocompletion
+sync-bq-schema() {
+	# Self-healing: Ensure venv and symlink exist
+	if [[ ! -d "$PY_LAB_PROJECT/.venv" ]]; then
+		(cd "$HOME/dotfiles" && ./install_python_lab.sh)
+	elif [[ ! -L "$PY_LAB_VENV" ]]; then
+		mkdir -p "$(dirname "$PY_LAB_VENV")"
+		ln -sfn "$PY_LAB_PROJECT/.venv" "$PY_LAB_VENV"
+	fi
+
+	local script_path="$HOME/dotfiles/scripts/python/sync_bq_schema.py"
+	"$PY_LAB_VENV/bin/python" "$script_path" "$@"
+}

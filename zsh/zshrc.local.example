@@ -40,10 +40,10 @@
 #     fi
 # fi
 #
-# # Kubernetes completions (only if kubectl exists)
-# if command -v kubectl &>/dev/null; then
-#   source <(kubectl completion zsh)
-# fi
+# # BigQuery Neovim autocompletion settings (used by sync-bq-schema)
+# export BIGQUERY_PROJECT="my-gcp-project"
+# export BIGQUERY_DATASETS="dataset1,dataset2"
+# export BIGQUERY_REGION="region-europe-west3"
 
 # ----------------------------------------------------------------------------
 # 4. Device-Specific Custom Aliases / Prompts
