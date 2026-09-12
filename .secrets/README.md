@@ -13,6 +13,7 @@ To guarantee that no sensitive keys or raw recovery codes ever leak to Git, this
 
 - `github/` ➜ For GitHub 2FA recovery codes (e.g., `.secrets/github/recovery-codes.txt`).
 - `ssh/` ➜ For machine-specific, local-only SSH configurations (e.g., `.secrets/ssh/config`).
+- `documents/` ➜ For offline documents, contracts.
 
 ## Setup on a New Machine
 
