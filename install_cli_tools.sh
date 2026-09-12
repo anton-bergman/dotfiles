@@ -4,7 +4,7 @@
 set -e
 
 # Source utility functions
-source "$(dirname "$0")/../lib/utils.sh"
+source "$HOME/dotfiles/lib/utils.sh"
 
 # Ensure brew/mise are ready
 ensure_base_ready
