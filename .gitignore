@@ -1,21 +1,34 @@
+# Operating System & Environment
 .DS_Store
-zsh/plugins/*
-!zsh/plugins/.gitkeep
 .env
-wallpapers/*
-!wallpapers/.gitkeep
-opencode/plugins/*
-!opencode/plugins/.gitkeep
 
-# Local, private, and machine-specific overrides
-*.local
-*.local.*
-**/local/*
-
-# Secure Static Storage Vault (.secrets/)
+# Secrets & Credentials Vault
 .secrets/**/*
 !.secrets/**/
 !.secrets/**/.gitkeep
 !.secrets/README.md
 !.secrets/**/*.example
+
+# Local & Machine-Specific Overrides
+*.local
+*.local.*
+**/local/*
+
+# External Plugins & Downloaded Assets
+zsh/plugins/*
+!zsh/plugins/.gitkeep
+opencode/plugins/*
+!opencode/plugins/.gitkeep
+wallpapers/*
+!wallpapers/.gitkeep
+
+# AI Agent Core (Private Skills & Commands)
+agents/commands/build-dashboard.md
+agents/commands/publish-to-redash.md
+agents/skills/data-model/
+agents/skills/redash/
+agents/skills/sellpy-query-writer/
+
+# OpenCode Tooling & Local Configs
+opencode/ponytail/
 
