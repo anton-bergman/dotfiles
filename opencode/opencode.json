@@ -3,7 +3,7 @@
   // ============================================================================
   // CORE SETTINGS
   // ============================================================================
-  "model": "google/gemini-3.5-flash",
+  "model": "google/gemini-3.8-flash",
   "theme": "my-theme", // Default: "opencode"
   "formatter": false, // Default: true
   "autoupdate": true,
