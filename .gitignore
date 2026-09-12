@@ -28,6 +28,7 @@ agents/commands/publish-to-redash.md
 agents/skills/data-model/
 agents/skills/redash/
 agents/skills/sellpy-query-writer/
+agents/mcp/bq-tools.yaml
 
 # OpenCode Tooling & Local Configs
 opencode/ponytail/
