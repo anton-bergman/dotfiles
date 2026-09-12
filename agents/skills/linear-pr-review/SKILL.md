@@ -24,21 +24,29 @@ Perform a comprehensive code and PR review of a branch. This skill goes beyond i
    - Define clearly in your own mind: **What is the core problem being solved, and what are the constraints?**
 
 4. **Isolate Changes & Extract the Diff:**
-   - Retrieve the base branch of the PR using `gh pr view --json baseRefName --jq .baseRefName`.
-   - Run a **three-dot diff** against this base branch to isolate only the changes introduced on this specific branch:
+   - **Resolve the Base Branch:**
+     1. Check if the current branch has an open PR using `gh pr view --json baseRefName --jq .baseRefName`.
+     2. If not found or `gh pr view` fails, check default remote branch via `git symbolic-ref refs/remotes/origin/HEAD` or tracking of `main`/`master`/`develop`.
+     3. Fall back to local presence of `main` or `master`. If ambiguous, ask the user to specify.
+   - Run a **three-dot diff** against the resolved base branch to isolate only the changes introduced on this specific branch:
      ```bash
      git diff <base_branch>...HEAD
      ```
 
-5. **Deep Code Comprehension & Impact Analysis ("The What"):**
+5. **Deep Code Comprehension, Correctness & Design Audit ("The What"):**
    - **Full-File Reading:** Do not rely on raw diff chunks. For any file containing substantial logic edits, read the surrounding code (or the entire file) using the file-reading tools to fully grasp the state machine, imports, and local context.
    - **Reference Audit (Impact Analysis):** For any modified, added, or renamed methods, interfaces, or classes, use the grep search tool to scan the rest of the codebase. Verify that no references or caller sites are broken by the signature/structural changes.
-   - **Trace Dynamic Payloads:** Mentally trace a dry-run payload through the modified code paths. (e.g., Simulate an error state, a missing field, or an "Unsure" fallback value. Ensure it does not trigger silent failures, unhandled exceptions, or dynamic typing issues down the line).
+   - **Bug & Unintended Behavior Audit:** Actively probe for subtle logic errors, state machine invalid transitions, off-by-one errors, unhandled edge cases (null/undefined, empty inputs), race conditions, resource/memory leaks, and unhandled promise rejections or exceptions.
+   - **Architecture & Design Quality Audit:** Critically evaluate design decisions even if the code works correctly. Check for:
+     - Leaky abstractions, tight coupling, and violation of single responsibility.
+     - Misplaced logic (e.g. UI doing data transformations, API routers holding business logic).
+     - Rigid or fragile implementations that create tech debt or will be a nightmare to maintain or extend in the future.
+   - **Trace Dynamic Payloads:** Mentally trace a dry-run payload through the modified code paths (e.g. simulate an error state, a missing field, or unexpected values). Ensure it does not trigger silent failures or dynamic typing issues down the line.
 
 6. **Audit Test Quality & Engineering Conventions:**
    - Locate the test files covering the modified code.
    - Read these tests and evaluate:
-     - Do they cover actual logical boundary conditions and edge cases?
+     - Do they cover actual logical boundary conditions, edge cases, and failure modes?
      - Are they asserting exact expected values rather than using overly broad or trivial mocks?
      - Do they follow local testing patterns (e.g., `pytest`, `pytest-asyncio`, utilizing shared fixtures)?
 
@@ -47,6 +55,10 @@ Perform a comprehensive code and PR review of a branch. This skill goes beyond i
      - **Summary of Intent & Changes:** Clear, high-level summary of the problem, why these specific changes were made, and how they solve it.
      - **Requirements & Alignment Check:** Rigorous assessment against the GitHub description and Linear criteria. Explicitly call out any gaps, omissions, or partial implementations.
      - **Downstream Impact & Safety Check:** Confirm whether reference analysis and dynamic dry-runs surfaced any risks, regressions, or caller breakages.
-     - **Code Quality, Logic, & Conventions Feedback:** Constructive feedback detailing files and lines, indicating where code can be simplified, made more performant, or more compliant with local styling.
+     - **Code Quality, Architectural Design & Maintainability:** Detailed feedback on implementation choices, design risks, anti-patterns, maintainability concerns, and performance or styling improvements.
      - **Testing Integrity:** Critique of test coverage and assertions.
+     - **Actionable Inline Comment Suggestions:** For each specific finding (bug, bad design choice, edge case, or refactoring opportunity), provide ready-to-use comment suggestions:
+       - **Location:** File path and line number(s) (e.g., `src/services/order.ts:142`).
+       - **Context:** Relevant code snippet or line reference.
+       - **Suggested Comment:** The exact, well-crafted markdown comment text ready to copy-paste onto GitHub or Linear (using ` ```suggestion ```` blocks where appropriate), clearly explaining the issue, why it matters, and a recommended fix.
      - **Conclusion & Recommendation:** Clear, actionable verdict (e.g., Approve, Approve with minor notes, or Request changes).

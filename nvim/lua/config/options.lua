@@ -128,5 +128,5 @@ vim.keymap.set("n", "<c-l>", ":wincmd l<CR>")
 vim.keymap.set("x", "<leader>p", [["_dP]])
 
 -- Resize neovim window height (vertical axis)
-vim.keymap.set("n", "<M-Up>", "<cmd>resize -2<CR>", { desc = "Increase window height" })
-vim.keymap.set("n", "<M-Down>", "<cmd>resize +2<CR>", { desc = "Decrease window height" })
+vim.keymap.set("n", "<M-Up>", "<cmd>resize +2<CR>", { desc = "Increase window height" })
+vim.keymap.set("n", "<M-Down>", "<cmd>resize -2<CR>", { desc = "Decrease window height" })
