@@ -4,6 +4,7 @@ node = "lts"
 uv = "latest"
 python = "latest"
 usage = "latest"  # CLI autocomplete engine used by mise
+bun = "latest"
 
 [settings]
 

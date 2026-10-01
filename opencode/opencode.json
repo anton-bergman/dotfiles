@@ -27,6 +27,7 @@
       "aws * describe-*": "allow",
       "aws * get-*": "allow",
       "aws * head-*": "allow",
+      "aws * filter-*": "allow",
       "aws * help*": "allow",
       "aws s3 ls*": "allow"
     },
