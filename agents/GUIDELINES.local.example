@@ -1,0 +1,40 @@
+# Local Workplace Context & Environment Directives
+
+_Note: This file is machine-local and git-ignored. It provides company domain context and ad-hoc directives._
+
+---
+
+## 1. Cloud & Data Warehouse Conventions
+
+### A. Google Cloud / BigQuery
+
+- **Default Warehouse:** `analytics-309907.datawarehouse_prod`.
+- **Query Discipline:**
+  - Execute read-only analytical and validation queries only.
+  - Always inspect partition filters (`date`, `created_at`) to avoid expensive table scans on large tables (`items`, `orders`, `dispatch`).
+  - Cross-reference domain schemas via `sellpy-knowledge-wiki` or BigQuery metadata before composing queries.
+
+### B. Vector Search & Qdrant
+
+- **Cluster Usage:** Strictly read-only exploration and vector similarity search.
+- Do not run collection recreation, point upserts, or snapshot creations.
+
+### C. AWS Infrastructure
+
+- **Services:** S3, Lambda, CloudWatch Logs.
+- Log inspection via `aws logs filter-log-events` or `aws logs tail` is encouraged for debugging.
+- No deploying, deleting, or invoking mutating Lambdas.
+
+---
+
+## 2. Core Domain Map & Pipelines
+
+- **Pricer / Pricing Service:** Machine learning pricing pipelines, valuation algorithms, and markdown scheduling.
+- **Recommendations & Assortment:** User recommendations, item similarity embeddings, vector search retrieval, auto-measurement, and photo/material extraction.
+- **ETL & Logistics:** Warehouse routing, order management, inventory ingestion, and item status transitions.
+
+---
+
+## 3. Ad-Hoc Directives & Notes
+
+_(Add scratch notes, temporary project focuses, or active team policies here as needed)_

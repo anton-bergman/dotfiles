@@ -160,7 +160,7 @@ This script will:
 - Install **Claude Code** via Homebrew cask (if not already installed).
 - Generate a Claude-compatible `mcp.json` file by extracting only local MCP servers from the universal `agents/mcp.json`.
 - Set up symbolic links for Claude Code settings (`settings.json`).
-- Set up symbolic links for universal agent skills and global instructions (`agents/INSTRUCTIONS.md`).
+- Set up symbolic links for universal agent skills and global guidelines (`agents/GUIDELINES.md`).
 
 **Note:** After installation, run `claude` once to complete the OAuth login flow.
 

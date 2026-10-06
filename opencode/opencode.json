@@ -146,10 +146,5 @@
   },
   "skills": {
     "paths": ["~/.config/agents/skills"]
-  },
-  // ============================================================================
-  // PROJECT INSTRUCTIONS
-  // ============================================================================
-  // Default: [] (no instructions)
-  "instructions": ["~/.config/agents/INSTRUCTIONS.md"]
+  }
 }

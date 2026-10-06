@@ -26,6 +26,12 @@ mkdir -p "$CLAUDE_CONFIG_DIR"
 # Ensure agents central directory is linked
 link_file "$DOTFILES_DIR/agents" "$HOME/.config/agents"
 
+# Ensure local guidelines exist
+if [ ! -f "$DOTFILES_DIR/agents/GUIDELINES.local.md" ]; then
+	info "Creating agents/GUIDELINES.local.md from example..."
+	cp "$DOTFILES_DIR/agents/GUIDELINES.local.example" "$DOTFILES_DIR/agents/GUIDELINES.local.md"
+fi
+
 # Link settings
 link_file "$DOTFILES_DIR/claude/settings.json" "$CLAUDE_CONFIG_DIR/settings.json"
 

@@ -1,6 +1,6 @@
-# INSTRUCTIONS.md
+# AGENTS.md
 
-This repository contains personal dotfiles and configurations for a macOS-centric development environment. These guidelines are intended for agentic coding assistants to ensure consistency, safety, and idiomatic development within this codebase.
+This repository contains personal dotfiles and configurations for a macOS-centric development environment. These guidelines are intended for agentic coding assistants working inside this dotfiles repository to ensure consistency, safety, and idiomatic development within this codebase.
 
 ## Project Structure
 

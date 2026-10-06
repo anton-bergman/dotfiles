@@ -30,6 +30,17 @@ mkdir -p "$OPENCODE_THEMES_DIR"
 # Ensure agents central directory is linked
 link_file "$DOTFILES_DIR/agents" "$HOME/.config/agents"
 
+# Ensure local guidelines exist
+if [ ! -f "$DOTFILES_DIR/agents/GUIDELINES.local.md" ]; then
+	info "Creating agents/GUIDELINES.local.md from example..."
+	cp "$DOTFILES_DIR/agents/GUIDELINES.local.example" "$DOTFILES_DIR/agents/GUIDELINES.local.md"
+fi
+
+# Compile global AGENTS.md for OpenCode
+info "Compiling global AGENTS.md for OpenCode..."
+rm -f "$OPENCODE_CONFIG_DIR/AGENTS.md"
+cat "$DOTFILES_DIR/agents/GUIDELINES.md" "$DOTFILES_DIR/agents/GUIDELINES.local.md" > "$OPENCODE_CONFIG_DIR/AGENTS.md"
+
 # Remove existing config if it is a symlink or file to prevent writing through symlink
 rm -f "$OPENCODE_CONFIG_DIR/opencode.json"
 
