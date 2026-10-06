@@ -24,10 +24,6 @@ OPENCODE_THEMES_DIR="$OPENCODE_CONFIG_DIR/themes"
 OPENCODE_MCP_DIR="$OPENCODE_CONFIG_DIR/mcp"
 OPENCODE_PLUGINS_DIR="$DOTFILES_DIR/opencode/plugins"
 
-# --- Manage OpenCode Plugins ---
-info "Managing OpenCode plugins..."
-clone_or_pull "https://github.com/DietrichGebert/ponytail.git" "$OPENCODE_PLUGINS_DIR/ponytail" "main"
-
 # Ensure directories exist
 mkdir -p "$OPENCODE_THEMES_DIR"
 
@@ -104,13 +100,5 @@ mkdir -p "$OPENCODE_CONFIG_DIR/commands"
 for cmd in "$DOTFILES_DIR/agents/commands"/*.md; do
 	[ -e "$cmd" ] && link_file "$cmd" "$OPENCODE_CONFIG_DIR/commands/$(basename "$cmd")"
 done
-
-# Link Ponytail Commands
-for cmd in "$DOTFILES_DIR/opencode/plugins/ponytail/.opencode/command"/*.md; do
-	[ -e "$cmd" ] && link_file "$cmd" "$OPENCODE_CONFIG_DIR/commands/$(basename "$cmd")"
-done
-
-# Link Ponytail configuration
-link_file "$DOTFILES_DIR/opencode/ponytail/config.json" "$HOME/.config/ponytail/config.json"
 
 success "OpenCode setup completed!"
