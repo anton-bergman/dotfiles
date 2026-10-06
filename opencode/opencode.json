@@ -18,9 +18,20 @@
       "*": "allow", // Default
       "rm -rf*": "ask",
       "sudo*": "ask",
+
+      // --- Git Guardrails ---
       "git push*": "ask",
       "git commit*": "ask",
       "git add*": "ask",
+      "git merge*": "ask",
+      "git rebase*": "ask",
+      "git reset*": "ask",
+      "git restore*": "ask",
+      "git clean*": "ask",
+      "git branch -[dD]*": "ask",
+      "git stash drop*": "ask",
+      "git stash clear*": "ask",
+
       // --- AWS Guardrails ---
       "aws *": "ask",
       "aws * list-*": "allow",
