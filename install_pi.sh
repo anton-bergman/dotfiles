@@ -45,12 +45,7 @@ cat "$DOTFILES_DIR/agents/GUIDELINES.md" "$DOTFILES_DIR/agents/GUIDELINES.local.
 info "Linking Pi root configuration files..."
 for cfg in "$DOTFILES_DIR/pi"/*.json "$DOTFILES_DIR/pi"/*.yaml "$DOTFILES_DIR/pi"/*.yml; do
 	[ -e "$cfg" ] || continue
-	filename=$(basename "$cfg")
-
-	# Exclude permissions.json as it has its own target path in extensions
-	[ "$filename" = "permissions.json" ] && continue
-
-	link_file "$cfg" "$PI_CONFIG_DIR/$filename"
+	link_file "$cfg" "$PI_CONFIG_DIR/$(basename "$cfg")"
 done
 
 # Compile Pi-compatible mcp.json (removes client-specific keys like 'type')
@@ -76,12 +71,21 @@ with open(os.path.join(pi_config_dir, "mcp.json"), "w") as f:
     json.dump({"mcpServers": clean_servers}, f, indent=2)
 EOF
 
-# Link permissions configuration
-info "Linking Pi permissions..."
+# Link extension-scoped configurations
+info "Linking extension-scoped configurations..."
 rm -f "$PI_EXTENSIONS_DIR/guardrails.ts"
 
-mkdir -p "$PI_EXTENSIONS_DIR/pi-permission-system"
-link_file "$DOTFILES_DIR/pi/permissions.json" "$PI_EXTENSIONS_DIR/pi-permission-system/config.json"
+if [ -d "$DOTFILES_DIR/pi/extensions" ]; then
+	for ext_dir in "$DOTFILES_DIR/pi/extensions"/*; do
+		[ -d "$ext_dir" ] || continue
+		ext_name=$(basename "$ext_dir")
+		mkdir -p "$PI_EXTENSIONS_DIR/$ext_name"
+		for cfg in "$ext_dir"/*; do
+			[ -e "$cfg" ] || continue
+			link_file "$cfg" "$PI_EXTENSIONS_DIR/$ext_name/$(basename "$cfg")"
+		done
+	done
+fi
 
 # Reconcile declared Pi packages dynamically from settings.json (Bidirectional Sync)
 info "Reconciling declared Pi packages from settings.json..."
