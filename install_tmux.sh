@@ -21,4 +21,7 @@ clone_or_pull "https://github.com/tmux-plugins/tpm.git" "$HOME/.tmux/plugins/tpm
 info "Linking configuration..."
 link_file "$HOME/dotfiles/tmux" "$HOME/.config/tmux"
 
+# Ensure Python utility scripts are executable
+chmod +x "$HOME/dotfiles/scripts/python/tmux_safe_copy.py" 2>/dev/null || true
+
 success "Tmux setup completed!"

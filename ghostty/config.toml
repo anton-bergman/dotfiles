@@ -18,6 +18,9 @@ cursor-style-blink = false
 # This may be needed for cleaner experience in some setups
 shell-integration-features = "no-cursor"
 
+# macOS Option Key: Treat Left Option as Alt for terminal shortcuts (Alt+C, Alt+T, etc.)
+# Keeps Right Option intact for typing special characters and diacritics
+macos-option-as-alt = "left"
+
 # Keybindings
-keybind = shift+enter=text:\u001b\r # Map Shift+Enter to ESC+Enter
 keybind = cmd+t=new_window
