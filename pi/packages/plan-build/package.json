@@ -1,0 +1,9 @@
+{
+  "name": "plan-build",
+  "version": "1.0.0",
+  "description": "Local Plan/Build mode package with Shift+Tab toggle and startup mode support",
+  "keywords": ["pi-package"],
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  }
+}

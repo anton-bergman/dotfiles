@@ -1,0 +1,9 @@
+{
+  "name": "copy-code",
+  "version": "1.0.0",
+  "description": "Copy latest assistant codeblock to clipboard cleanly via Alt+C",
+  "keywords": ["pi-package"],
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  }
+}

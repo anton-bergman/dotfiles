@@ -1,0 +1,10 @@
+{
+  "toolActivation": "auto",
+  "workflow": "none",
+  "autoOpenBrowser": false,
+  "maxInlineContentChars": 30000,
+  "shortcuts": {
+    "curate": "ctrl+shift+s",
+    "activity": "ctrl+shift+w"
+  }
+}

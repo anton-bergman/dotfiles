@@ -1,0 +1,63 @@
+{
+  "$schema": "https://raw.githubusercontent.com/gotgenes/pi-packages/main/packages/pi-permission-system/schemas/permissions.schema.json",
+  "permission": {
+    "*": "allow",
+    "path": {
+      "*": "allow",
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "*.env.example": "allow",
+      "*token*": "ask",
+      "~/.ssh/*": "deny",
+      "~/.gnupg/*": "deny",
+      "~/.git-credentials": "deny",
+      "~/.netrc": "deny",
+      "~/.zsh_history": "deny",
+      "~/.bash_history": "deny",
+      "~/.history": "deny",
+      "~/.aws/*": "ask",
+      "~/.config/gcloud/*": "ask",
+      "~/.kube/*": "ask",
+      "~/Library/Keychains/*": "deny",
+      "/etc/sudoers*": "deny",
+      "/etc/shadow*": "deny"
+    },
+    "bash": {
+      "*": "allow",
+      "sudo *": "ask",
+      "rm -rf *": "ask",
+
+      "git push *": "deny",
+      "git reset --hard*": "deny",
+      "git clean -f*": "deny",
+
+      "git commit*": "ask",
+      "git add*": "ask",
+      "git merge*": "ask",
+      "git rebase*": "ask",
+      "git restore*": "ask",
+      "git checkout*": "ask",
+      "git branch -[dD]*": "ask",
+      "git stash drop*": "ask",
+      "git stash clear*": "ask",
+
+      "aws *": "ask",
+      "aws * list*": "allow",
+      "aws * describe*": "allow",
+      "aws * get*": "allow",
+      "aws * head*": "allow",
+      "aws * filter*": "allow",
+      "aws * help*": "allow",
+      "aws s3 ls*": "allow",
+      "aws logs tail*": "allow"
+    },
+    "external_directory": {
+      "*": "ask",
+      "~/tmp/*": "allow",
+      "/tmp/*": "allow"
+    },
+    "external_directory_read": {
+      "*": "allow"
+    }
+  }
+}

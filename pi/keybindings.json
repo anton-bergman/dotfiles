@@ -1,0 +1,4 @@
+{
+  "$schema": "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/schemas/keybindings.json",
+  "app.thinking.cycle": "alt+t"
+}

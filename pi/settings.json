@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/earendil-works/pi/main/packages/coding-agent/schemas/settings.json",
+  "theme": "dark",
+  "externalEditor": "nvim",
+  "quietStartup": false,
+  "tuiMode": "regular",
+  "defaultProjectTrust": "ask",
+  "enableInstallTelemetry": false,
+  "enableAnalytics": false,
+  "npmCommand": ["mise", "exec", "node@lts", "--", "npm"],
+  "packages": [
+    "npm:pi-mcp-adapter@5.1.0",
+    "~/dotfiles/pi/packages/plan-build",
+    "~/dotfiles/pi/packages/copy-code",
+    "npm:@gotgenes/pi-permission-system@40.0.2",
+    "npm:pi-web-access@0.37.0"
+  ],
+  "skills": ["~/.config/agents/skills"],
+  "enableSkillCommands": true,
+  "defaultProvider": "google",
+  "defaultModel": "gemini-3.8-flash",
+  "defaultThinkingLevel": "low",
+  "compaction": {
+    "enabled": true,
+    "reserveTokens": 16384
+  },
+  "retry": {
+    "enabled": true,
+    "maxRetries": 3
+  },
+  "extensions": ["-builtin:mcp"],
+  "lastChangelogVersion": "1.0.3"
+}

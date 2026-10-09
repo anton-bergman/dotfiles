@@ -158,11 +158,30 @@ cd ~/dotfiles && ./install_claude.sh
 This script will:
 
 - Install **Claude Code** via Homebrew cask (if not already installed).
-- Generate a Claude-compatible `mcp.json` file by extracting only local MCP servers from the universal `agents/mcp.json`.
+- Merge universal MCP servers from `agents/mcp.json` directly into `~/.claude.json`.
 - Set up symbolic links for Claude Code settings (`settings.json`).
 - Set up symbolic links for universal agent skills and global guidelines (`agents/GUIDELINES.md`).
 
 **Note:** After installation, run `claude` once to complete the OAuth login flow.
+
+---
+
+### Install Pi
+
+Pi is an extensible, terminal-native AI coding agent. To set up Pi configuration, run the installation script:
+
+```bash
+cd ~/dotfiles && ./install_pi.sh
+```
+
+This script will:
+
+- Install **Pi** via Homebrew formula (`pi-coding-agent`).
+- Set up symbolic links for Pi settings (`settings.json`) and security permissions (`permissions.json` via `@gotgenes/pi-permission-system`).
+- Set up symbolic links for universal MCP servers (`agents/mcp.json`), agent skills, and prompt templates.
+- Compile global guidelines into `~/.pi/agent/AGENTS.md`.
+
+**Note:** After installation, run `pi` and use `/login` to authenticate with your preferred model provider.
 
 ---
 
