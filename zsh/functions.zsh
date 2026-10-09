@@ -5,10 +5,11 @@
 # ============================================
 
 # Create or attach to a tmux project session with pre-configured layout
-# Usage: tn [-c|-o] [directory]
+# Usage: tn [-c|-o|-p] [directory]
 #   tn ~/projects/myapp     - Create/attach to session (default: opencode)
 #   tn -c ~/projects/myapp  - Create/attach with Claude Code as assistant
 #   tn -o ~/projects/myapp  - Create/attach with OpenCode as assistant
+#   tn -p ~/projects/myapp  - Create/attach with Pi as assistant
 #   tn                      - Create/attach for current directory
 tn() {
 	local assistant="opencode"
@@ -24,8 +25,12 @@ tn() {
 			assistant="opencode"
 			shift
 			;;
+		-p)
+			assistant="pi"
+			shift
+			;;
 		*)
-			echo "Unknown flag: $1 (use -c for Claude Code, -o for OpenCode)"
+			echo "Unknown flag: $1 (use -c for Claude Code, -o for OpenCode, -p for Pi)"
 			return 1
 			;;
 		esac
@@ -296,3 +301,41 @@ caf() {
 
 	caffeinate -i -w "$target_pid"
 }
+
+# ============================================
+# GitHub PR Review Draft Staging
+# ============================================
+
+# Stage AI review comments into a private pending review on GitHub
+# Usage: pr-stage [pr_number]
+pr-stage() {
+	local pr_num="${1:-}"
+
+	if [[ -z "$pr_num" ]]; then
+		pr_num=$(gh pr view --json number -q .number 2>/dev/null)
+		if [[ -z "$pr_num" ]]; then
+			echo "Error: No PR specified and current branch has no open PR." >&2
+			echo "Usage: pr-stage [pr_number]" >&2
+			return 1
+		fi
+	fi
+
+	echo "Preparing draft review for PR #$pr_num..."
+	if command -v opencode >/dev/null 2>&1; then
+		opencode -p "/stage-review $pr_num"
+	else
+		echo "OpenCode not found. Run the stage-pr-review skill in your agent of choice for PR #$pr_num."
+	fi
+}
+
+# Clear all pending draft review comments on a PR
+# Usage: pr-clear-drafts [pr_number]
+pr-clear-drafts() {
+	local script_path="$HOME/dotfiles/scripts/python/gh_draft_review.py"
+	if [[ ! -f "$script_path" ]]; then
+		echo "Error: Staging script not found at $script_path" >&2
+		return 1
+	fi
+	python3 "$script_path" clear "$@"
+}
+
