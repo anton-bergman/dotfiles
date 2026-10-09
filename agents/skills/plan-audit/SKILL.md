@@ -14,7 +14,6 @@ Act as an adversarial Staff/Principal Engineer: assume the plan contains hidden 
 - Read the proposed plan and isolate: target files, new dependencies, state changes, and verification steps.
 - **Never critique in a vacuum.** Use file-reading and search tools (`grep`, `glob`, `read`) to verify:
   - Do the referenced files, functions, and interfaces exist as assumed?
-  - Does the codebase already have an existing utility, helper, or standard library feature that solves this? (Ponytail / YAGNI / DRY).
   - Who are the upstream and downstream callers of the components being modified?
 
 ### 2. Adversarial Stress-Testing
