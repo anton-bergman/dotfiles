@@ -33,3 +33,6 @@ agents/mcp/bq-tools.yaml
 # OpenCode Tooling & Local Configs
 opencode/ponytail/
 
+# Pi Local Packages & Extensions
+pi/packages/sellpy-ai-gateway/
+
