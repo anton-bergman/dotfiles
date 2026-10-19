@@ -145,6 +145,6 @@
     }
   },
   "skills": {
-    "paths": ["~/.config/agents/skills"]
+    "paths": ["~/.config/agents/skills", "~/.config/agents/skills/local"]
   }
 }

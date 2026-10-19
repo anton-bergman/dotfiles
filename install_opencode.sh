@@ -101,6 +101,9 @@ link_file "$DOTFILES_DIR/opencode/my-theme.json" "$OPENCODE_THEMES_DIR/my-theme.
 # Link plugins directory
 link_file "$DOTFILES_DIR/opencode/plugins" "$OPENCODE_CONFIG_DIR/plugins"
 
+# Link skills directory from central hub
+link_file "$DOTFILES_DIR/agents/skills" "$OPENCODE_CONFIG_DIR/skills"
+
 # Link custom commands to global user commands
 if [ -L "$OPENCODE_CONFIG_DIR/commands" ]; then
 	rm "$OPENCODE_CONFIG_DIR/commands"
