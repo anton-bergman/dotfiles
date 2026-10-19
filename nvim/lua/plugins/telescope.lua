@@ -9,8 +9,17 @@ return {
 			vim.g.telescope_grep_command = { "grep", "--color=never", "-r", "--exclude-dir={.git,node_modules}", "." }
 
 			-- Keymap to open Telescope's file finder and search for files in the current project
-			-- This respects .gitignore and only shows git-tracked files
-			vim.keymap.set("n", "<leader>ff", builtin.find_files, { desc = "Telescope find files" })
+			-- Respects .gitignore, includes dotfiles (.gitignore, .dockerignore),
+			-- un-ignores machine-local files (*.local, **/local/*), and excludes .git/
+			vim.keymap.set("n", "<leader>ff", function()
+				builtin.find_files({
+					find_command = {
+						"sh",
+						"-c",
+						'(rg --files --hidden -L -g "!.git/*"; rg --files --hidden -L --no-ignore -g "!.git/*" -g "!node_modules/*" -g "!.venv*" -g "!venv*" -g "!.secrets/*" -g "!dist/*" -g "!build/*" -g "*.local" -g "*.local.*" -g "**/local/**") | sort -u',
+					},
+				})
+			end, { desc = "Telescope find files" })
 
 			-- Keymap to search ALL files including untracked/ignored files
 			-- This bypasses git filtering completely
