@@ -7,9 +7,6 @@ import {
 type Mode = "plan" | "build";
 
 const MODE_RE = /^(plan|build)\b/i;
-const APPROVAL_RE =
-  /^(ok|okay|k|kk|go|yes|yep|yeah|sure|agreed|approved|proceed|do it|go ahead|let'?s? do it|build it|sounds? good|looks? good|perfect|great)[.,!]?\s*(go|let'?s? go|do it|proceed|ahead|build)?[.,!]?$/i;
-const APPROVAL_MAX_LEN = 30;
 
 const PLAN_PROMPT = `
 
@@ -18,7 +15,7 @@ The user asked for a plan and the conversation is read-only until they approve i
 - Produce a structured implementation plan: goal, ordered steps, files to create/modify, tests to write/update, risks, open questions.
 - Do NOT create, edit, or delete any files. Do NOT run mutating commands (installs, migrations, git write operations, shell redirects, etc.).
 - Read-only inspection is allowed: ls, cat/grep/read, git status/diff/log, etc.
-- If the user's message approves the plan or says to proceed ("ok", "go", "ok, go", "proceed", "sounds good"), switch to executing the plan instead.
+- If the user explicitly switches to build mode (e.g. says "build", "/build", or presses Shift+Tab), switch to executing the plan instead.
 - Otherwise end by telling the user to say "build" (or press Shift+Tab) to proceed.`;
 
 const BUILD_PROMPT = `
@@ -69,11 +66,6 @@ export default function (pi: ExtensionAPI) {
     return match[1].toLowerCase() === "plan" ? "plan" : "build";
   };
 
-  const isApproval = (prompt: string): boolean => {
-    const trimmed = prompt.trim();
-    return trimmed.length <= APPROVAL_MAX_LEN && APPROVAL_RE.test(trimmed);
-  };
-
   // Initialize mode and restore state on session start
   pi.on("session_start", (_event, ctx) => {
     // Default to 'plan' as configured, unless restored from entries
@@ -100,11 +92,6 @@ export default function (pi: ExtensionAPI) {
     if (detected) {
       modeChanged = mode !== detected;
       mode = detected;
-      updateUI(ctx);
-      pi.appendEntry({ mode }, "plan_build_mode");
-    } else if (mode === "plan" && isApproval(event.prompt)) {
-      modeChanged = true;
-      mode = "build";
       updateUI(ctx);
       pi.appendEntry({ mode }, "plan_build_mode");
     }

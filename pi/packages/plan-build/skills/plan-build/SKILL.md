@@ -8,9 +8,9 @@ description: Plan/Build workflow mode control. ACTIVATE whenever the user says "
 The user controls the workflow with two keywords or the `Shift+Tab` keyboard shortcut:
 
 - **plan** (or Shift+Tab) — you are in PLAN mode: only produce a plan, never change anything.
-- **build** (or Shift+Tab / "ok, go") — you are in BUILD mode: execute the plan and make changes.
+- **build** (or Shift+Tab) — you are in BUILD mode: execute the plan and make changes.
 
-A companion extension enforces this mechanically: in plan mode, `write`/`edit` tool calls and mutating `bash` commands are blocked. The mode is sticky until the user says **build** (or explicitly approves the plan, e.g. "ok, go", or presses Shift+Tab).
+A companion extension enforces this mechanically: in plan mode, `write`/`edit` tool calls and mutating `bash` commands are blocked. The mode is sticky until the user says **build** (or presses Shift+Tab).
 
 ## When the user says "plan"
 
