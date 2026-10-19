@@ -338,4 +338,3 @@ pr-clear-drafts() {
 	fi
 	python3 "$script_path" clear "$@"
 }
-
