@@ -39,7 +39,7 @@ fi
 # Compile global AGENTS.md for Pi
 info "Compiling global AGENTS.md for Pi..."
 rm -f "$PI_CONFIG_DIR/AGENTS.md"
-cat "$DOTFILES_DIR/agents/GUIDELINES.md" "$DOTFILES_DIR/agents/GUIDELINES.local.md" > "$PI_CONFIG_DIR/AGENTS.md"
+cat "$DOTFILES_DIR/agents/GUIDELINES.md" "$DOTFILES_DIR/agents/GUIDELINES.local.md" >"$PI_CONFIG_DIR/AGENTS.md"
 
 # Link all root Pi configuration files (*.json, *.yaml, *.yml)
 info "Linking Pi root configuration files..."
@@ -89,7 +89,7 @@ fi
 
 # Reconcile declared Pi packages dynamically from settings.json (Bidirectional Sync)
 info "Reconciling declared Pi packages from settings.json..."
-python3 - << 'EOF'
+python3 - <<'EOF'
 import json
 import os
 import subprocess
