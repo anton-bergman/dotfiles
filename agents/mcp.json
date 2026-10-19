@@ -17,11 +17,8 @@
       ]
     },
     "linear": {
-      "type": "remote",
-      "url": "https://mcp.linear.app/mcp",
-      "headers": {
-        "Authorization": "Bearer {env:LINEAR_API_KEY}"
-      }
+      "type": "http",
+      "url": "https://mcp.linear.app/mcp"
     },
     "betterstack": {
       "type": "http",
