@@ -8,16 +8,34 @@ return {
 			-- Set the grep command to use `grep` instead of `ripgrep`
 			vim.g.telescope_grep_command = { "grep", "--color=never", "-r", "--exclude-dir={.git,node_modules}", "." }
 
+			-- Shared arguments for ripgrep (Single Source of Truth for Telescope search scope)
+			-- Includes dotfiles (.github/, configs), follows symlinks (-L), and includes *.local files,
+			-- while strictly excluding caches, virtualenvs, dependencies, and git history.
+			local rg_base_args = {
+				"--hidden",
+				"-L",
+				"--no-ignore-vcs",
+				"-g", "!.git/*",
+				"-g", "!node_modules/*",
+				"-g", "!.venv*",
+				"-g", "!venv*",
+				"-g", "!.secrets/*",
+				"-g", "!dist/*",
+				"-g", "!build/*",
+				"-g", "!__pycache__/*",
+				"-g", "!.pytest_cache/*",
+				"-g", "!.ruff_cache/*",
+				"-g", "!.mypy_cache/*",
+				"-g", "!.DS_Store",
+			}
+
 			-- Keymap to open Telescope's file finder and search for files in the current project
-			-- Respects .gitignore, includes dotfiles (.gitignore, .dockerignore),
-			-- un-ignores machine-local files (*.local, **/local/*), and excludes .git/
+			-- Uses shared rg_base_args (100% symmetric with live_grep)
 			vim.keymap.set("n", "<leader>ff", function()
+				local find_args = { "rg", "--files" }
+				vim.list_extend(find_args, rg_base_args)
 				builtin.find_files({
-					find_command = {
-						"sh",
-						"-c",
-						'(rg --files --hidden -L -g "!.git/*"; rg --files --hidden -L --no-ignore -g "!.git/*" -g "!node_modules/*" -g "!.venv*" -g "!venv*" -g "!.secrets/*" -g "!dist/*" -g "!build/*" -g "*.local" -g "*.local.*" -g "**/local/**") | sort -u',
-					},
+					find_command = find_args,
 				})
 			end, { desc = "Telescope find files" })
 
@@ -60,7 +78,14 @@ return {
 			end, { desc = "Telescope find all files" })
 
 			-- Keymap to open Telescope's live grep and search for text across the project files
-			vim.keymap.set("n", "<leader>fg", builtin.live_grep, { desc = "Telescope live grep" })
+			-- Uses shared rg_base_args (100% symmetric with find_files)
+			vim.keymap.set("n", "<leader>fg", function()
+				builtin.live_grep({
+					additional_args = function()
+						return rg_base_args
+					end,
+				})
+			end, { desc = "Telescope live grep" })
 
 			-- Keymap to open Telescope's git status and show modified files
 			vim.keymap.set("n", "<leader>gs", builtin.git_status, { desc = "Telescope git status" })
