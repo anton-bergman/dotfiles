@@ -258,7 +258,6 @@ dotfiles/
 ├── claude/                  # Claude Code base configuration templates
 ├── ghostty/                 # Ghostty terminal configuration
 ├── git/                     # Global Git configuration (gitconfig, gitignore_global)
-├── iterm2/                  # iTerm2 configuration profiles and themes
 ├── lib/                     # Shared shell utility functions (utils.sh)
 ├── macos/                   # macOS-specific settings and scripts
 │   ├── aerospace/           # AeroSpace window manager config

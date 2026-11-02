@@ -80,7 +80,7 @@ These are the extensions I have installed to integrate my most-used tools direct
 
 ## Script Commands
 
-I use a custom script to quickly open new windows of Terminal, iTerm, and Chrome.  
+I use custom scripts to quickly open new windows of Ghostty and Chrome.  
 To manage these, I've configured Raycast to read from a dedicated directory in my dotfiles.
 
 **How to set up:**

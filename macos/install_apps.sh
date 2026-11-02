@@ -22,7 +22,7 @@ Options:
 Examples:
   ./macos/install_apps.sh
   ./macos/install_apps.sh --exclude spotify,google-chrome
-  ./macos/install_apps.sh -e spotify -e iterm2
+  ./macos/install_apps.sh -e spotify -e google-chrome
   ./macos/install_apps.sh --only raycast
 EOF
 }

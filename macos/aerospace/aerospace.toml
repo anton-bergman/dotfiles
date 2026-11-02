@@ -50,7 +50,7 @@ on-focus-changed = [
     """exec-and-forget /bin/bash -c '
     APP_ID=$(aerospace list-windows --focused --format "%{app-bundle-id}" 2>/dev/null)
     case "$APP_ID" in
-        com.mitchellh.ghostty|com.googlecode.iterm2|org.alacritty|net.kovidgoyal.kitty|com.microsoft.VSCode|com.todesktop.230313mzl4w4u92)
+        com.mitchellh.ghostty|org.alacritty|net.kovidgoyal.kitty|com.microsoft.VSCode|com.todesktop.230313mzl4w4u92)
             $HOME/.local/bin/switch-input-source com.apple.keylayout.ABC
             ;;
         com.google.Chrome|company.thebrowser.Browser|com.apple.Safari)

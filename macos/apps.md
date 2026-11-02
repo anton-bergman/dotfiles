@@ -31,7 +31,6 @@ Exclude specific applications (comma-separated or multiple flags):
 
 ```bash
 ./macos/install_apps.sh --exclude spotify,google-chrome
-./macos/install_apps.sh -e spotify -e iterm2
 ```
 
 Install only targeted applications:
@@ -63,7 +62,6 @@ Install only targeted applications:
 
 ## Development
 
-- **iTerm2** - Terminal emulator _(See `dotfiles/README.md` for installation & setup)_
 - **Neovim** - Text editor _(See `dotfiles/README.md` for installation & setup)_
 - **VS Code** - IDE _(See `dotfiles/vscode/vscode-extensions.md` for extensions list & `dotfiles/README.md` for installation)_
 
