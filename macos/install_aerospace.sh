@@ -32,4 +32,7 @@ success "Input source switcher compiled."
 info "Linking configuration..."
 link_file "$HOME/dotfiles/macos/aerospace/aerospace.toml" "$HOME/.config/aerospace/aerospace.toml"
 
-success "AeroSpace and JankyBorders setup completed!"
+# 7. Setup Karabiner-Elements (Caps Lock Dual-Role)
+"$HOME/dotfiles/macos/install_karabiner.sh"
+
+success "AeroSpace, JankyBorders, and Karabiner setup completed!"

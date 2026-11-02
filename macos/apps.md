@@ -16,6 +16,8 @@ This file lists my essential macOS applications with quick install commands for 
   _(Install from official instructions — see Homebrew website)_
 - **AeroSpace** - Tiling window manager for macOS  
   `brew install --cask nikitabobko/tap/aerospace`
+- **Karabiner-Elements** - Keyboard customizer for dual-role Caps Lock navigation  
+  `brew install --cask karabiner-elements`
 - **SketchyBar** - Customizable status bar for macOS  
   `brew install --cask sketchybar`
 - **JankyBorders** - Add borders to windows for easier visual focus  
