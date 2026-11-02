@@ -28,10 +28,10 @@ truncate_to_repo = false
 format = ' [git:\(](bright-green)[$branch](bright-yellow)'
 
 [git_status]
-format = '([$all_status$ahead_behind](bright-yellow))[\)](bright-green)'
-ahead = ' 󰁝'
-behind = ' 󰁅'
-diverged = ' 󰁅 󰁝'
+format = '([ $all_status$ahead_behind](bright-yellow))[\)](bright-green)'
+ahead = '󰁝'
+behind = '󰁅'
+diverged = '󰁅󰁝'
 conflicted = '!'
 modified = '*'
 staged = '+'
