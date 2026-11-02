@@ -261,8 +261,7 @@ dotfiles/
 ├── lib/                     # Shared shell utility functions (utils.sh)
 ├── macos/                   # macOS-specific settings and scripts
 │   ├── aerospace/           # AeroSpace window manager config
-│   ├── raycast/             # Raycast scripts and setup
-│   └── simple-bar/          # Simple-Bar configuration
+│   └── raycast/             # Raycast scripts and setup
 ├── mise/                    # Global tool version manager (mise) configuration
 ├── nvim/                    # Neovim configuration (Lazy.nvim setup)
 ├── opencode/                # OpenCode base configuration templates and plugins

@@ -7,7 +7,7 @@ This repository contains personal dotfiles and configurations for a macOS-centri
 - `agents/`: The Agnostic Agent Core. Contains universal skills, global instructions, and the single-source-of-truth MCP server definitions.
 - `nvim/`: Neovim configuration (Lua-based, using Lazy.nvim).
 - `zsh/`: Zsh configuration, including plugins and custom functions.
-- `macos/`: macOS-specific configurations (AeroSpace, Simple-Bar, Raycast).
+- `macos/`: macOS-specific configurations (AeroSpace, Raycast).
 - `tmux/`: Tmux configuration.
 - `vscode/`: VS Code settings and extension lists.
 - `scripts/`: Utility scripts (Python, Bash).

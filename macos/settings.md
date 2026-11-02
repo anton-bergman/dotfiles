@@ -6,9 +6,7 @@ This document lists my personal macOS configuration preferences for setting up a
 
 - [Desktop & Dock](#desktop--dock)
 - [Finder](#finder)
-- [Control Centre](#control-centre)
 - [Keyboard](#keyboard)
-- [Ubersicht](#ubersicht)
 
 ---
 
@@ -87,24 +85,9 @@ Navigate to `Finder` > `View` > `Show Path Bar`
 
 - **Show Path Bar:** ON
 
-## Control Centre
-
-Navigate to `System Settings` > `Control Centre`
-
-- **Automatically hide and show the menu bar**: NEVER
-  _(Only relevant if using Simple-bar for menu bar management)_
-
 ## Keyboard
 
 Navigate to `System Settings` > `Keyboard`
 
 - **Key repeat rate:** Fast
 - **Delay until repeat:** Short
-
-## Ubersicht
-
-_(Only relevant if using Simple-bar for menu bar management)_
-
-Navigate to `Übersicht` > `Preferences`
-
-- **Launch Übersicht when I login:** ON

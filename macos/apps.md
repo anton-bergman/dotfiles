@@ -51,8 +51,6 @@ Install only targeted applications:
   `brew install --cask karabiner-elements`
 - **JankyBorders** - Add borders to windows for easier visual focus  
   `brew install --cask jankyborders`
-- **Übersicht** - Widget engine for macOS (required for Simple-Bar)  
-  `brew install --cask ubersicht`
 - **Raycast** - Productivity launcher and command palette for macOS  
   `brew install --cask raycast`
 

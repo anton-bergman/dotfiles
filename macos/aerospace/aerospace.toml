@@ -12,17 +12,6 @@ after-startup-command = [
   'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=3.0',
 ]
 
-##### Simple-bar #####
-# Uncomment these lines if you use Simple-Bar
-#	on-focus-changed = [
-#	  "exec-and-forget osascript -e 'tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\"'",
-#	]
-#	exec-on-workspace-change = [
-#	  '/bin/zsh',
-#	  '-c',
-#	  '/usr/bin/osascript -e "tell application id \"tracesOf.Uebersicht\" to refresh widget id \"simple-bar-index-jsx\""',
-#	]
-
 ##### Input Source Switching #####
 # Automatically switch keyboard input source based on the focused app.
 # Terminals and code editors -> English (ABC)
@@ -91,13 +80,7 @@ automatically-unhide-macos-hidden-apps = false
     inner.vertical =   16
     outer.left =       16
     outer.bottom =     16
-		# Simple-bar
-    # outer.top =     [
-    #   # offset of 32 on internal display, because of notch (16" MPB)
-    #   { monitor.'built-in.*' = 16 },
-    #   48
-    # ]
-		outer.top =				 8
+    outer.top =        8
     outer.right =      16
 
 [workspace-to-monitor-force-assignment]
