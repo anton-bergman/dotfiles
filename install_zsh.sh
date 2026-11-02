@@ -14,14 +14,14 @@ header "Zsh & Dotfiles Setup"
 # --- Install packages ---
 info "Installing required packages..."
 
-# Install oh-my-posh
+# Install Starship prompt
 # Format: cmd:pkg:provider
-smart_install "oh-my-posh:jandedobbeleer/oh-my-posh/oh-my-posh:brew"
+smart_install "starship:starship:brew"
 
 # Install Nerd Font (Hack font)
 if ! font_installed "Hack"; then
 	info "Installing Nerd Font Hack..."
-	oh-my-posh font install Hack
+	smart_install "font-hack-nerd-font:font-hack-nerd-font:cask"
 else
 	success "Hack font already installed."
 fi
@@ -56,5 +56,6 @@ link_file "$LOCAL_ZSH_CONFIG" "$HOME/.zshrc.local"
 link_file "$DOTFILES_DIR/vim/vimrc" "$HOME/.vimrc"
 link_file "$DOTFILES_DIR/git/gitconfig" "$HOME/.gitconfig"
 link_file "$DOTFILES_DIR/git/gitignore_global" "$HOME/.gitignore_global"
+link_file "$DOTFILES_DIR/starship/starship.toml" "$HOME/.config/starship.toml"
 
 success "Zsh and dotfiles setup completed!"
