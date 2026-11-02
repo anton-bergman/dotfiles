@@ -4,9 +4,41 @@ This file lists my essential macOS applications with quick install commands for 
 
 ## Contents
 
+- [Batch Installation](#batch-installation)
 - [System Tools](#system-tools)
 - [Development](#development)
 - [Media](#media)
+
+---
+
+## Batch Installation
+
+Standalone macOS desktop applications (without dedicated configuration scripts) are defined in `macos/apps.manifest`.
+
+Install all standalone desktop apps in one command:
+
+```bash
+./macos/install_apps.sh
+```
+
+Inspect installation status without installing:
+
+```bash
+./macos/install_apps.sh --list
+```
+
+Exclude specific applications (comma-separated or multiple flags):
+
+```bash
+./macos/install_apps.sh --exclude spotify,google-chrome
+./macos/install_apps.sh -e spotify -e iterm2
+```
+
+Install only targeted applications:
+
+```bash
+./macos/install_apps.sh --only raycast
+```
 
 ---
 
