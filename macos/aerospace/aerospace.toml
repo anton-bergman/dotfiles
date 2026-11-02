@@ -10,24 +10,7 @@
 # Available commands : https://nikitabobko.github.io/AeroSpace/commands
 after-startup-command = [
   'exec-and-forget borders active_color=0xffe1e3e4 inactive_color=0xff494d64 width=3.0',
-
-  ##### Sketchybar #####
-  # Uncomment the next line if you want AeroSpace to start SketchyBar
-  #'exec-and-forget sketchybar'
 ]
-
-##### Sketchybar #####
-# Uncomment these lines if you use SketchyBar
-# Notify Sketchybar about workspace change
-# exec-on-workspace-change = ['/bin/bash', '-c',
-#     'sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE'
-# ]
-# 
-# Notify Sketchybar about focuse change
-# See https://nikitabobko.github.io/AeroSpace/guide#on-focus-changed-callbacks
-# on-focus-changed = [
-#   'exec-and-forget sketchybar --trigger aerospace_focus_change',
-# ]
 
 ##### Simple-bar #####
 # Uncomment these lines if you use Simple-Bar

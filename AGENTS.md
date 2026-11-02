@@ -7,7 +7,7 @@ This repository contains personal dotfiles and configurations for a macOS-centri
 - `agents/`: The Agnostic Agent Core. Contains universal skills, global instructions, and the single-source-of-truth MCP server definitions.
 - `nvim/`: Neovim configuration (Lua-based, using Lazy.nvim).
 - `zsh/`: Zsh configuration, including plugins and custom functions.
-- `macos/`: macOS-specific configurations (AeroSpace, SketchyBar, Raycast).
+- `macos/`: macOS-specific configurations (AeroSpace, Simple-Bar, Raycast).
 - `tmux/`: Tmux configuration.
 - `vscode/`: VS Code settings and extension lists.
 - `scripts/`: Utility scripts (Python, Bash).
@@ -40,7 +40,7 @@ This repository uses an "Agnostic Agent Core" to share skills and MCP servers ac
 
 We use specific tools to maintain code quality. Agents should run these tools after making changes.
 
-### Lua (Neovim & SketchyBar)
+### Lua (Neovim)
 
 - **Tool:** `stylua`
 - **Command:** `stylua <path_to_file>`
@@ -70,7 +70,6 @@ There are no automated test suites for the core dotfiles. Verification must be p
 
 - **Neovim:** Restart Neovim or run `:source %` on the modified config file. Use `:Lazy check` to verify plugin status.
 - **Zsh:** Run `source ~/.zshrc` or open a new terminal session.
-- **SketchyBar:** Run `sketchybar --reload`.
 - **Tmux:** Run `tmux source-file ~/.config/tmux/tmux.conf`.
 
 ### Running Single Tests (Submodules)
@@ -88,12 +87,11 @@ External plugins like `zsh-syntax-highlighting` have their own test suites.
 - **Idempotency:** Installation and setup scripts should be idempotent (safe to run multiple times).
 - **Descriptive Naming:** Use clear, descriptive names for variables and functions (e.g., `colors`, `settings`, `load_plugins`).
 
-### Lua Style (Neovim & SketchyBar)
+### Lua Style (Neovim)
 
 - **Indentation:** Use **tabs**.
 - **Modularity:** Use `require()` to load modules. Avoid global variables; use `local` instead.
 - **Plugin Configs:** When adding a new plugin to Neovim, create a new file in `nvim/lua/plugins/`.
-- **SketchyBar:** Define items in `macos/sketchybar/items/` and colors in `colors.lua`. Use the `helpers` directory for C-based event providers.
 
 ### Shell Style
 

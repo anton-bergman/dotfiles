@@ -92,7 +92,7 @@ Navigate to `Finder` > `View` > `Show Path Bar`
 Navigate to `System Settings` > `Control Centre`
 
 - **Automatically hide and show the menu bar**: NEVER
-  _(Only relevant if using SketchyBar or Simple-bar for menu bar management)_
+  _(Only relevant if using Simple-bar for menu bar management)_
 
 ## Keyboard
 

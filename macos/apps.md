@@ -49,8 +49,6 @@ Install only targeted applications:
   `brew install --cask nikitabobko/tap/aerospace`
 - **Karabiner-Elements** - Keyboard customizer for dual-role Caps Lock navigation  
   `brew install --cask karabiner-elements`
-- **SketchyBar** - Customizable status bar for macOS  
-  `brew install --cask sketchybar`
 - **JankyBorders** - Add borders to windows for easier visual focus  
   `brew install --cask jankyborders`
 - **Übersicht** - Widget engine for macOS (required for Simple-Bar)  
