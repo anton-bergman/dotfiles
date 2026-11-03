@@ -5,13 +5,13 @@ set -e
 
 # Source utility functions
 source "$HOME/dotfiles/lib/utils.sh"
+ensure_base_ready
 
 header "Tmux Setup"
 
 # --- Install packages ---
 info "Installing Tmux..."
-# Format: cmd:pkg:provider
-smart_install "tmux:tmux:brew" "tmux:tmux:apt"
+host_install_id "tmux"
 
 # --- Plugin Management ---
 info "Managing Tmux Plugin Manager (TPM)..."

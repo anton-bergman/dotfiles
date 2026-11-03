@@ -11,11 +11,6 @@ ensure_base_ready
 
 header "OpenCode Setup"
 
-# --- Install OpenCode binary ---
-# Using the explicit tap spec: cmd:pkg:provider
-# OpenCode is currently only supported on macOS via this script
-smart_install "opencode:opencode-ai/opencode/opencode:brew"
-
 # --- Setup Configuration ---
 info "Setting up configuration files..."
 DOTFILES_DIR="$HOME/dotfiles"

@@ -11,8 +11,7 @@ ensure_base_ready
 header "Ghostty Setup"
 
 # --- Install Ghostty ---
-# Format: cmd:pkg:provider
-smart_install "ghostty:ghostty:brew"
+host_install_id "ghostty"
 
 # --- Symlink dotfiles ---
 info "Linking configuration..."

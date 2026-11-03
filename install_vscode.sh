@@ -12,8 +12,7 @@ ensure_base_ready
 header "VS Code Setup"
 
 # --- Install VS Code ---
-# Use the explicit spec model: cmd:pkg:provider
-smart_install "code:visual-studio-code:cask" "code:code:apt"
+host_install_id "vscode"
 
 # --- Install extensions ---
 VSCODE_EXT_FILE="$HOME/dotfiles/vscode/vscode-extensions.txt"

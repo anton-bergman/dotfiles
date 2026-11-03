@@ -11,10 +11,6 @@ ensure_base_ready
 
 header "Claude Code Setup"
 
-# --- Install Claude Code binary ---
-# Claude Code is distributed as a Homebrew cask (native binary)
-smart_install "claude:claude-code:cask"
-
 # --- Setup Configuration ---
 info "Setting up configuration files..."
 DOTFILES_DIR="$HOME/dotfiles"

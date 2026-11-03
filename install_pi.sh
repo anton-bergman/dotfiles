@@ -11,10 +11,6 @@ ensure_base_ready
 
 header "Pi Setup"
 
-# --- Install Pi CLI binary ---
-# Using the Homebrew formula from homebrew-core: pi-coding-agent
-smart_install "pi:pi-coding-agent:brew"
-
 # --- Setup Configuration ---
 info "Setting up configuration files..."
 DOTFILES_DIR="$HOME/dotfiles"

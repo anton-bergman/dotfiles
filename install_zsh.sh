@@ -14,17 +14,8 @@ header "Zsh & Dotfiles Setup"
 # --- Install packages ---
 info "Installing required packages..."
 
-# Install Starship prompt
-# Format: cmd:pkg:provider
-smart_install "starship:starship:brew"
-
 # Install Nerd Font (Hack font)
-if ! font_installed "Hack"; then
-	info "Installing Nerd Font Hack..."
-	smart_install "font-hack-nerd-font:font-hack-nerd-font:cask"
-else
-	success "Hack font already installed."
-fi
+host_install_id "hack-font"
 
 # --- Clone zsh plugins repositories ---
 info "Managing Zsh plugins..."

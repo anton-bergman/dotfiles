@@ -6,7 +6,21 @@ python = "latest"
 usage = "latest"  # CLI autocomplete engine used by mise
 bun = "latest"
 
+# Universal CLI Binaries (Cross-platform precompiled GitHub releases)
+neovim = "stable"
+starship = "latest"
+fzf = "latest"
+ripgrep = "latest"
+lazygit = "latest"
+tlrc = "latest"
+gh = "latest"
+opencode = "latest"
+claude = "latest"
+"npm:@earendil-works/pi-coding-agent" = "latest"
+
 [settings]
+trusted_config_paths = ["~/dev"]
+github_attestations = false
 
 # Support .python-version, .nvmrc, and .node-version files for older projects
 legacy_version_file = true

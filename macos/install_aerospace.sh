@@ -15,11 +15,10 @@ if [ "$IS_MAC" = false ]; then
 fi
 
 # 3. Install AeroSpace
-# Format: cmd:pkg:provider
-smart_install "aerospace:nikitabobko/tap/aerospace:cask"
+host_install_id "aerospace"
 
 # 4. Install JankyBorders
-smart_install "borders:FelixKratz/formulae/borders:brew"
+host_install_id "borders"
 
 # 5. Compile input source switcher
 info "Compiling input source switcher..."

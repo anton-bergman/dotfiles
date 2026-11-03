@@ -1,0 +1,143 @@
+#!/usr/bin/env python3
+"""Cross-platform package existence probe across Homebrew and Arch/AUR."""
+
+import argparse
+import concurrent.futures
+import json
+import sys
+import urllib.error
+import urllib.request
+from typing import Callable, Tuple
+
+REGISTRY: dict[str, Callable[[str], Tuple[bool, str]]] = {}
+
+
+def register(name: str):
+    """Decorator to register package manager check functions."""
+    def decorator(func: Callable[[str], Tuple[bool, str]]):
+        REGISTRY[name] = func
+        return func
+    return decorator
+
+
+@register("brew")
+def check_brew(pkg: str) -> Tuple[bool, str]:
+    url = f"https://formulae.brew.sh/api/formula/{pkg}.json"
+    req = urllib.request.Request(url, headers={"User-Agent": "pkg-check/1.0"})
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        data = json.loads(resp.read())
+        return True, f"stable {data['versions']['stable']}"
+
+
+@register("cask")
+def check_cask(pkg: str) -> Tuple[bool, str]:
+    url = f"https://formulae.brew.sh/api/cask/{pkg}.json"
+    req = urllib.request.Request(url, headers={"User-Agent": "pkg-check/1.0"})
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        data = json.loads(resp.read())
+        return True, f"version {data['version']}"
+
+
+@register("pacman")
+def check_pacman(pkg: str) -> Tuple[bool, str]:
+    url = f"https://archlinux.org/packages/search/json/?name={pkg}"
+    req = urllib.request.Request(url, headers={"User-Agent": "pkg-check/1.0"})
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        data = json.loads(resp.read())
+        results = data.get("results", [])
+        if results:
+            item = results[0]
+            return True, f"{item['pkgver']}-{item['pkgrel']} [{item['repo']}]"
+        return False, "package not in official repositories"
+
+
+@register("aur")
+def check_aur(pkg: str) -> Tuple[bool, str]:
+    url = f"https://aur.archlinux.org/rpc/v5/search/{pkg}"
+    req = urllib.request.Request(url, headers={"User-Agent": "pkg-check/1.0"})
+    with urllib.request.urlopen(req, timeout=5) as resp:
+        data = json.loads(resp.read())
+        results = [r for r in data.get("results", []) if r["Name"] == pkg]
+        if results:
+            return True, f"version {results[0]['Version']}"
+        return False, "package not in AUR"
+
+
+def run_probe(mgr: str, pkg: str) -> Tuple[str, bool, str]:
+    fn = REGISTRY[mgr]
+    try:
+        found, info = fn(pkg)
+        return mgr, found, info
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            return mgr, False, "404 not found"
+        return mgr, False, f"HTTP {e.code}"
+    except Exception as e:
+        return mgr, False, f"network error ({e})"
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        prog="pkg-check",
+        description="Cross-platform package existence probe across Homebrew and Arch/AUR.",
+    )
+    parser.add_argument(
+        "-p", "--package",
+        required=True,
+        help="Target package name to verify.",
+    )
+    parser.add_argument(
+        "-m", "--manager",
+        choices=sorted(REGISTRY.keys()),
+        default=None,
+        help="Target package manager (default: probe all registered managers).",
+    )
+    parser.add_argument(
+        "-q", "--quiet",
+        action="store_true",
+        help="Suppress output; exit code indicates existence.",
+    )
+
+    args = parser.parse_args()
+    pkg = args.package
+
+    # Single-manager target mode
+    if args.manager:
+        _, found, info = run_probe(args.manager, pkg)
+        if not args.quiet:
+            status = "FOUND" if found else "NOT FOUND"
+            print(f"[{args.manager}] {pkg}: {status} ({info})")
+        sys.exit(0 if found else 1)
+
+    # Multi-manager concurrent probe mode
+    managers = ["brew", "cask", "pacman", "aur"]
+    results: dict[str, Tuple[bool, str]] = {}
+
+    with concurrent.futures.ThreadPoolExecutor(max_workers=len(managers)) as executor:
+        future_map = {executor.submit(run_probe, mgr, pkg): mgr for mgr in managers}
+        for future in concurrent.futures.as_completed(future_map):
+            mgr, found, info = future.result()
+            results[mgr] = (found, info)
+
+    has_macos = results["brew"][0] or results["cask"][0]
+    has_linux = results["pacman"][0] or results["aur"][0]
+    cross_platform = has_macos and has_linux
+
+    if not args.quiet:
+        print(f"Cross-platform probe for '{pkg}':")
+        for mgr in managers:
+            found, info = results[mgr]
+            status = "FOUND" if found else "NOT FOUND"
+            print(f"  [{mgr:<6}] {pkg}: {status} ({info})")
+
+        print("-" * 50)
+        if cross_platform:
+            print("Verdict: CROSS-PLATFORM COMPATIBLE (Available on macOS & Linux)")
+        else:
+            print("Verdict: PLATFORM PARITY MISSING (Not available on both macOS & Linux)")
+
+    sys.exit(0 if cross_platform else 1)
+
+
+if __name__ == "__main__":
+    main()

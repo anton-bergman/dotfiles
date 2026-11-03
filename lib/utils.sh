@@ -40,154 +40,12 @@ fi
 
 ARCH=$(uname -m)
 
+# Source pluggable host package manager adapter
+source "$(dirname "${BASH_SOURCE[0]}")/host_pkg.sh"
+
 # --- Command Check ---
 command_exists() {
 	command -v "$1" &>/dev/null
-}
-
-# --- Provider Implementation ---
-
-_install_with_brew() {
-	brew install "$1"
-}
-
-_install_with_cask() {
-	if [ "$IS_MAC" = true ]; then
-		brew install --cask "$1"
-	else
-		warn "Casks are only supported on macOS. Skipping $1."
-		return 1
-	fi
-}
-
-_install_with_mise() {
-	if command_exists mise; then
-		mise use -g "$1"
-	else
-		return 1
-	fi
-}
-
-_install_with_apt() {
-	if command_exists apt; then
-		sudo apt update && sudo apt install -y "$1"
-	else
-		return 1
-	fi
-}
-
-_install_with_uv() {
-	if command_exists uv; then
-		uv tool install "$1"
-	else
-		return 1
-	fi
-}
-
-# --- Repository Management ---
-
-# add_apt_repo <ppa_path>
-# Example: add_apt_repo "ppa:neovim-ppa/stable"
-add_apt_repo() {
-	local ppa=$1
-	if [ "$IS_LINUX" = true ] && command_exists apt; then
-		# Ensure add-apt-repository is installed (handled by ensure_base_ready, but good for safety)
-		if ! command_exists add-apt-repository; then
-			sudo apt update && sudo apt install -y software-properties-common
-		fi
-
-		# Check if repo is already added to avoid redundant updates
-		if ! grep -q "$ppa" /etc/apt/sources.list /etc/apt/sources.list.d/* 2>/dev/null; then
-			info "Adding APT repository: $ppa"
-			sudo add-apt-repository -y "$ppa"
-			sudo apt update
-		else
-			info "APT repository $ppa already exists. Skipping."
-		fi
-	fi
-}
-
-# add_apt_key <key_url> <keyring_name>
-# Example: add_apt_key "https://packages.microsoft.com/keys/microsoft.asc" "microsoft.gpg"
-add_apt_key() {
-	local url=$1
-	local name=$2
-	if [ "$IS_LINUX" = true ] && command_exists apt; then
-		if [ ! -f "/usr/share/keyrings/$name" ]; then
-			info "Adding GPG key: $name"
-			curl -fsSL "$url" | gpg --dearmor | sudo tee "/usr/share/keyrings/$name" >/dev/null
-		else
-			info "GPG key $name already exists. Skipping."
-		fi
-	fi
-}
-
-# add_apt_source <name> <source_line>
-# Example: add_apt_source "vscode" "deb [arch=amd64 signed-by=/usr/share/keyrings/microsoft.gpg] https://packages.microsoft.com/repos/code stable main"
-add_apt_source() {
-	local name=$1
-	local line=$2
-	if [ "$IS_LINUX" = true ] && command_exists apt; then
-		if [ ! -f "/etc/apt/sources.list.d/$name.list" ]; then
-			info "Adding APT source: $name"
-			echo "$line" | sudo tee "/etc/apt/sources.list.d/$name.list" >/dev/null
-			sudo apt update
-		else
-			info "APT source $name already exists. Skipping."
-		fi
-	fi
-}
-
-# --- Smart Install Function ---
-
-# Internal helper to parse and execute a spec
-# Format: cmd:pkg:provider
-_execute_smart_install() {
-	local spec="$1"
-
-	# Parse using awk for robustness across bash versions
-	local cmd=$(echo "$spec" | awk -F: '{print $1}')
-	local pkg=$(echo "$spec" | awk -F: '{print $2}')
-	local provider=$(echo "$spec" | awk -F: '{print $3}')
-
-	if [ -z "$cmd" ] || [ -z "$pkg" ] || [ -z "$provider" ]; then
-		error "Invalid spec format: '$spec'. Expected 'cmd:pkg:provider'"
-	fi
-
-	if command_exists "$cmd"; then
-		success "$cmd is already installed."
-		return 0
-	fi
-
-	info "Installing $pkg via $provider (expecting cmd: $cmd)..."
-
-	local status=0
-	case "$provider" in
-	brew) _install_with_brew "$pkg" || status=1 ;;
-	cask) _install_with_cask "$pkg" || status=1 ;;
-	mise) _install_with_mise "$pkg" || status=1 ;;
-	apt) _install_with_apt "$pkg" || status=1 ;;
-	uv) _install_with_uv "$pkg" "$extras" || status=1 ;;
-	*) error "Unknown provider: $provider in spec '$spec'" ;;
-	esac
-
-	if [ $status -eq 0 ] && command_exists "$cmd"; then
-		success "Successfully installed $pkg"
-	else
-		error "Failed to install $pkg via $provider. Command '$cmd' not found."
-	fi
-}
-
-# Usage: smart_install "cmd:pkg:provider" ["linux_cmd:linux_pkg:linux_provider"]
-smart_install() {
-	local spec="$1"
-
-	# Use second argument if we are on Linux/WSL and it was provided
-	if [ "$IS_LINUX" = true ] && [ -n "$2" ]; then
-		spec="$2"
-	fi
-
-	_execute_smart_install "$spec"
 }
 
 # --- Font Utilities ---
@@ -298,48 +156,21 @@ clone_or_pull() {
 ensure_base_ready() {
 	header "Initializing Environment"
 
-	# Linux Core Bootstrap
-	if [ "$IS_LINUX" = true ] && command_exists apt; then
-		info "Ensuring Linux core dependencies..."
-		if ! command_exists gpg || ! command_exists wget || ! command_exists add-apt-repository; then
-			sudo apt update
-			sudo apt install -y apt-transport-https ca-certificates curl gnupg wget software-properties-common
-		fi
-	fi
+	# 1. Assert required package managers are installed
+	ensure_prerequisites
 
-	# Install Homebrew if missing
-	if ! command_exists brew; then
-		info "Homebrew not found. Installing..."
-		/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+	# 2. Ensure Mise configuration is linked and trusted
+	mkdir -p "$HOME/.config/mise"
+	link_file "$HOME/dotfiles/mise/config.toml" "$HOME/.config/mise/config.toml"
+	mise trust "$HOME/.config/mise/config.toml" >/dev/null 2>&1 || true
+	mise trust "$HOME/dotfiles/mise/config.toml" >/dev/null 2>&1 || true
 
-		if [ "$IS_MAC" = true ]; then
-			eval "$(/opt/homebrew/bin/brew shellenv)" 2>/dev/null || eval "$(/usr/local/bin/brew shellenv)"
-		else
-			eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-		fi
-		success "Homebrew installation completed!"
-	fi
+	# 3. Ensure global tools from mise/config.toml are installed
+	info "Ensuring global tools are installed via Mise..."
+	mise install --yes
 
-	# Install Mise if missing
-	if ! command_exists mise; then
-		info "Mise not found. Installing..."
-		curl https://mise.jdx.dev/install.sh | sh
-		# Setup path
-		export PATH="$HOME/.local/bin:$PATH"
-
-		info "Linking Mise configuration..."
-		mkdir -p "$HOME/.config/mise"
-		link_file "$HOME/dotfiles/mise/config.toml" "$HOME/.config/mise/config.toml"
-		mise trust "$HOME/.config/mise/config.toml"
-		mise trust "$HOME/dotfiles/mise/config.toml"
-		eval "$(mise activate bash --shims)"
-
-		info "Ensuring global tools are installed (Node, Python, etc.)..."
-		mise install --yes
-		mise exec uv -- uv tool install poetry
-		poetry config virtualenvs.in-project true
-		success "Mise setup completed!"
-	fi
+	# 4. Activate shims in current subshell PATH
+	eval "$(mise activate bash --shims 2>/dev/null || true)"
 
 	success "Base environment ready."
 }

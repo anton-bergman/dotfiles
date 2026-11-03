@@ -15,8 +15,7 @@ if [ "$IS_MAC" = false ]; then
 fi
 
 # 3. Install Karabiner-Elements
-# Format: cmd:pkg:provider
-smart_install "karabiner_cli:karabiner-elements:cask"
+host_install_id "karabiner"
 
 # 4. Symlink Configuration
 info "Linking configuration..."
