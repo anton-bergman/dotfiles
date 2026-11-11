@@ -13,8 +13,9 @@
     "~/dotfiles/pi/packages/plan-build",
     "~/dotfiles/pi/packages/copy-code",
     "~/dotfiles/pi/packages/sellpy-ai-gateway",
-    "npm:@gotgenes/pi-permission-system@40.0.2",
-    "npm:pi-web-access@0.37.0"
+    "~/dotfiles/pi/packages/undo",
+    "npm:@gotgenes/pi-permission-system",
+    "npm:pi-web-access"
   ],
   "skills": ["~/.config/agents/skills", "~/.config/agents/skills/local"],
   "enableSkillCommands": true,
@@ -30,5 +31,5 @@
     "maxRetries": 3
   },
   "hideThinkingBlock": true,
-  "lastChangelogVersion": "1.2.0"
+  "lastChangelogVersion": "1.5.2"
 }
