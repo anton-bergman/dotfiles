@@ -65,7 +65,7 @@ This script will:
   - `zsh-completions`
 - Set up symbolic links for `.zshrc`.
 - Set up symbolic links for `.vimrc` (basic Vim configuration).
-- Load custom functions from `functions.zsh`.
+- Autoload modular custom functions from `zsh/functions/` (e.g. `wt`, `tn`, `caf`).
 
 ---
 
