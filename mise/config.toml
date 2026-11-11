@@ -17,6 +17,8 @@ gh = "latest"
 opencode = "latest"
 claude = "latest"
 "npm:@earendil-works/pi-coding-agent" = "latest"
+hunk = "latest"
+"github:pamburus/hl" = "latest"
 
 [settings]
 trusted_config_paths = ["~/dev"]
