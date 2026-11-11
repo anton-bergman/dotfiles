@@ -13,3 +13,7 @@ NOTES.md
 *.local
 *.local.*
 **/local/*
+
+# Git Worktrees
+.worktrees/
+
