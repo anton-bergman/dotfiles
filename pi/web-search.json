@@ -3,6 +3,11 @@
   "workflow": "none",
   "autoOpenBrowser": false,
   "maxInlineContentChars": 30000,
+  "commands": {
+    "google-account": {
+      "enabled": false
+    }
+  },
   "shortcuts": {
     "curate": "ctrl+shift+s",
     "activity": "ctrl+shift+w"

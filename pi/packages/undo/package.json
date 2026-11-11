@@ -1,0 +1,9 @@
+{
+  "name": "undo",
+  "version": "1.0.0",
+  "description": "Ergonomic non-destructive conversation undo command for Pi",
+  "keywords": ["pi-package"],
+  "peerDependencies": {
+    "@earendil-works/pi-coding-agent": "*"
+  }
+}
