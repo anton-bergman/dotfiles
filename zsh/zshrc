@@ -73,10 +73,13 @@ if command -v fzf >/dev/null 2>&1; then
 	eval "$(fzf --zsh)"
 fi
 
-# ----- Custom Functions -----
-if [[ -f "$HOME/dotfiles/zsh/functions.zsh" ]]; then
-	source "$HOME/dotfiles/zsh/functions.zsh"
-fi
+# ----- Custom Autoloaded Functions -----
+export DEFAULT_ASSISTANT="${DEFAULT_ASSISTANT:-pi}"
+fpath=("$HOME/dotfiles/zsh/functions" $fpath)
+for _f in "$HOME/dotfiles/zsh/functions/"*(-N:t); do
+	unfunction "$_f" 2>/dev/null || true
+done
+autoload -Uz "$HOME/dotfiles/zsh/functions/"*(-N:t)
 
 if [[ -f "$HOME/dotfiles/zsh/python.zsh" ]]; then
 	source "$HOME/dotfiles/zsh/python.zsh"

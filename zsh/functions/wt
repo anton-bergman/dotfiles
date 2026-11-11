@@ -1,0 +1,674 @@
+#!/usr/bin/env zsh
+
+# ==============================================================================
+# wt - Git worktree manager & cockpit launcher
+# ==============================================================================
+
+wt() {
+	local cmd="${1:-}"
+
+	case "$cmd" in
+	-h | --help)
+		_wt_help
+		return 0
+		;;
+	-a | --all)
+		_wt_switch_global
+		return 0
+		;;
+	ls | list)
+		_wt_ls
+		return 0
+		;;
+	rm | remove)
+		shift
+		_wt_rm "$@"
+		return $?
+		;;
+	*)
+		if [[ -z "$cmd" ]]; then
+			_wt_switch_local
+		else
+			_wt_create_or_switch "$@"
+		fi
+		;;
+	esac
+}
+
+# ------------------------------------------------------------------------------
+# Help Documentation
+# ------------------------------------------------------------------------------
+_wt_help() {
+	cat <<'EOF'
+wt - Fast, non-invasive Git worktree manager & cockpit launcher
+
+USAGE:
+  wt                               Interactive worktree switcher (fzf, current repo)
+  wt -a, --all                     Global worktree switcher (fzf, across ~/dev/)
+  wt [add] <branch> [opts...]      Create or switch to worktree, then launch tn
+  wt <repo>:<branch> [opts...]     Create or switch to worktree in a specific repo
+  wt rm [branch] [-f]              Safely teardown worktree and associated tmux session
+  wt ls                            List active worktrees in current repository
+  wt -h, --help                    Show this help message
+
+OPTIONS:
+  -f, --from <base>                Base branch (default: origin/main). Use '-f main' for offline/local base
+  -d, --bg                         Create worktree & tmux session in background (detached)
+  -n, --no-tmux                    Create worktree on disk only (do not launch tmux)
+
+EXAMPLES:
+  wt                               # Fuzzy-search and jump to a worktree
+  wt feature-auth                  # Create branch & worktree off latest origin/main
+  wt feature-auth -f main          # Create branch off local main (offline/no network)
+  wt feature-b -f feature-a        # Stack feature-b on top of local feature-a
+  wt pricer:fix-pricing            # Create/open worktree in ~/dev/pricer from anywhere
+  wt rm                            # Safely delete current worktree (checks dirty/unpushed)
+  wt rm feature-auth -f            # Force delete worktree and kill its tmux session
+EOF
+}
+
+# ------------------------------------------------------------------------------
+# Helper: Resolve Git Root Repository
+# ------------------------------------------------------------------------------
+_wt_resolve_root() {
+	local dir="${1:-$(pwd)}"
+	local toplevel
+	toplevel=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null)
+	if [[ -z "$toplevel" ]]; then
+		return 1
+	fi
+
+	# If inside .worktrees/, the root is the parent directory
+	if [[ "$toplevel" =~ '/\.worktrees/' ]]; then
+		echo "${toplevel%%/.worktrees/*}"
+	elif [[ "$toplevel" =~ '/\.worktrees$' ]]; then
+		dirname "$toplevel"
+	else
+		echo "$toplevel"
+	fi
+}
+
+# ------------------------------------------------------------------------------
+# Helper: Fast In-Process Branch Resolver
+# ------------------------------------------------------------------------------
+_wt_get_branch() {
+	local target_dir="$1"
+	local head_file=""
+
+	if [[ -f "$target_dir/.git" ]]; then
+		local gitdir_line=""
+		read -r gitdir_line < "$target_dir/.git" 2>/dev/null
+		local rel_dir="${gitdir_line#gitdir: }"
+		if [[ "$rel_dir" = /* ]]; then
+			head_file="$rel_dir/HEAD"
+		else
+			head_file="$target_dir/$rel_dir/HEAD"
+		fi
+	elif [[ -d "$target_dir/.git" ]]; then
+		head_file="$target_dir/.git/HEAD"
+	fi
+
+	if [[ -n "$head_file" && -f "$head_file" ]]; then
+		local head_line=""
+		read -r head_line < "$head_file" 2>/dev/null
+		if [[ "$head_line" == ref:\ refs/heads/* ]]; then
+			echo "${head_line#ref: refs/heads/}"
+			return 0
+		elif [[ -n "$head_line" ]]; then
+			echo "${head_line[1,7]}"
+			return 0
+		fi
+	fi
+
+	# Fallback to git binary if HEAD is non-standard
+	git -C "$target_dir" branch --show-current 2>/dev/null || echo "main"
+}
+
+# ------------------------------------------------------------------------------
+# Create or Switch to Worktree
+# ------------------------------------------------------------------------------
+_wt_create_or_switch() {
+	# Allow optional 'add' keyword: wt add foo -> wt foo
+	if [[ "$1" == "add" ]]; then
+		shift
+	fi
+
+	local target="$1"
+	shift || true
+
+	local base_branch=""
+	local no_tmux=false
+	local tn_args=()
+
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+		-f | --from)
+			base_branch="$2"
+			shift 2
+			;;
+		-n | --no-tmux)
+			no_tmux=true
+			shift
+			;;
+		-d | --bg)
+			tn_args+=("-d")
+			shift
+			;;
+		*)
+			tn_args+=("$1")
+			shift
+			;;
+		esac
+	done
+
+	# Parse cross-repo syntax: <repo>:<branch>
+	local repo_root=""
+	local branch=""
+
+	if [[ "$target" =~ ':' ]]; then
+		local repo_part="${target%%:*}"
+		branch="${target#*:}"
+		if [[ -d "$HOME/dev/$repo_part" ]]; then
+			repo_root="$HOME/dev/$repo_part"
+		elif [[ -d "$repo_part" ]]; then
+			repo_root=$(cd "$repo_part" && pwd)
+		else
+			echo "Error: Repository '$repo_part' not found in ~/dev/ or path." >&2
+			return 1
+		fi
+	else
+		branch="$target"
+		repo_root=$(_wt_resolve_root)
+		if [[ -z "$repo_root" ]]; then
+			echo "Error: Not inside a Git repository. Use 'wt <repo>:<branch>' or specify repo." >&2
+			return 1
+		fi
+	fi
+
+	# Handle jump to root branch (main / master)
+	local primary_branch="main"
+	if ! git -C "$repo_root" show-ref --verify --quiet "refs/heads/main" && git -C "$repo_root" show-ref --verify --quiet "refs/heads/master"; then
+		primary_branch="master"
+	fi
+
+	# Normalize '-f origin' to 'origin/<primary_branch>'
+	if [[ "$base_branch" == "origin" ]]; then
+		base_branch="origin/$primary_branch"
+	fi
+
+	if [[ "$branch" == "$primary_branch" ]]; then
+		echo "Switching to root branch '$primary_branch'..."
+		if [[ "$no_tmux" == false ]]; then
+			tn "$repo_root" "${tn_args[@]}"
+		fi
+		return 0
+	fi
+
+	# Sanitize folder name: replace '/' with '-' to avoid nested directories
+	local folder_name=$(echo "$branch" | tr '/' '-')
+	local worktree_dir="$repo_root/.worktrees/$folder_name"
+
+	# If worktree already exists, simply attach
+	if [[ -d "$worktree_dir" ]]; then
+		echo "Worktree '.worktrees/$folder_name' already exists. Attaching..."
+		if [[ "$no_tmux" == false ]]; then
+			tn "$worktree_dir" "${tn_args[@]}"
+		fi
+		return 0
+	fi
+
+	# Ensure parent .worktrees directory exists
+	mkdir -p "$repo_root/.worktrees"
+
+	# 1. If branch already exists locally, checkout immediately (0ms, no network)
+	if git -C "$repo_root" show-ref --verify --quiet "refs/heads/$branch"; then
+		echo "Checking out existing local branch '$branch'..."
+		git -C "$repo_root" worktree add "$worktree_dir" "$branch"
+	elif [[ -n "$base_branch" ]]; then
+		# 2. User passed explicit base branch (-f / --from)
+		if [[ "$base_branch" == origin/* ]]; then
+			local remote_ref="${base_branch#origin/}"
+			echo "Fetching '$remote_ref' from origin..."
+			if ! git -C "$repo_root" fetch origin "+refs/heads/${remote_ref}:refs/remotes/origin/${remote_ref}"; then
+				echo "Error: Could not fetch '$base_branch' from origin." >&2
+				return 1
+			fi
+		elif ! git -C "$repo_root" show-ref --verify --quiet "refs/heads/$base_branch"; then
+			echo "Error: Local base branch '$base_branch' not found." >&2
+			return 1
+		fi
+
+		echo "Creating worktree '$branch' (branched from $base_branch)..."
+		local track_flag=""
+		if [[ "$base_branch" == origin/* ]]; then
+			track_flag="--no-track"
+		fi
+		git -C "$repo_root" worktree add $track_flag -b "$branch" "$worktree_dir" "$base_branch"
+	else
+		# 3. Default: Fetch fresh primary branch and opportunistic target branch from origin
+		echo "Fetching latest '$primary_branch' from origin..."
+		if ! git -C "$repo_root" fetch origin "+refs/heads/${primary_branch}:refs/remotes/origin/${primary_branch}"; then
+			echo "Error: Could not fetch 'origin/$primary_branch'. Cannot verify fresh base branch." >&2
+			echo "To branch from local state without network, run:" >&2
+			echo "  wt $branch -f $primary_branch" >&2
+			return 1
+		fi
+
+		# Opportunistically fetch remote branch if a teammate pushed it
+		git -C "$repo_root" fetch origin "+refs/heads/${branch}:refs/remotes/origin/${branch}" 2>/dev/null || true
+
+		if git -C "$repo_root" show-ref --verify --quiet "refs/remotes/origin/$branch"; then
+			echo "Found remote branch 'origin/$branch'. Tracking remote..."
+			git -C "$repo_root" worktree add --track -b "$branch" "$worktree_dir" "origin/$branch"
+		else
+			local base="origin/$primary_branch"
+			echo "Creating worktree '$branch' (branched from $base)..."
+			git -C "$repo_root" worktree add --no-track -b "$branch" "$worktree_dir" "$base"
+		fi
+	fi
+
+	# Propagate .env* and *.local* files from root
+	local env_file
+	for env_file in "$repo_root"/.env*(N) "$repo_root"/*.local*(N); do
+		if [[ -f "$env_file" ]]; then
+			cp -n "$env_file" "$worktree_dir/" 2>/dev/null || true
+		fi
+	done
+
+	# Launch cockpit via tn
+	if [[ "$no_tmux" == false ]]; then
+		tn "$worktree_dir" "${tn_args[@]}"
+	fi
+}
+
+# ------------------------------------------------------------------------------
+# Safe Teardown: wt rm [branch] [-f]
+# ------------------------------------------------------------------------------
+_wt_rm() {
+	local force=false
+	local target=""
+
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+		-f | --force)
+			force=true
+			shift
+			;;
+		*)
+			if [[ -z "$target" ]]; then
+				target="$1"
+			fi
+			shift
+			;;
+		esac
+	done
+
+	local repo_root
+	repo_root=$(_wt_resolve_root)
+	if [[ -z "$repo_root" ]]; then
+		echo "Error: Not inside a Git repository." >&2
+		return 1
+	fi
+
+	local worktree_dir=""
+	local branch=""
+
+	if [[ -z "$target" ]]; then
+		# If standing inside a worktree, target current
+		local current_dir=$(pwd)
+		if [[ "$current_dir" =~ '/\.worktrees/' ]]; then
+			worktree_dir="${current_dir%%/.worktrees/*}/.worktrees/${${current_dir##*/.worktrees/}%%/*}"
+			branch=$(git -C "$worktree_dir" branch --show-current 2>/dev/null)
+		else
+			# Outside a worktree: prompt with fzf
+			local wt_dirs=("$repo_root/.worktrees"/*(N/))
+			if [[ ${#wt_dirs[@]} -eq 0 ]]; then
+				echo "No worktrees found to remove in $repo_root." >&2
+				return 1
+			fi
+			local wt_names=()
+			local w
+			for w in "${wt_dirs[@]}"; do
+				wt_names+=("$(basename "$w")")
+			done
+			local selected
+			selected=$(printf '%s\n' "${wt_names[@]}" | fzf --header "Select worktree to delete:")
+			if [[ -z "$selected" ]]; then
+				echo "Aborted."
+				return 0
+			fi
+			branch="$selected"
+			local folder_name=$(echo "$branch" | tr '/' '-')
+			worktree_dir="$repo_root/.worktrees/$folder_name"
+		fi
+	else
+		branch="$target"
+		local folder_name=$(echo "$branch" | tr '/' '-')
+		worktree_dir="$repo_root/.worktrees/$folder_name"
+	fi
+
+	# Guard: Never delete root branch
+	if [[ "$branch" == "main" || "$branch" == "master" || "$worktree_dir" == "$repo_root" ]]; then
+		echo "Error: '$branch' is the primary repository root and cannot be removed." >&2
+		return 1
+	fi
+
+	if [[ ! -d "$worktree_dir" ]]; then
+		echo "Error: Worktree path '$worktree_dir' not found." >&2
+		return 1
+	fi
+
+	# Guard 1: Working tree cleanliness
+	if [[ -n $(git -C "$worktree_dir" status --porcelain 2>/dev/null) && "$force" == false ]]; then
+		echo "Error: Worktree has uncommitted changes. Commit, stash, or pass -f to force." >&2
+		return 1
+	fi
+
+	# Guard 2: Unpushed commits check
+	local unpushed
+	unpushed=$(git -C "$worktree_dir" log @{u}..HEAD --oneline 2>/dev/null || true)
+	if [[ -n "$unpushed" && "$force" == false ]]; then
+		echo "Error: Branch '$branch' has unpushed commits. Push to remote or pass -f to force." >&2
+		return 1
+	fi
+
+	# Leave the target before removal; killing its session first can terminate this shell.
+	if [[ "$PWD" == "$worktree_dir" || "$PWD" == "$worktree_dir/"* ]]; then
+		cd "$repo_root" || return 1
+	fi
+
+	local remove_flags=()
+	[[ "$force" == true ]] && remove_flags+=(--force)
+	if ! git -C "$repo_root" worktree remove "${remove_flags[@]}" "$worktree_dir"; then
+		echo "Error: Failed to remove worktree '$worktree_dir'. Session kept open." >&2
+		return 1
+	fi
+	if ! git -C "$repo_root" branch -D "$branch"; then
+		echo "Error: Worktree removed, but branch '$branch' could not be deleted. Session kept open." >&2
+		return 1
+	fi
+	echo "Successfully removed worktree and branch '$branch'."
+
+	# Tmux Session Handover
+	local repo_name=$(basename "$repo_root" | tr '. ' '__')
+	local session_name="${repo_name}__$(basename "$worktree_dir" | tr '. ' '__')"
+
+	if [[ -n "$TMUX" ]]; then
+		local current_session=$(tmux display-message -p '#S' 2>/dev/null)
+		if [[ "$current_session" == "$session_name" ]]; then
+			if tmux has-session -t "=$repo_name" 2>/dev/null; then
+				tmux switch-client -t "=$repo_name"
+			else
+				tmux switch-client -l 2>/dev/null || tmux switch-client -n 2>/dev/null || true
+			fi
+		fi
+	fi
+
+	# Keep this last: it may terminate the shell executing wt rm.
+	tmux kill-session -t "=$session_name" 2>/dev/null || true
+}
+
+# ------------------------------------------------------------------------------
+# Local FZF Switcher
+# ------------------------------------------------------------------------------
+_wt_switch_local() {
+	local repo_root
+	repo_root=$(_wt_resolve_root)
+	if [[ -z "$repo_root" ]]; then
+		# Not in a repo, fallback to global switcher
+		_wt_switch_global
+		return $?
+	fi
+
+	local current_dir=$(pwd)
+
+	# Cache active tmux sessions once
+	typeset -A active_tmux_sessions
+	local sess
+	while IFS= read -r sess; do
+		[[ -n "$sess" ]] && active_tmux_sessions[$sess]=1
+	done < <(tmux list-sessions -F '#S' 2>/dev/null || true)
+
+	local markers=()
+	local branch_names=()
+	local statuses=()
+	local paths=()
+	local max_branch_len=0
+
+	# 1. Add root repo / main branch
+	local root_branch=""
+	root_branch=$(_wt_get_branch "$repo_root")
+	local root_marker=" "
+	if [[ "$current_dir" == "$repo_root" ]]; then
+		root_marker="*"
+	fi
+
+	local root_session=$(basename "$repo_root" | tr '. ' '__')
+	local root_status="tmux: none"
+	if [[ -n "${active_tmux_sessions[$root_session]}" ]]; then
+		root_status="tmux: active"
+	fi
+
+	markers+=("$root_marker")
+	branch_names+=("$root_branch")
+	statuses+=("$root_status")
+	paths+=("$repo_root")
+	(( ${#root_branch} > max_branch_len )) && max_branch_len=${#root_branch}
+
+	# 2. Add secondary worktrees
+	if [[ -d "$repo_root/.worktrees" ]]; then
+		local wt_dir=""
+		local b_name=""
+		local marker=" "
+		local s_name=""
+		local wt_status="tmux: none"
+		for wt_dir in "$repo_root/.worktrees"/*(N/); do
+			b_name=$(_wt_get_branch "$wt_dir")
+			marker=" "
+			if [[ "$current_dir" == "$wt_dir"* ]]; then
+				marker="*"
+			fi
+
+			s_name="${root_session}__$(basename "$wt_dir" | tr '. ' '__')"
+			wt_status="tmux: none"
+			if [[ -n "${active_tmux_sessions[$s_name]}" ]]; then
+				wt_status="tmux: active"
+			fi
+
+			markers+=("$marker")
+			branch_names+=("$b_name")
+			statuses+=("$wt_status")
+			paths+=("$wt_dir")
+			(( ${#b_name} > max_branch_len )) && max_branch_len=${#b_name}
+		done
+	fi
+
+	# Format lines with dynamic column widths
+	local lines=()
+	local i
+	for (( i = 1; i <= ${#paths[@]}; i++ )); do
+		lines+=("$(printf "%s %-${max_branch_len}s  │  %s" "${markers[$i]}" "${branch_names[$i]}" "${statuses[$i]}")")
+	done
+
+	# Pick with FZF
+	local selected
+	selected=$(printf '%s\n' "${lines[@]}" | fzf --height 40% --layout=reverse --header "Switch to worktree:" --no-hscroll)
+	if [[ -z "$selected" ]]; then
+		return 0
+	fi
+
+	local idx=1
+	local l
+	for l in "${lines[@]}"; do
+		if [[ "$l" == "$selected" ]]; then
+			tn "${paths[$idx]}"
+			return 0
+		fi
+		((idx++))
+	done
+}
+
+# ------------------------------------------------------------------------------
+# Global FZF Switcher across ~/dev/
+# ------------------------------------------------------------------------------
+_wt_switch_global() {
+	local current_dir=$(pwd)
+
+	# Cache active tmux sessions once
+	typeset -A active_tmux_sessions
+	local sess
+	while IFS= read -r sess; do
+		[[ -n "$sess" ]] && active_tmux_sessions[$sess]=1
+	done < <(tmux list-sessions -F '#S' 2>/dev/null || true)
+
+	local repo_names=()
+	local markers=()
+	local branch_names=()
+	local statuses=()
+	local paths=()
+	local max_repo_len=0
+	local max_branch_len=0
+
+	local repo_dir=""
+	local r_name=""
+	local r_session=""
+	local b_root=""
+	local m_root=" "
+	local s_root="tmux: none"
+	local wt_dir=""
+	local b_sub=""
+	local m_sub=" "
+	local s_sub_name=""
+	local s_sub="tmux: none"
+
+	for repo_dir in "$HOME/dev"/*(N/); do
+		if [[ ! -d "$repo_dir/.git" && ! -f "$repo_dir/.git" ]]; then
+			continue
+		fi
+
+		r_name=$(basename "$repo_dir")
+		r_session=$(echo "$r_name" | tr '. ' '__')
+
+		# Root branch
+		b_root=$(_wt_get_branch "$repo_dir")
+		m_root=" "
+		if [[ "$current_dir" == "$repo_dir" ]]; then
+			m_root="*"
+		fi
+		s_root="tmux: none"
+		if [[ -n "${active_tmux_sessions[$r_session]}" ]]; then
+			s_root="tmux: active"
+		fi
+
+		repo_names+=("$r_name")
+		markers+=("$m_root")
+		branch_names+=("$b_root")
+		statuses+=("$s_root")
+		paths+=("$repo_dir")
+
+		(( ${#r_name} > max_repo_len )) && max_repo_len=${#r_name}
+		(( ${#b_root} > max_branch_len )) && max_branch_len=${#b_root}
+
+		# Secondary worktrees
+		if [[ -d "$repo_dir/.worktrees" ]]; then
+			for wt_dir in "$repo_dir/.worktrees"/*(N/); do
+				b_sub=$(_wt_get_branch "$wt_dir")
+				m_sub=" "
+				if [[ "$current_dir" == "$wt_dir"* ]]; then
+					m_sub="*"
+				fi
+				s_sub_name="${r_session}__$(basename "$wt_dir" | tr '. ' '__')"
+				s_sub="tmux: none"
+				if [[ -n "${active_tmux_sessions[$s_sub_name]}" ]]; then
+					s_sub="tmux: active"
+				fi
+
+				repo_names+=("$r_name")
+				markers+=("$m_sub")
+				branch_names+=("$b_sub")
+				statuses+=("$s_sub")
+				paths+=("$wt_dir")
+
+				(( ${#b_sub} > max_branch_len )) && max_branch_len=${#b_sub}
+			done
+		fi
+	done
+
+	if [[ ${#paths[@]} -eq 0 ]]; then
+		echo "No repositories or worktrees found in ~/dev/." >&2
+		return 1
+	fi
+
+	# Terminal width safety budget: truncate if pane is narrow
+	local term_cols=${COLUMNS:-80}
+	local available_width=$((term_cols - 20))
+	if (( available_width < 40 )); then
+		available_width=40
+	fi
+
+	if (( (max_repo_len + max_branch_len) > available_width )); then
+		# Allocate 35% to repo, 65% to branch
+		local budget_repo=$((available_width * 35 / 100))
+		local budget_branch=$((available_width - budget_repo))
+		(( budget_repo < 12 )) && budget_repo=12
+		(( budget_branch < 15 )) && budget_branch=15
+
+		if (( max_repo_len > budget_repo )); then
+			max_repo_len=$budget_repo
+		fi
+		if (( max_branch_len > budget_branch )); then
+			max_branch_len=$budget_branch
+		fi
+	fi
+
+	# Format lines with dynamic column widths and smart truncation
+	local lines=()
+	local i
+	local disp_r=""
+	local disp_b=""
+	for (( i = 1; i <= ${#paths[@]}; i++ )); do
+		disp_r="${repo_names[$i]}"
+		disp_b="${branch_names[$i]}"
+
+		if (( ${#disp_r} > max_repo_len )); then
+			disp_r="${disp_r[1,$((max_repo_len - 2))]}.."
+		fi
+		if (( ${#disp_b} > max_branch_len )); then
+			disp_b="${disp_b[1,$((max_branch_len - 2))]}.."
+		fi
+
+		lines+=("$(printf "%-${max_repo_len}s  │  %s %-${max_branch_len}s  │  %s" "$disp_r" "${markers[$i]}" "$disp_b" "${statuses[$i]}")")
+	done
+
+	local selected
+	selected=$(printf '%s\n' "${lines[@]}" | fzf --height 50% --layout=reverse --header "Global Worktree Switcher:" --no-hscroll)
+	if [[ -z "$selected" ]]; then
+		return 0
+	fi
+
+	local idx=1
+	local l
+	for l in "${lines[@]}"; do
+		if [[ "$l" == "$selected" ]]; then
+			tn "${paths[$idx]}"
+			return 0
+		fi
+		((idx++))
+	done
+}
+
+# ------------------------------------------------------------------------------
+# Non-interactive List (wt ls)
+# ------------------------------------------------------------------------------
+_wt_ls() {
+	local repo_root
+	repo_root=$(_wt_resolve_root)
+	if [[ -z "$repo_root" ]]; then
+		echo "Error: Not inside a Git repository." >&2
+		return 1
+	fi
+
+	git -C "$repo_root" worktree list
+}
+
+wt "$@"

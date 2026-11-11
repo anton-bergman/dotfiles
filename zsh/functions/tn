@@ -1,0 +1,137 @@
+#!/usr/bin/env zsh
+
+# Helper: Attach to tmux session (handles being inside/outside tmux)
+_tmux_attach() {
+	local session_name="$1"
+
+	if [[ -n "$TMUX" ]]; then
+		# Already inside tmux, switch to the session (use = for exact match)
+		tmux switch-client -t "=$session_name"
+	else
+		# Not in tmux, attach to the session (use = for exact match)
+		tmux attach-session -t "=$session_name"
+	fi
+}
+
+# Create or attach to a tmux project session with pre-configured cockpit layout
+# Usage: tn [-d|--bg] [directory] | tn close
+tn() {
+	if [[ "${1:-}" == "close" ]]; then
+		if (( $# != 1 )); then
+			echo "Usage: tn close (no additional arguments)" >&2
+			return 1
+		fi
+		if [[ -z "${TMUX:-}" ]]; then
+			echo "Error: tn close requires a current tmux session." >&2
+			return 1
+		fi
+
+		local current_session
+		current_session=$(tmux display-message -p '#S' 2>/dev/null)
+		local total_sessions
+		total_sessions=$(tmux list-sessions 2>/dev/null | wc -l | tr -d ' ')
+
+		if (( total_sessions > 1 )); then
+			# Switch to last active session (fallback to next session) before killing
+			tmux switch-client -l 2>/dev/null || tmux switch-client -n 2>/dev/null || true
+		fi
+
+		tmux kill-session -t "=$current_session"
+		return $?
+	fi
+
+	local detached=false
+	local project_path=""
+	local assistant="${DEFAULT_ASSISTANT:-opencode}"
+
+	# Parse flags
+	while [[ $# -gt 0 ]]; do
+		case "$1" in
+		-d | --bg)
+			detached=true
+			shift
+			;;
+		-h | --help)
+			echo "Usage: tn [-d|--bg] [directory] | tn close"
+			echo ""
+			echo "Launch or attach to a tmux project cockpit (nvim + assistant split)."
+			echo "tn close stops the current session immediately, including all pane processes."
+			echo "Saved files, Git branches, and worktrees remain unchanged."
+			echo "Default assistant is configured via \$DEFAULT_ASSISTANT (current: $assistant)."
+			return 0
+			;;
+		*)
+			if [[ -z "$project_path" ]]; then
+				project_path="$1"
+			fi
+			shift
+			;;
+		esac
+	done
+
+	project_path="${project_path:-.}"
+
+	# Resolve to absolute path and navigate to directory
+	project_path=$(cd "$project_path" 2>/dev/null && pwd)
+	if [[ -z "$project_path" ]]; then
+		echo "Error: Directory does not exist: $1" >&2
+		return 1
+	fi
+
+	# Generate session name: worktree-aware
+	local session_name=""
+	if [[ "$project_path" =~ '/\.worktrees/' ]]; then
+		local repo_root="${project_path%%/.worktrees/*}"
+		local repo_name=$(basename "$repo_root" | tr '. ' '__')
+		local branch_folder="${project_path##*/.worktrees/}"
+		branch_folder=$(echo "$branch_folder" | tr '. /' '___')
+		session_name="${repo_name}__${branch_folder}"
+	else
+		session_name=$(basename "$project_path" | tr '. ' '__')
+	fi
+
+	# Check if session already exists (use = for exact match, avoiding prefix matching)
+	if tmux has-session -t "=$session_name" 2>/dev/null; then
+		if [[ "$detached" == false ]]; then
+			echo "Session '$session_name' already exists. Attaching..."
+			_tmux_attach "$session_name"
+		else
+			echo "Session '$session_name' already exists (running in background)."
+		fi
+		return 0
+	fi
+
+	# Create new session
+	echo "Creating new tmux session: $session_name (assistant: $assistant)"
+
+	# 1. Create new session (detached) in project directory
+	tmux new-session -d -s "$session_name" -c "$project_path"
+
+	# 2. Window 1: "editor" - nvim | assistant split
+	tmux rename-window -t "$session_name:1" "editor"
+
+	# Launch nvim in the first pane
+	tmux send-keys -t "$session_name:1.1" "nvim" C-m
+
+	# Split window vertically (creates right pane)
+	tmux split-window -h -t "$session_name:1" -c "$project_path"
+
+	# Launch the selected assistant in the right pane
+	tmux send-keys -t "$session_name:1.2" "$assistant" C-m
+
+	# Set pane sizes: 70/30 split (nvim larger, assistant smaller)
+	tmux resize-pane -t "$session_name:1.1" -x 70%
+
+	# 3. Window 2: "terminal" - empty pane for running code/tests
+	tmux new-window -t "$session_name:2" -n "terminal" -c "$project_path"
+
+	# 4. Focus on the editor window (window 1)
+	tmux select-window -t "$session_name:1"
+
+	# 5. Attach to session unless detached was requested
+	if [[ "$detached" == false ]]; then
+		_tmux_attach "$session_name"
+	fi
+}
+
+tn "$@"
