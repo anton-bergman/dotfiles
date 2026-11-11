@@ -6,7 +6,7 @@ return {
 			local builtin = require("telescope.builtin")
 
 			-- Set the grep command to use `grep` instead of `ripgrep`
-			vim.g.telescope_grep_command = { "grep", "--color=never", "-r", "--exclude-dir={.git,node_modules}", "." }
+			vim.g.telescope_grep_command = { "grep", "--color=never", "-r", "--exclude-dir={.git,node_modules,.worktrees}", "." }
 
 			-- Shared arguments for ripgrep (Single Source of Truth for Telescope search scope)
 			-- Includes dotfiles (.github/, configs), follows symlinks (-L), and includes *.local files,
@@ -16,6 +16,7 @@ return {
 				"-L",
 				"--no-ignore-vcs",
 				"-g", "!.git/*",
+				"-g", "!.worktrees/*",
 				"-g", "!node_modules/*",
 				"-g", "!.venv*",
 				"-g", "!venv*",
@@ -70,6 +71,7 @@ return {
 
 						-- Version control
 						"%.git/",
+						"%.worktrees/",
 
 						-- OS files
 						"%.DS_Store",
