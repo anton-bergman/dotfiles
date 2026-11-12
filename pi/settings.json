@@ -7,7 +7,13 @@
   "defaultProjectTrust": "ask",
   "enableInstallTelemetry": false,
   "enableAnalytics": false,
-  "npmCommand": ["mise", "exec", "node@lts", "--", "npm"],
+  "npmCommand": [
+    "mise",
+    "exec",
+    "node@lts",
+    "--",
+    "npm"
+  ],
   "showHardwareCursor": true,
   "packages": [
     "~/dotfiles/pi/packages/plan-build",
@@ -17,7 +23,10 @@
     "npm:@gotgenes/pi-permission-system",
     "npm:pi-web-access"
   ],
-  "skills": ["~/.config/agents/skills", "~/.config/agents/skills/local"],
+  "skills": [
+    "~/.config/agents/skills",
+    "~/.config/agents/skills/local"
+  ],
   "enableSkillCommands": true,
   "defaultProvider": "google",
   "defaultModel": "gemini-3.8-flash",
@@ -31,5 +40,9 @@
     "maxRetries": 3
   },
   "hideThinkingBlock": true,
-  "lastChangelogVersion": "1.5.2"
+  "lastChangelogVersion": "1.5.2",
+  "extensionChangelogVersions": {
+    "{\"source\":\"npm:@gotgenes/pi-permission-system\",\"scope\":\"user\"}": "42.0.0",
+    "{\"source\":\"npm:pi-web-access\",\"scope\":\"user\"}": "0.47.0"
+  }
 }
