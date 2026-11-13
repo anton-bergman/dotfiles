@@ -9,7 +9,7 @@ Like most dotfiles, this is an ongoing exercise in convincing myself that tweaki
 The repository manages complete, self-contained environments for:
 
 - **Shell & Terminal:** Zsh (plugins, completions), Starship prompt, Hack Nerd Font, and Ghostty.
-- **Editor:** Modular Neovim (Lazy.nvim, LSPs, treesitter, image.nvim) and VS Code settings sync.
+- **Editor:** Modular Neovim (Lazy.nvim, LSPs, treesitter) and VS Code settings sync.
 - **Multiplexer:** Tmux with TPM (Tmux Plugin Manager) and native system clipboard synchronization.
 - **AI Coding Agents:** Agnostic Agent Core managing shared skills, guidelines, and MCP servers across **Pi**, **Claude Code**, and **OpenCode**.
 - **Package Management:** Single declarative registry in `mise/config.toml` (Node, Python, uv, Bun, CLI utilities) paired with `packages.psv` for OS casks, fonts, and native C-libraries.

@@ -76,7 +76,7 @@ get_module_description() {
 	core) echo "Universal CLI utilities (fzf, rg, lazygit, btop, fastfetch, fnox, vd)" ;;
 	zsh) echo "Shell environment, plugins, starship prompt & gitconfig" ;;
 	tmux) echo "Terminal multiplexer, TPM plugins & safe copy daemon" ;;
-	nvim) echo "Neovim editor, C-deps (luarocks, magick) & configs" ;;
+	nvim) echo "Neovim editor, LSPs & configuration" ;;
 	ghostty) echo "GPU terminal emulator & configuration" ;;
 	fnox) echo "Secret injection & credential daemon" ;;
 	pi) echo "Pi coding agent, local packages & MCP manifests" ;;

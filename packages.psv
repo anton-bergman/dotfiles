@@ -1,7 +1,5 @@
 # ID          | MODULE   | MACOS_SPEC                        | LINUX_SPEC            | CHECK          | DESCRIPTION
 hack-font     | zsh      | cask:font-hack-nerd-font          | pacman:ttf-hack-nerd  | font:Hack      | Hack Nerd Font for terminal and prompt glyphs
-luarocks      | nvim     | brew:luarocks                     | pacman:luarocks       | cmd:luarocks   | Lua package manager for Neovim
-imagemagick   | nvim     | brew:imagemagick                  | pacman:imagemagick    | cmd:magick     | Image processing library for image.nvim
 ghostty       | ghostty  | brew:ghostty                      | skip                  | cmd:ghostty    | Fast native GPU terminal emulator
 vscode        | vscode   | cask:visual-studio-code           | pacman:code           | cmd:code       | Visual Studio Code editor
 aerospace     | macos    | cask:nikitabobko/tap/aerospace    | skip                  | cmd:aerospace  | macOS tiling window manager
