@@ -12,6 +12,7 @@ __pycache__/
 !.secrets/**/*.example
 
 # Local & Machine-Specific Overrides
+.active_modules
 *.local
 *.local.*
 !*.local.example

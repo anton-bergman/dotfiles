@@ -14,13 +14,13 @@ This repository contains personal dotfiles and configurations for a macOS-centri
 - `yazi/`: Yazi file manager configuration and plugins.
 - `opencode/`: Base configuration templates and plugins for the OpenCode AI assistant.
 - `claude/`: Base configuration templates for the Claude Code AI assistant.
-- `install_*.sh`: Installation scripts for various components.
+- `install.sh`: Authoritative CLI orchestrator and modular subsystem runner.
 
 ## Build and Installation
 
-There is no traditional "build" step. Installation and updates are handled via shell scripts that create symbolic links and install dependencies.
+There is no traditional "build" step. Installation and updates are handled via the modular `./install.sh` CLI:
 
-- **Initial Setup:** Run the relevant `./install_<component>.sh` script.
+- **Initial Setup:** Run `./install.sh` to provision all active modules, or `./install.sh <module>` to provision a single subsystem.
 - **Dependency Management:**
   - **Homebrew:** Primary package manager for macOS.
   - **Mise:** Used for managing tool versions (see `mise/config.toml`).
@@ -34,7 +34,7 @@ This repository uses an "Agnostic Agent Core" to share skills and MCP servers ac
 
 - **Skills:** Add new markdown-based skills to `agents/skills/`.
 - **MCP Servers:** Define new servers ONLY in `agents/mcp.json` using the standard `mcpServers` schema.
-- **Compilation:** The `opencode/opencode.json` and `claude/settings.json` files are **TEMPLATES**. If you modify `agents/mcp.json`, you MUST run `./install_opencode.sh` or `./install_claude.sh` to compile and link the configurations dynamically. Never manually edit `~/.config/opencode/opencode.json` to add an MCP server.
+- **Compilation:** The `opencode/opencode.json` and `claude/settings.json` files are **TEMPLATES**. If you modify `agents/mcp.json`, you MUST run `./install.sh agents` (or `./install.sh <client>`) to compile and link the configurations dynamically. Never manually edit `~/.config/opencode/opencode.json` to add an MCP server.
 
 ## Linting and Formatting
 
@@ -125,7 +125,7 @@ External plugins like `zsh-syntax-highlighting` have their own test suites.
 
 - **Grep First:** Before modifying a configuration, grep the codebase to see how similar settings are handled elsewhere.
 - **Symbolic Links:** When "installing" a new file, ensure it is placed in the `~/dotfiles` directory and symlinked to its destination in `~/.config/` or `$HOME`.
-- **Plugin Management:** When adding Neovim plugins, update `nvim/lua/plugins/` and ensure any external dependencies are added to `install_nvim.sh`.
-- **Agent Tooling:** When asked to create/modify a skill or MCP tool, make changes ONLY in the `agents/` directory, and then execute `./install_opencode.sh` and/or `./install_claude.sh` to compile them into the target environment.
+- **Plugin Management:** When adding Neovim plugins, update `nvim/lua/plugins/` and ensure any external host dependencies are declared in `packages.psv` under module `nvim`.
+- **Agent Tooling:** When asked to create/modify a skill or MCP tool, make changes ONLY in the `agents/` directory, and then execute `./install.sh agents` to compile them into all target environments.
 - **Testing:** Since automated tests are limited, describe how you verified your changes (e.g., "I reloaded Neovim and confirmed the new keymap is active").
 - **Consistency:** If a file uses 2-space indentation (common in JSON/YAML), maintain it. If it uses tabs (common in Lua), use tabs.

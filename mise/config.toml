@@ -1,24 +1,42 @@
 [tools]
-# Global Playground Runtimes (LTS/Stable)
+# ==========================================
+# Module: base (Foundation Runtimes)
+# ==========================================
 node = "lts"
 uv = "latest"
 python = "latest"
-usage = "latest"  # CLI autocomplete engine used by mise
 bun = "latest"
+usage = "latest"
 
-# Universal CLI Binaries (Cross-platform precompiled GitHub releases)
-neovim = "stable"
-starship = "latest"
+# ==========================================
+# Module: core (Universal CLI Utilities)
+# ==========================================
 fzf = "latest"
 ripgrep = "latest"
 lazygit = "latest"
-tlrc = "latest"
+fastfetch = "latest"
+starship = "latest"
 gh = "latest"
-opencode = "latest"
-claude = "latest"
-"npm:@earendil-works/pi-coding-agent" = "latest"
+tlrc = "latest"
 hunk = "latest"
 "github:pamburus/hl" = "latest"
+
+# ==========================================
+# Subsystems
+# ==========================================
+# Module: nvim
+neovim = "stable"
+
+# Module: tmux
+tmux = "latest"
+
+# Module: fnox
+fnox = { version = "latest", workflow = "release.yml" }
+
+# Module: agents
+claude = "latest"
+opencode = "latest"
+"npm:@earendil-works/pi-coding-agent" = "latest"
 
 [settings]
 trusted_config_paths = ["~/dev"]

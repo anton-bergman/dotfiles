@@ -1,0 +1,11 @@
+#:schema https://fnox.jdx.dev/schema.json
+default_provider = "bw"
+
+[providers.bw]
+type = "bitwarden"
+backend = "rbw"
+auth_command = "rbw unlock"
+
+[secrets]
+GOOGLE_GENAI_API_KEY = { provider = "bw", value = "google-genai-dev" }
+SELLPY_AI_GATEWAY_KEY = { provider = "bw", value = "sellpy-ai-gateway" }

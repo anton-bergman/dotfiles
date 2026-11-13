@@ -6,30 +6,48 @@
 # Default Linux package manager (override via DOTFILES_LINUX_PKG_MANAGER)
 DOTFILES_LINUX_PKG_MANAGER="${DOTFILES_LINUX_PKG_MANAGER:-pacman}"
 
-# --- Pre-Flight Validation ---
+# --- Pre-Flight Validation with Interactive Bootstrap ---
 ensure_prerequisites() {
-	local missing=()
-
+	# 1. Check / Bootstrap Mise
 	if ! command_exists mise; then
-		missing+=("mise (install: curl https://mise.jdx.dev/install.sh | sh)")
+		if [ -t 0 ]; then
+			echo -ne "${YELLOW}>> [NOTICE]${NC} Mise is required but not installed. Install mise automatically? [Y/n] "
+			read -r answer
+			answer=${answer:-Y}
+			if [[ "$answer" =~ ^[Yy]$ ]]; then
+				info "Installing Mise..."
+				curl -fsSL https://mise.jdx.dev/install.sh | sh
+				export PATH="$HOME/.local/bin:$PATH"
+			else
+				error "Mise is required. Install manually: curl https://mise.jdx.dev/install.sh | sh"
+			fi
+		else
+			error "Missing prerequisite: mise (install: curl https://mise.jdx.dev/install.sh | sh)"
+		fi
 	fi
 
+	# 2. Check / Bootstrap Homebrew on macOS
 	if [ "$IS_MAC" = true ]; then
 		if ! command_exists brew; then
-			missing+=("brew (install: https://brew.sh)")
+			if [ -t 0 ]; then
+				echo -ne "${YELLOW}>> [NOTICE]${NC} Homebrew is required on macOS. Install Homebrew automatically? [Y/n] "
+				read -r answer
+				answer=${answer:-Y}
+				if [[ "$answer" =~ ^[Yy]$ ]]; then
+					info "Installing Homebrew..."
+					/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+					eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv 2>/dev/null || true)"
+				else
+					error "Homebrew is required. Install manually: https://brew.sh"
+				fi
+			else
+				error "Missing prerequisite: brew (install: https://brew.sh)"
+			fi
 		fi
 	elif [ "$IS_LINUX" = true ]; then
 		if ! command_exists "$DOTFILES_LINUX_PKG_MANAGER"; then
-			missing+=("$DOTFILES_LINUX_PKG_MANAGER (Linux package manager '$DOTFILES_LINUX_PKG_MANAGER' not found)")
+			error "Linux package manager '$DOTFILES_LINUX_PKG_MANAGER' not found."
 		fi
-	fi
-
-	if [ ${#missing[@]} -gt 0 ]; then
-		echo -e "${RED}>> [ERROR] Missing required prerequisite(s):${NC}"
-		for m in "${missing[@]}"; do
-			echo -e "   - $m"
-		done
-		exit 1
 	fi
 }
 
@@ -131,7 +149,7 @@ install_binary_url() {
 	fi
 }
 
-# --- Manifest Package Resolver ---
+# --- Manifest Package Resolver by ID ---
 host_install_id() {
 	local target_id="$1"
 	local manifest="$HOME/dotfiles/packages.psv"
@@ -141,14 +159,14 @@ host_install_id() {
 	fi
 
 	local matched_line=""
-	while IFS='|' read -r raw_id raw_mac raw_linux raw_check raw_desc || [ -n "$raw_id" ]; do
+	while IFS='|' read -r raw_id raw_mod raw_mac raw_linux raw_check raw_desc || [ -n "$raw_id" ]; do
 		# Skip comments and empty lines
 		[[ "$raw_id" =~ ^[[:space:]]*# ]] && continue
 		[[ -z "$(echo "$raw_id" | xargs)" ]] && continue
 
 		local clean_id=$(echo "$raw_id" | xargs)
 		if [ "$clean_id" = "$target_id" ]; then
-			matched_line="$raw_id|$raw_mac|$raw_linux|$raw_check|$raw_desc"
+			matched_line="$raw_id|$raw_mod|$raw_mac|$raw_linux|$raw_check|$raw_desc"
 			break
 		fi
 	done <"$manifest"
@@ -157,10 +175,11 @@ host_install_id() {
 		error "Package ID '$target_id' not found in packages.psv"
 	fi
 
-	local macos_spec=$(echo "$matched_line" | cut -d'|' -f2 | xargs)
-	local linux_spec=$(echo "$matched_line" | cut -d'|' -f3 | xargs)
-	local check_spec=$(echo "$matched_line" | cut -d'|' -f4 | xargs)
-	local desc=$(echo "$matched_line" | cut -d'|' -f5 | xargs)
+	local mod_name=$(echo "$matched_line" | cut -d'|' -f2 | xargs)
+	local macos_spec=$(echo "$matched_line" | cut -d'|' -f3 | xargs)
+	local linux_spec=$(echo "$matched_line" | cut -d'|' -f4 | xargs)
+	local check_spec=$(echo "$matched_line" | cut -d'|' -f5 | xargs)
+	local desc=$(echo "$matched_line" | cut -d'|' -f6 | xargs)
 
 	local spec="$macos_spec"
 	if [ "$IS_LINUX" = true ]; then
@@ -168,7 +187,7 @@ host_install_id() {
 	fi
 
 	if [ "$spec" = "skip" ]; then
-		info "Package '$target_id' is marked 'skip' for this OS. Skipping."
+		log_action "Skipping" "$target_id (not applicable on this OS)"
 		return 0
 	fi
 
@@ -177,11 +196,11 @@ host_install_id() {
 
 	# Check if already installed
 	if _check_package_installed "$check_spec" "$provider" "$pkg"; then
-		success "$target_id ($pkg) is already installed."
+		log_action "Verified" "$target_id ($provider: ok)"
 		return 0
 	fi
 
-	info "Installing $target_id ($pkg) via $provider..."
+	log_action "Installing" "$target_id via $provider"
 
 	local status=0
 	case "$provider" in
@@ -212,11 +231,71 @@ host_install_id() {
 	esac
 
 	if [ $status -eq 0 ] && _check_package_installed "$check_spec" "$provider" "$pkg"; then
-		success "Successfully installed $target_id"
+		log_action "Installed" "$target_id ($provider)"
 	elif [ $status -eq 0 ]; then
-		# Some casks or drivers may succeed without immediate path detection
-		success "Installed $target_id via $provider"
+		log_action "Installed" "$target_id ($provider)"
 	else
-		error "Failed to install $target_id via $provider"
+		log_error "Failed to install $target_id via $provider"
+		return 1
+	fi
+}
+
+# --- Manifest Package Resolver by Module Tag ---
+host_install_module() {
+	local target_module="$1"
+	local manifest="$HOME/dotfiles/packages.psv"
+
+	[ -f "$manifest" ] || error "Manifest file not found: $manifest"
+
+	local pkg_ids=()
+	while IFS='|' read -r raw_id raw_mod raw_mac raw_linux raw_check raw_desc || [ -n "$raw_id" ]; do
+		[[ "$raw_id" =~ ^[[:space:]]*# ]] && continue
+		[[ -z "$(echo "$raw_id" | xargs)" ]] && continue
+
+		local clean_id=$(echo "$raw_id" | xargs)
+		local clean_mod=$(echo "$raw_mod" | xargs)
+
+		if [ "$clean_mod" = "$target_module" ]; then
+			pkg_ids+=("$clean_id")
+		fi
+	done <"$manifest"
+
+	for pid in "${pkg_ids[@]}"; do
+		host_install_id "$pid"
+	done
+}
+
+# --- Module-Scoped Package Upgrades ---
+host_upgrade_module() {
+	local target_module="$1"
+	local manifest="$HOME/dotfiles/packages.psv"
+
+	[ -f "$manifest" ] || return 0
+
+	local pkgs=()
+	while IFS='|' read -r raw_id raw_mod raw_mac raw_linux raw_check raw_desc || [ -n "$raw_id" ]; do
+		[[ "$raw_id" =~ ^[[:space:]]*# ]] && continue
+		[[ -z "$(echo "$raw_id" | xargs)" ]] && continue
+
+		local clean_mod=$(echo "$raw_mod" | xargs)
+		if [ "$clean_mod" = "$target_module" ]; then
+			local spec="$raw_mac"
+			[ "$IS_LINUX" = true ] && spec="$raw_linux"
+			local clean_spec=$(echo "$spec" | xargs)
+			[ "$clean_spec" = "skip" ] && continue
+			local pkg=$(echo "$clean_spec" | cut -d: -f2-)
+			pkgs+=("$pkg")
+		fi
+	done <"$manifest"
+
+	if [ ${#pkgs[@]} -gt 0 ]; then
+		if [ "$IS_MAC" = true ]; then
+			brew upgrade "${pkgs[@]}" 2>/dev/null || true
+		elif [ "$IS_LINUX" = true ]; then
+			case "$DOTFILES_LINUX_PKG_MANAGER" in
+			pacman) sudo pacman -S --needed --noconfirm "${pkgs[@]}" 2>/dev/null || true ;;
+			apt) sudo apt install --only-upgrade -y "${pkgs[@]}" 2>/dev/null || true ;;
+			esac
+		fi
 	fi
 }

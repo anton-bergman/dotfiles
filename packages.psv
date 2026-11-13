@@ -1,13 +1,12 @@
-# ID          | MACOS_SPEC                        | LINUX_SPEC            | CHECK          | DESCRIPTION
-hack-font     | cask:font-hack-nerd-font          | pacman:ttf-hack-nerd  | font:Hack      | Hack Nerd Font for terminal and prompt glyphs
-luarocks      | brew:luarocks                     | pacman:luarocks       | cmd:luarocks   | Lua package manager for Neovim
-imagemagick   | brew:imagemagick                  | pacman:imagemagick    | cmd:magick     | Image processing library for image.nvim
-tmux          | brew:tmux                         | pacman:tmux           | cmd:tmux       | Terminal multiplexer
-btop          | brew:btop                         | pacman:btop           | cmd:btop       | Resource monitor
-fastfetch     | brew:fastfetch                    | pacman:fastfetch      | cmd:fastfetch  | System info fetch tool
-visidata      | uv:visidata                       | uv:visidata           | cmd:vd         | Terminal tabular data explorer
-aerospace     | cask:nikitabobko/tap/aerospace    | skip                  | cmd:aerospace  | macOS tiling window manager
-borders       | brew:FelixKratz/formulae/borders  | skip                  | cmd:borders    | macOS window border daemon
-karabiner     | cask:karabiner-elements           | skip                  | receipt        | macOS keyboard remapper
-ghostty       | brew:ghostty                      | skip                  | cmd:ghostty    | Fast native GPU terminal emulator
-vscode        | cask:visual-studio-code           | pacman:code           | cmd:code       | Visual Studio Code editor
+# ID          | MODULE   | MACOS_SPEC                        | LINUX_SPEC            | CHECK          | DESCRIPTION
+hack-font     | zsh      | cask:font-hack-nerd-font          | pacman:ttf-hack-nerd  | font:Hack      | Hack Nerd Font for terminal and prompt glyphs
+luarocks      | nvim     | brew:luarocks                     | pacman:luarocks       | cmd:luarocks   | Lua package manager for Neovim
+imagemagick   | nvim     | brew:imagemagick                  | pacman:imagemagick    | cmd:magick     | Image processing library for image.nvim
+ghostty       | ghostty  | brew:ghostty                      | skip                  | cmd:ghostty    | Fast native GPU terminal emulator
+vscode        | vscode   | cask:visual-studio-code           | pacman:code           | cmd:code       | Visual Studio Code editor
+aerospace     | macos    | cask:nikitabobko/tap/aerospace    | skip                  | cmd:aerospace  | macOS tiling window manager
+borders       | macos    | brew:FelixKratz/formulae/borders  | skip                  | cmd:borders    | macOS window border daemon
+karabiner     | macos    | cask:karabiner-elements           | skip                  | receipt        | macOS keyboard remapper
+rbw           | core     | brew:rbw                          | pacman:rbw            | cmd:rbw        | Unofficial Bitwarden CLI client in Rust
+visidata      | core     | uv:visidata                       | uv:visidata           | cmd:vd         | Terminal tabular data explorer
+btop          | core     | brew:btop                         | pacman:btop           | cmd:btop       | Resource monitor

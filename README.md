@@ -1,305 +1,86 @@
 # dotfiles
 
-This repository contains my personal dotfiles for configuring and automating the setup of my development environment.
-
-## Table of Contents
-
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-  - [Install Dotfiles](#install-dotfiles)
-  - [Install Zsh Plugins](#install-zsh-plugins)
-  - [Install Python Lab](#install-python-lab)
-  - [Install Neovim](#install-neovim)
-  - [Install VS Code](#install-vs-code)
-  - [Install OpenCode](#install-opencode)
-  - [Install Claude Code](#install-claude-code)
-  - [Install Ghostty](#install-ghostty)
-  - [Install Tmux](#install-tmux)
-  - [Install CLI Tools](#install-cli-tools)
-  - [Install Wallpapers](#install-wallpapers)
-- [Directory Structure](#directory-structure)
-- [Troubleshooting](#troubleshooting)
+Like most dotfiles, this is an ongoing exercise in convincing myself that tweaking terminal configs counts as productive engineering. It's my daily driver setup for macOS and Linux, built to be predictable, modular and honest about what it does. It uses **Mise** for portable runtimes, a simple host manifest (`packages.psv`) and an orchestrator that sets up the whole workflow without the usual headaches.
 
 ---
 
-## Prerequisites
+## Overview
 
-Before proceeding, ensure the following are installed:
+The repository manages complete, self-contained environments for:
 
-1. **Homebrew:** Install Homebrew (macOS package manager) using:
-
-   ```bash
-   /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-   ```
-
----
-
-## Installation
-
-### Install Dotfiles
-
-1. Clone this repository into your home directory:
-
-   ```bash
-   git clone https://github.com/anton-bergman/dotfiles.git ~/dotfiles
-   ```
-
-2. Follow the individual installation steps for each component (e.g., Zsh, Neovim, VS Code, Tmux, CLI tools) as outlined below.
+- **Shell & Terminal:** Zsh (plugins, completions), Starship prompt, Hack Nerd Font, and Ghostty.
+- **Editor:** Modular Neovim (Lazy.nvim, LSPs, treesitter, image.nvim) and VS Code settings sync.
+- **Multiplexer:** Tmux with TPM (Tmux Plugin Manager) and native system clipboard synchronization.
+- **AI Coding Agents:** Agnostic Agent Core managing shared skills, guidelines, and MCP servers across **Pi**, **Claude Code**, and **OpenCode**.
+- **Package Management:** Single declarative registry in `mise/config.toml` (Node, Python, uv, Bun, CLI utilities) paired with `packages.psv` for OS casks, fonts, and native C-libraries.
 
 ---
 
-### Install Zsh Plugins
+## Quick Start
 
-To set up Zsh plugins, run the Zsh installation script:
+On a fresh machine, clone the repository into your home directory:
 
 ```bash
-cd ~/dotfiles && ./install_zsh.sh
+git clone https://github.com/anton-bergman/dotfiles.git ~/dotfiles
+cd ~/dotfiles && ./install.sh
 ```
 
-This script will:
-
-- Install **Oh-My-Posh** and the **Hack Nerd Font**.
-- Clone and set up the following Zsh plugins:
-  - `zsh-autosuggestions`
-  - `zsh-syntax-highlighting`
-  - `zsh-completions`
-- Set up symbolic links for `.zshrc`.
-- Set up symbolic links for `.vimrc` (basic Vim configuration).
-- Autoload modular custom functions from `zsh/functions/` (e.g. `wt`, `tn`, `caf`).
+`./install.sh` verifies prerequisites. If **Mise** or **Homebrew** (macOS) are missing, it prompts to install them automatically before provisioning.
 
 ---
 
-### Install Python Lab
+## Usage
 
-To set up the persistent Python Lab environment (used for testing and data utilities), run the installation script:
+Everything runs through `./install.sh`:
 
 ```bash
-cd ~/dotfiles && ./install_python_lab.sh
+# Set up all active modules (fresh machine or full sync)
+./install.sh
+
+# Target a specific tool or composite group
+./install.sh nvim             # Sync Neovim, its host dependencies and config
+./install.sh tmux             # Sync Tmux, TPM plugins and config
+./install.sh agents           # Sync Pi, Claude Code and OpenCode together
+
+# Keep things up to date across Mise, Homebrew and Git plugins
+./install.sh upgrade          # Upgrade everything across the entire system
+./install.sh upgrade nvim     # Upgrade only Neovim and its C-libraries
+./install.sh upgrade agents   # Upgrade all AI agent harnesses
+
+# See what's active, dormant or available
+./install.sh list
 ```
-
-This script will:
-
-- Install **uv** (managed by **Mise**) for ultra-fast package management.
-- Initialize the lab project in `~/dotfiles/scripts/python/` with core data science and utility packages (`pandas`, `rich`, `httpx`, etc.).
-- Set up symbolic links to make the environment accessible at `~/.virtualenvs/lab`.
-- Enable the `py` command for a pre-configured **IPython** shell and rapid script execution.
 
 ---
 
-### Install Neovim
+## Machine-Specific Profiles
 
-To set up Neovim and its dependencies, run the Neovim installation script:
+Default active modules are configured in `install.sh`. To customize which modules install on a specific machine (e.g. a minimal headless server vs. a personal MacBook) without modifying git:
 
-```bash
-cd ~/dotfiles && ./install_nvim.sh
-```
-
-This script will:
-
-- Install **Neovim**, **LuaRocks**, **Ripgrep** _(required for Telescope fuzzy finding)_, and **ImageMagick** _(required for image.nvim plugin)_.
-- Set up symbolic links for Neovim configuration.
-- Configure **Lazy.nvim** as the plugin manager with pre-installed plugins for LSP, autocompletion, syntax highlighting, and more.
-
-To start Neovim:
+Create `.active_modules` in the repository root:
 
 ```bash
+# ~/dotfiles/.active_modules
+zsh
+tmux
 nvim
+fnox
+pi
 ```
 
-To update plugins inside Neovim:
-
-```bash
-:Lazy sync
-```
+`./install.sh` automatically detects this file and provisions only your selected profile.
 
 ---
 
-### Install VS Code
+## Diagnostics & Troubleshooting
 
-To set up VS Code, run the VS Code installation script:
-
-```bash
-cd ~/dotfiles && ./install_vscode.sh
-```
-
-This script will:
-
-- Install VS Code (if not already installed).
-- Install extensions listed in `vscode/vscode-extensions.txt`.
-- Set up symbolic links for VS Code settings.
-
----
-
-### Install OpenCode
-
-OpenCode is an AI-powered coding assistant CLI. To set up OpenCode configuration, run the installation script:
-
-```bash
-cd ~/dotfiles && ./install_opencode.sh
-```
-
-This script will:
-
-- Install **OpenCode** via Homebrew (if not already installed).
-- Generate a dynamic `opencode.json` configuration file by merging the base template (`opencode/opencode.json`) with universal MCP servers (`agents/mcp.json`).
-- Set up symbolic links for universal agent skills and instructions from the `agents/` directory.
-- Install OpenCode plugins if `package.json` exists in `~/.config/opencode/`.
-
----
-
-### Install Claude Code
-
-Claude Code is Anthropic's AI-powered coding assistant CLI. To set up Claude Code configuration, run the installation script:
-
-```bash
-cd ~/dotfiles && ./install_claude.sh
-```
-
-This script will:
-
-- Install **Claude Code** via Homebrew cask (if not already installed).
-- Merge universal MCP servers from `agents/mcp.json` directly into `~/.claude.json`.
-- Set up symbolic links for Claude Code settings (`settings.json`).
-- Set up symbolic links for universal agent skills and global guidelines (`agents/GUIDELINES.md`).
-
-**Note:** After installation, run `claude` once to complete the OAuth login flow.
-
----
-
-### Install Pi
-
-Pi is an extensible, terminal-native AI coding agent. To set up Pi configuration, run the installation script:
-
-```bash
-cd ~/dotfiles && ./install_pi.sh
-```
-
-This script will:
-
-- Install **Pi** via Homebrew formula (`pi-coding-agent`).
-- Set up symbolic links for Pi settings (`settings.json`) and security permissions (`permissions.json` via `@gotgenes/pi-permission-system`).
-- Set up symbolic links for universal MCP servers (`agents/mcp.json`), agent skills, and prompt templates.
-- Compile global guidelines into `~/.pi/agent/AGENTS.md`.
-
-**Note:** After installation, run `pi` and use `/login` to authenticate with your preferred model provider.
-
----
-
-### Install Ghostty
-
-Ghostty is a modern, GPU-accelerated terminal emulator. To set up Ghostty, run the installation script:
-
-```bash
-cd ~/dotfiles && ./install_ghostty.sh
-```
-
-This script will:
-
-- Install **Ghostty** via Homebrew.
-- Set up symbolic links for Ghostty configuration (`config.toml`).
-
----
-
-### Install Tmux
-
-To set up Tmux run the Tmux installation script:
-
-```bash
-cd ~/dotfiles && ./install_tmux.sh
-```
-
-This script will:
-
-- Install Tmux and the Tmux Plugin Manager (TPM).
-- Set up symbolic links for Tmux configuration.
-
----
-
-### Install CLI Tools
-
-To install additional CLI tools:
-
-1. Run the CLI tools installation script:
-   ```bash
-   cd ~/dotfiles && ./install_cli_tools.sh
-   ```
-
-This script will install:
-
-- **Fastfetch:** A fast system information tool.
-- **TLDR:** Simplified and community-driven man pages.
-- **Btop:** A modern, interactive terminal resource monitor.
-- **Fzf:** A general-purpose command-line fuzzy finder.
-- **Lazygit:** A simple terminal UI for git commands.
-- **VisiData:** A terminal spreadsheet viewer and data analyzer.
-
----
-
-### Install Wallpapers
-
-To set up desktop wallpapers:
-
-1. Run the wallpaper installation script:
-   ```bash
-   cd ~/dotfiles && ./install_wallpapers.sh
-   ```
-
-**Note:** Wallpapers are not included in the repository due to copyright restrictions. They are downloaded from their original sources for personal use only.
-
----
-
-## Directory Structure
-
-The repository is organized as follows:
-
-```
-dotfiles/
-├── agents/                  # Agnostic Agent Core: universal skills, MCP servers, and global instructions
-├── claude/                  # Claude Code base configuration templates
-├── ghostty/                 # Ghostty terminal configuration
-├── git/                     # Global Git configuration (gitconfig, gitignore_global)
-├── lib/                     # Shared shell utility functions (utils.sh)
-├── macos/                   # macOS-specific settings and scripts
-│   ├── aerospace/           # AeroSpace window manager config
-│   └── raycast/             # Raycast scripts and setup
-├── mise/                    # Global tool version manager (mise) configuration
-├── nvim/                    # Neovim configuration (Lazy.nvim setup)
-├── opencode/                # OpenCode base configuration templates and plugins
-├── scripts/                 # Utility scripts (e.g., Python Lab and data tools)
-├── tmux/                    # Tmux configuration
-├── vim/                     # Basic Vim configuration (.vimrc)
-├── vscode/                  # VS Code settings and extension lists
-├── wallpapers/              # Desktop wallpapers (downloaded, gitignored)
-├── zsh/                     # Zsh configuration, plugins, and custom functions
-├── install_claude.sh        # Claude Code installation script
-├── install_cli_tools.sh     # CLI tools installation script (btop, fzf, fastfetch, etc.)
-├── install_ghostty.sh       # Ghostty terminal installation script
-├── install_nvim.sh          # Neovim installation script
-├── install_opencode.sh      # OpenCode installation script
-├── install_python_lab.sh    # Python Lab installation script
-├── install_tmux.sh          # Tmux installation script
-├── install_vscode.sh        # VS Code installation script
-├── install_wallpapers.sh    # Wallpaper installation script
-├── install_zsh.sh           # Zsh installation script
-├── README.md                # Main documentation and installation guide
-└── TODO.md                  # Personal task list and roadmap
-```
-
----
-
-## Troubleshooting
-
-- **Permission Issues:** Ensure all scripts have executable permissions:
-
+- **Execution Logs:** Every run appends full sub-command outputs to `/tmp/dotfiles-install.log`.
+- **Verbose Output:** Pass `-v` to stream raw command outputs in real-time:
   ```bash
-  chmod +x ~/dotfiles/*.sh ~/dotfiles/cli-tools/*.sh
+  ./install.sh -v nvim
   ```
-
-- **Missing Dependencies:** Verify Homebrew and required tools are installed.
-
-- **Symbolic Link Issues:** Remove existing conflicting files or directories before running the scripts:
+- **Error Diagnostics:** If an installation fails, the runner halts and replays the exact failure output directly on the screen.
+- **Permissions:** Ensure scripts have executable permissions:
   ```bash
-  rm -rf ~/.config/nvim ~/.config/tmux ~/.zshrc
+  chmod +x ~/dotfiles/install.sh ~/dotfiles/*/setup.sh
   ```
-
----

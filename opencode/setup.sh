@@ -1,61 +1,40 @@
 #!/bin/bash
-
-# Exit immediately if any command fails
 set -e
-
-# Source utility functions
-source "$HOME/dotfiles/lib/utils.sh"
-
-# Ensure brew/mise are ready
+DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+source "$DOTFILES_DIR/lib/utils.sh"
 ensure_base_ready
 
-header "OpenCode Setup"
-
-# --- Setup Configuration ---
-info "Setting up configuration files..."
-DOTFILES_DIR="$HOME/dotfiles"
 OPENCODE_CONFIG_DIR="$HOME/.config/opencode"
 OPENCODE_THEMES_DIR="$OPENCODE_CONFIG_DIR/themes"
-OPENCODE_MCP_DIR="$OPENCODE_CONFIG_DIR/mcp"
-OPENCODE_PLUGINS_DIR="$DOTFILES_DIR/opencode/plugins"
 
-# Ensure directories exist
 mkdir -p "$OPENCODE_THEMES_DIR"
 
 # Ensure agents central directory is linked
 link_file "$DOTFILES_DIR/agents" "$HOME/.config/agents"
 
-# Ensure local guidelines exist
-if [ ! -f "$DOTFILES_DIR/agents/GUIDELINES.local.md" ]; then
-	info "Creating agents/GUIDELINES.local.md from example..."
-	cp "$DOTFILES_DIR/agents/GUIDELINES.local.example" "$DOTFILES_DIR/agents/GUIDELINES.local.md"
+# Compile global AGENTS.md for OpenCode (truly optional local guidelines)
+rm -f "$OPENCODE_CONFIG_DIR/AGENTS.md"
+if [ -f "$DOTFILES_DIR/agents/GUIDELINES.local.md" ]; then
+	cat "$DOTFILES_DIR/agents/GUIDELINES.md" "$DOTFILES_DIR/agents/GUIDELINES.local.md" >"$OPENCODE_CONFIG_DIR/AGENTS.md"
+else
+	cp "$DOTFILES_DIR/agents/GUIDELINES.md" "$OPENCODE_CONFIG_DIR/AGENTS.md"
 fi
 
-# Compile global AGENTS.md for OpenCode
-info "Compiling global AGENTS.md for OpenCode..."
-rm -f "$OPENCODE_CONFIG_DIR/AGENTS.md"
-cat "$DOTFILES_DIR/agents/GUIDELINES.md" "$DOTFILES_DIR/agents/GUIDELINES.local.md" > "$OPENCODE_CONFIG_DIR/AGENTS.md"
-
-# Remove existing config if it is a symlink or file to prevent writing through symlink
 rm -f "$OPENCODE_CONFIG_DIR/opencode.json"
 
 # Compile and write main configuration with merged MCPs
-info "Generating merged opencode.json configuration..."
 python3 - <<EOF
 import json
 import os
+import re
 
 dotfiles_dir = os.path.expanduser("~/dotfiles")
 opencode_config_dir = os.path.expanduser("~/.config/opencode")
 
 # Load template config and strip comments
 with open(os.path.join(dotfiles_dir, "opencode/opencode.json"), "r") as f:
-    import re
     lines = f.readlines()
-    clean_lines = []
-    for line in lines:
-        line = re.sub(r'(?<!:)\/\/.*', '', line)
-        clean_lines.append(line)
+    clean_lines = [re.sub(r'(?<!:)\/\/.*', '', line) for line in lines]
     config = json.loads("".join(clean_lines))
 
 # Load central MCP servers
@@ -84,7 +63,6 @@ for name, mcp_server in mcp_data.get("mcpServers", {}).items():
 
 config["mcp"] = opencode_mcp
 
-# Write the final file
 os.makedirs(opencode_config_dir, exist_ok=True)
 with open(os.path.join(opencode_config_dir, "opencode.json"), "w") as f:
     json.dump(config, f, indent=2)
@@ -99,15 +77,14 @@ link_file "$DOTFILES_DIR/opencode/plugins" "$OPENCODE_CONFIG_DIR/plugins"
 # Link skills directory from central hub
 link_file "$DOTFILES_DIR/agents/skills" "$OPENCODE_CONFIG_DIR/skills"
 
-# Link custom commands to global user commands
+# Link custom commands
 if [ -L "$OPENCODE_CONFIG_DIR/commands" ]; then
 	rm "$OPENCODE_CONFIG_DIR/commands"
 fi
 mkdir -p "$OPENCODE_CONFIG_DIR/commands"
 
-# Link Agnostic Commands
-for cmd in "$DOTFILES_DIR/agents/commands"/*.md; do
-	[ -e "$cmd" ] && link_file "$cmd" "$OPENCODE_CONFIG_DIR/commands/$(basename "$cmd")"
-done
-
-success "OpenCode setup completed!"
+if [ -d "$DOTFILES_DIR/agents/commands" ]; then
+	for cmd in "$DOTFILES_DIR/agents/commands"/*.md; do
+		[ -e "$cmd" ] && link_file "$cmd" "$OPENCODE_CONFIG_DIR/commands/$(basename "$cmd")"
+	done
+fi
