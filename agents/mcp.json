@@ -8,21 +8,28 @@
       ]
     },
     "bigquery": {
-      "command": "npx",
-      "args": [
-        "-y",
-        "@toolbox-sdk/server",
-        "--config=/Users/anton/.config/agents/mcp/bq-tools.yaml",
-        "--stdio"
-      ]
+      "type": "http",
+      "url": "https://services.dev.sellpy.net/litellm/mcp",
+      "headers": {
+        "x-litellm-api-key": "Bearer ${SELLPY_AI_GATEWAY_KEY}",
+        "x-mcp-servers": "BigQuery"
+      }
     },
     "linear": {
       "type": "http",
-      "url": "https://mcp.linear.app/mcp"
+      "url": "https://services.dev.sellpy.net/litellm/mcp",
+      "headers": {
+        "x-litellm-api-key": "Bearer ${SELLPY_AI_GATEWAY_KEY}",
+        "x-mcp-servers": "linear"
+      }
     },
     "betterstack": {
       "type": "http",
-      "url": "https://mcp.betterstack.com"
+      "url": "https://services.dev.sellpy.net/litellm/mcp",
+      "headers": {
+        "x-litellm-api-key": "Bearer ${SELLPY_AI_GATEWAY_KEY}",
+        "x-mcp-servers": "betterstack"
+      }
     },
     "redash": {
       "command": "npx",
