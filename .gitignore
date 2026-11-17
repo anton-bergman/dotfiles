@@ -4,13 +4,6 @@
 __pycache__/
 *.py[cod]
 
-# Secrets & Credentials Vault
-.secrets/**/*
-!.secrets/**/
-!.secrets/**/.gitkeep
-!.secrets/README.md
-!.secrets/**/*.example
-
 # Local & Machine-Specific Overrides
 .active_modules
 *.local
