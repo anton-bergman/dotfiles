@@ -36,8 +36,6 @@ return {
 			"-g",
 			"!venv*",
 			"-g",
-			"!.secrets/*",
-			"-g",
 			"!dist/*",
 			"-g",
 			"!build/*",
