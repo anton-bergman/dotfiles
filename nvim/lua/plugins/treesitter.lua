@@ -20,6 +20,7 @@ return {
 			"vimdoc",
 			"markdown",
 			"markdown_inline",
+			"typst",
 		})
 
 		-- Enable Treesitter highlighting globally for all supported filetypes

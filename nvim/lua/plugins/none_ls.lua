@@ -14,6 +14,7 @@ return {
 				"stylua",
 				"prettier",
 				"shfmt",
+				"typstyle",
 				"sqlfluff", -- BigQuery-compatible SQL formatter & linter
 			},
 			automatic_installation = true,
@@ -54,6 +55,9 @@ return {
 				null_ls.builtins.formatting.sqlfluff.with({
 					extra_args = { "--dialect", "bigquery" },
 				}),
+
+				-- Typst
+				null_ls.builtins.formatting.typstyle,
 			},
 		})
 	end,

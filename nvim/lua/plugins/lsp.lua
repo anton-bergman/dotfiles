@@ -22,6 +22,7 @@ return {
 					"ruff",
 					"taplo",
 					"dockerls",
+					"tinymist",
 				},
 			})
 		end,

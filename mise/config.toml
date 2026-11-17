@@ -20,6 +20,7 @@ gh = "latest"
 tlrc = "latest"
 hunk = "latest"
 "github:pamburus/hl" = "latest"
+typst = "latest"
 
 # ==========================================
 # Subsystems
