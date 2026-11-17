@@ -1,12 +1,5 @@
 {
   "mcpServers": {
-    "sellpy-knowledge-wiki": {
-      "command": "npx",
-      "args": [
-        "mcp-remote",
-        "https://knowledge-wiki-worker.johan-e93.workers.dev/mcp"
-      ]
-    },
     "bigquery": {
       "type": "http",
       "url": "https://services.dev.sellpy.net/litellm/mcp",
