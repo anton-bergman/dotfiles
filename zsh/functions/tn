@@ -101,6 +101,18 @@ tn() {
 		return 0
 	fi
 
+	# Pre-flight: Ensure AI credentials are primed in tmux before spawning cockpit
+	if [[ "$detached" == false && -t 0 ]]; then
+		if ! tmux show-environment -g SELLPY_AI_GATEWAY_KEY >/dev/null 2>&1; then
+			local _vault_bin="${commands[vault-sync]:-$HOME/.local/bin/vault-sync}"
+			if [[ -x "$_vault_bin" ]]; then
+				"$_vault_bin" || true
+			elif [[ -x "$HOME/dotfiles/scripts/vault-sync.sh" ]]; then
+				"$HOME/dotfiles/scripts/vault-sync.sh" || true
+			fi
+		fi
+	fi
+
 	# Create new session
 	echo "Creating new tmux session: $session_name (assistant: $assistant)"
 

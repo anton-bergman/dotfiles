@@ -26,6 +26,22 @@ if [[ -f "$HOME/.zshrc.local" ]]; then
 	source "$HOME/.zshrc.local"
 fi
 
+# Load warm secrets from vault cache if available
+_vault_dir="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
+_vault_file="${_vault_dir%/}/vault-env-${UID:-$(id -u)}.zsh"
+if [[ -z "${SELLPY_AI_GATEWAY_KEY:-}" && -f "$_vault_file" ]]; then
+	source "$_vault_file"
+fi
+
+# Reload environment when signaled by vault-sync
+TRAPUSR1() {
+	local _vault_dir="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}}"
+	local _vault_file="${_vault_dir%/}/vault-env-${UID:-$(id -u)}.zsh"
+	if [[ -f "$_vault_file" ]]; then
+		source "$_vault_file"
+	fi
+}
+
 # DEACTIVATE Oh-My-Posh
 # Initialize Oh-My-Posh with a custom theme for the Zsh prompt
 # eval "$(oh-my-posh init zsh --config ~/dotfiles/zsh/oh-my-posh/my-theme.yaml)"
@@ -105,6 +121,16 @@ setopt globdots            # Standard globbing patterns (like *) will match hidd
 
 # ----- Aliases -----
 alias ls='ls --color'
+
+# Sync secrets: opens floating popup if locked in tmux, or runs directly
+vault() {
+	local _vault_cmd="${commands[vault-sync]:-$HOME/.local/bin/vault-sync}"
+	if command -v rbw >/dev/null 2>&1 && ! rbw unlocked >/dev/null 2>&1 && [[ -n "${TMUX:-}" ]]; then
+		tmux display-popup -w 65 -h 12 -E -T " Vault Sync " "$_vault_cmd"
+	else
+		source "$_vault_cmd"
+	fi
+}
 
 # ----- Set language and formatting preferences -----
 export LANG=en_US.UTF-8        # Set the default language to English
